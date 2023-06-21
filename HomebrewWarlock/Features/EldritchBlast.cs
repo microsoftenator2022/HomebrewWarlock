@@ -40,6 +40,7 @@ using MicroWrath.Util.Unity;
 using Owlcat.Runtime.Core.Utils;
 
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 
 namespace HomebrewWarlock.Features
 {
@@ -67,38 +68,7 @@ namespace HomebrewWarlock.Features
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> CreateFeature(BlueprintInitializationContext context)
         {
-            Sprite getSprite() => AssetUtils.Direct.GetSprite("fdfbce1816665e74584c528faebcc381", 21300000);
-
-            //var fx = context.NewBlueprint(() =>
-            //    AssetUtils.CloneBlueprint(
-            //        BlueprintsDb.Owlcat.BlueprintProjectile.Disintegrate00.GetBlueprint()!,
-            //        GeneratedGuid.Get("EldritchBlastProjectile"),
-            //        nameof(GeneratedGuid.EldritchBlastProjectile)))
-            //    .Map((BlueprintProjectile projectile) =>
-            //    {
-            //        //var cast = projectile.CastFx;
-
-            //        var view = UnityEngine.Object.Instantiate(projectile.View.Load());
-            //        UnityEngine.Object.DontDestroyOnLoad(view);
-                    
-            //        //var hit = projectile.ProjectileHit.HitFx;
-            //        //var hitSnap = projectile.ProjectileHit.HitSnapFx;
-            //        //var miss = projectile.ProjectileHit.MissFx;
-            //        //var missDecal = projectile.ProjectileHit.MissDecalFx;
-
-
-            //        var gradients = view.gameObject.GetComponentsInChildren<Gradient>();
-            //        foreach (var g in gradients)
-            //        {
-            //            for (var i = 0; i < g.colorKeys.Length; i++)
-            //            {
-            //                var c = g.colorKeys[i].color;
-            //                var d = new Color { r = c.b, g = c.r, b = c.g, a = c.a };
-
-            //                g.colorKeys[i].color = d;
-            //            }
-            //        }
-            //    });
+            static Sprite getSprite() => AssetUtils.Direct.GetSprite("fdfbce1816665e74584c528faebcc381", 21300000);
 
             var ability = context.NewBlueprint<BlueprintAbility>(GeneratedGuid.Get("EldritchBlastAbility"), nameof(GeneratedGuid.EldritchBlastAbility))
                 .Map((BlueprintAbility ability) =>
@@ -124,107 +94,6 @@ namespace HomebrewWarlock.Features
             var projectile = context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.Disintegrate00)
                 .Map((BlueprintProjectile bp) =>
                 {
-                    //static Color RotateColor(Color color)
-                    //{
-                    //    //if (color.r > 1 || color.g > 1 || color.b > 1 || color.a > 1)
-                    //    //    return color;
-
-                    //    //if (color.r < 0 || color.g < 0 || color.b < 0 || color.a < 0)
-                    //    //    return color;
-
-                    //    //if (color.a == 0)
-                    //    //    return color;
-
-                    //    if (color.r == color.g && color.g == color.b)
-                    //        return color;
-
-                    //    if (color.g < color.r || color.g < color.b)
-                    //        return color;
-
-                    //    var oldColor = color;
-
-                    //    color.r = oldColor.g;
-                    //    color.g = oldColor.b;
-                    //    color.b = oldColor.r;
-
-                    //    MicroLogger.Debug(() => $"{oldColor} -> {color}");
-
-                    //    return color;
-                    //}
-
-                    //static Color RotateColorHue(Color color, double degrees)
-                    //{
-                    //    if (color.r == color.g && color.g == color.b)
-                    //        return color;
-
-                    //    var oldColor = color;
-
-                    //    Color.RGBToHSV(color, out var h, out var s, out var v);
-
-                    //    var oldH = h;
-
-                    //    var hF64 = (double)h;
-
-                    //    hF64 += degrees / 360.0;
-
-                    //    // x.y -> (x.y - x.0) = 0.y
-                    //    if (hF64 > 1) hF64 -= ((int)hF64);
-
-                    //    // -x.y -> (-x.y + (-(-x.0) + 1) = (-x.y + (x.0 + 1)) = -0.y + 1 = (1 - 0.y)
-                    //    if (hF64 < 0) hF64 += (-(int)hF64) + 1;
-
-                    //    h = (float)hF64;
-
-                    //    color = Color.HSVToRGB(h, s, v);
-
-                    //    MicroLogger.Debug(() => $"{oldH}\u00b0 -> {oldH}\u00b0");
-                    //    MicroLogger.Debug(() => $"{oldColor} -> {color}");
-
-                    //    return color;
-                    //}
-
-                    //static Gradient? ChangeGradientColors(Gradient? g, Func<Color, Color> f)
-                    //{
-                    //    if (g is null || g.colorKeys is null) return g;
-
-                    //    var colors = g.colorKeys;
-
-                    //    for (var i = 0; i < colors.Length; i++)
-                    //    {
-                    //        var ck = colors[i];
-
-                    //        ck.color = f(ck.color);
-
-                    //        colors[i] = ck;
-                    //    }
-
-                    //    g.colorKeys = colors;
-
-                    //    return g;
-                    //}
-
-                    //static ParticleSystem.MinMaxGradient ChangeMinMaxGradientColors(ParticleSystem.MinMaxGradient mmg, Func<Color, Color> f) =>
-                    //    mmg.mode switch
-                    //    {
-                    //        ParticleSystemGradientMode.Color =>
-                    //            new ParticleSystem.MinMaxGradient(f(mmg.color)),
-
-                    //        ParticleSystemGradientMode.TwoColors =>
-                    //            new ParticleSystem.MinMaxGradient(
-                    //                f(mmg.colorMin),
-                    //                f(mmg.colorMax)),
-
-                    //        ParticleSystemGradientMode.Gradient => new
-                    //            ParticleSystem.MinMaxGradient(ChangeGradientColors(mmg.gradient, f)),
-
-                    //        ParticleSystemGradientMode.TwoGradients =>
-                    //            new ParticleSystem.MinMaxGradient(
-                    //                ChangeGradientColors(mmg.gradientMin, f),
-                    //                ChangeGradientColors(mmg.gradientMax, f)),
-
-                    //        _ => mmg,
-                    //    };
-
                     static void ChangeAllColors(GameObject obj, Func<Color, Color> f)
                     {
                         var wasActive = obj.activeSelf;
@@ -251,56 +120,94 @@ namespace HomebrewWarlock.Features
                                     var tex = psr.material.GetTexture(tName);
 
                                     if (tex is not null)
-                                        sb.AppendLine($"  {tName}: {tex.name}");
+                                        sb.AppendLine($"  {tName}: [{(tex as Texture2D)?.format}] {tex.name}");
                                 }
 
                                 return sb.ToString();
                             });
 
                             const string rampTextureName = "_ColorAlphaRamp";
-
+                            
                             if (psr.material.GetTexture(rampTextureName) is { } caTexture)
                             {
-                                var texCopy = new Texture2D(caTexture.width, caTexture.height);
+                                var textureFormat = TextureFormat.RGBA32;
+                                
+                                if (caTexture is Texture2D t2d)
+                                {
+                                    textureFormat = t2d.format;
+                                }
+                                else
+                                {
+                                    MicroLogger.Warning($"{caTexture.name} is not {typeof(Texture2D)}");
+                                }
+                                
+                                var newTex = new Texture2D(
+                                    caTexture.width,
+                                    caTexture.height,
+                                    textureFormat: textureFormat,
+                                    mipCount: caTexture.mipmapCount,
+                                    false);
+                                Graphics.CopyTexture(caTexture, newTex);
+                                
+                                var logLevel = MicroLogger.LogLevel;
+                                
+                                if (logLevel == MicroLogger.Severity.Debug)
+                                    MicroLogger.LogLevel = MicroLogger.Severity.Info;
 
-                                Graphics.CopyTexture(caTexture, texCopy);
+                                var newPixels = newTex.GetPixels().Select(f).ToArray();
 
-                                texCopy.SetPixels(texCopy.GetPixels().Select(p => f(p)).ToArray());
-                                texCopy.Apply();
+                                MicroLogger.LogLevel = logLevel;
 
-                                psr.material.SetTexture(rampTextureName, texCopy);
+                                if (textureFormat.SupportsSetPixel())
+                                {
+                                    newTex.SetPixels(newPixels);
+                                }
+                                else
+                                {
+                                    var tempRGBA = new Texture2D(
+                                        caTexture.width,
+                                        caTexture.height,
+                                        textureFormat: TextureFormat.RGBA32,
+                                        mipCount: caTexture.mipmapCount,
+                                        false);
+
+                                    tempRGBA.SetPixels(newPixels);
+                                    tempRGBA.Compress(false);
+                                    tempRGBA.Apply(true, true);
+
+                                    Graphics.CopyTexture(tempRGBA, newTex);
+                                }
+
+                                newTex.Apply();
+
+                                psr.material.SetTexture(rampTextureName, newTex);
                             }
 
                             var cot = ps.colorOverLifetime;
-                            cot.color = UnityUtil.ChangeMinMaxGradientColors(cot.color, f);
-
+                            
                             var main = ps.main;
                             var sc = main.startColor;
 
+                            cot.color = UnityUtil.ChangeMinMaxGradientColors(cot.color, f);
                             main.startColor = UnityUtil.ChangeMinMaxGradientColors(sc, f);
                         }
 
                         foreach (var lr in obj.GetComponentsInChildren<LineRenderer>() ?? Enumerable.Empty<LineRenderer>())
                         {
-                            //var lra = lr.gameObject.activeSelf;
-                            //lr.gameObject.SetActive(false);
-
-                            MicroLogger.Debug(() => $"{lr.gameObject.name} :: {lr.GetType().ToString()}");
-
-                            //lr.startColor = RotateColors(lr.startColor);
-                            //lr.endColor = RotateColors(lr.endColor);
+                            MicroLogger.Debug(() => $"{lr.gameObject.name} :: {lr.GetType()}");
 
                             lr.colorGradient = UnityUtil.ChangeGradientColors(lr.colorGradient, f);
-
-                            //lr.gameObject.SetActive(lra);
                         }
 
                         foreach (var al in obj.GetComponentsInChildren<AnimatedLight>() ?? Enumerable.Empty<AnimatedLight>())
                         {
-                            MicroLogger.Debug(() => $"{al.gameObject.name} :: {al.GetType().ToString()}");
+                            MicroLogger.Debug(() => $"{al.gameObject.name} :: {al.GetType()}");
 
-                            al.m_Color = f(al.m_Color);
-                            al.m_ColorOverLifetime = UnityUtil.ChangeGradientColors(al.m_ColorOverLifetime, f);
+                            var c = al.m_Color;
+                            var col = al.m_ColorOverLifetime;
+                            
+                            al.m_Color = f(c);
+                            al.m_ColorOverLifetime = UnityUtil.ChangeGradientColors(col, f);
                         }
 
                         foreach (var rl in obj.GetComponentsInChildren<RimLightingAnimationSetup>())
