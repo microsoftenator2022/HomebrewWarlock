@@ -1,0 +1,13 @@
+{
+  "Id": "HomebrewWarlock",
+  "Version": "0.1.0.0",
+  "AssemblyName": "MicroWrath.Loader.dll",
+  "EntryMethod": "MicroWrath.MicroMod.Load",
+
+  "DisplayName": "HomebrewWarlock",
+
+  "Author": "microsoftenator",
+
+  "GameVersion": "2.1.3"
+
+}
