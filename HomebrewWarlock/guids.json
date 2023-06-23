@@ -6,5 +6,19 @@
   "WarlockClass": "fe6812e9-6852-4dbf-90a1-533b4f5154c0",
   "EldritchBlastFeature": "c137e441-5fe9-4a91-bef3-e22149855ce8",
   "WarlockInvocationSelection": "673fb582-0520-4a38-b836-149ccd95e2f8",
-  "EldritchBlastProjectile": "9026d790-6747-4606-bcac-f88f60843e6f"
+  "EldritchBlastProjectile": "9026d790-6747-4606-bcac-f88f60843e6f",
+  "WarlockEnergyResistanceSelection": "efe7f7a2-4aef-4f9e-809f-0b1d4ea530c1",
+  "WarlockEnergyResistanceFire": "9cce6f03-4f55-4ea6-ba27-29203aea854d",
+  "WarlockEnergyResistanceCold": "b70a87d1-96e6-4977-b017-f89cd500e3bb",
+  "WarlockEnergyResistanceAcid": "e9bdf484-b1e2-4901-a77a-02d97e1aa390",
+  "WarlockEnergyResistanceElectricity": "7884bacd-403e-47ae-b653-f6eb14f6c1cb",
+  "WarlockEnergyResistance": "22183d5d-5a04-4a1c-bf92-d68ebe1da768",
+  "WarlockEnergyResistanceSonic": "6f36d01e-09a3-466e-bb51-73332a18745c",
+  "WarlockDamageReduction": "626db01d-a9db-4697-9403-cf54a1538e3f",
+  "FiendishResiliendAbility": "92f69c80-9463-4f74-9ce1-81fc615519b8",
+  "FiendishResilienceResource": "694d5945-d764-4400-86fb-9464851a5dd4",
+  "FiendishResilienceFeature": "14cc8d23-674d-452b-9a22-39eba45eac94",
+  "DeceiveItemFeature": "b6a9518a-eb09-4827-844f-45bf50aff14a",
+  "DeceiveItemAbility": "abaf7661-c3f1-4bb0-a84c-9d70d0aa9ac1",
+  "DeceiveItemBuff": "cc28b275-5226-46d8-abf1-82b499e04dff"
 }

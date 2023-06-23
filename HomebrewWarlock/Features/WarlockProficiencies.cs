@@ -8,7 +8,6 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items.Armors;
-using Kingmaker.UnitLogic.FactLogic;
 
 using MicroWrath;
 using MicroWrath.BlueprintInitializationContext;

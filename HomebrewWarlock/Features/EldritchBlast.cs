@@ -19,7 +19,6 @@ using Kingmaker.UnitLogic.Abilities.Components;
 using Kingmaker.UnitLogic.FactLogic;
 using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Mechanics.Components;
-using Kingmaker.Utility;
 using Kingmaker.View;
 using Kingmaker.Visual.Animation.Kingmaker.Actions;
 
@@ -27,7 +26,7 @@ using Kingmaker.Visual.MaterialEffects.RimLighting;
 using Kingmaker.Visual.MaterialEffects.Dissolve;
 
 using MicroWrath;
-using MicroWrath.Assets;
+using MicroWrath.Util.Assets;
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.BlueprintsDb;
 using MicroWrath.Extensions;
@@ -37,17 +36,15 @@ using MicroWrath.Localization;
 using MicroWrath.Util;
 using MicroWrath.Util.Unity;
 
-using Owlcat.Runtime.Core.Utils;
-
 using UnityEngine;
-using UnityEngine.Experimental.Rendering;
+using Kingmaker.UnitLogic.Commands.Base;
 
 namespace HomebrewWarlock.Features
 {
     internal static partial class EldritchBlast
     {
         [LocalizedString]
-        internal static readonly string DisplayName = "Eldritch Blast";
+        internal const string DisplayName = "Eldritch Blast";
 
         [LocalizedString]
         internal static readonly string Description =
@@ -65,6 +62,14 @@ namespace HomebrewWarlock.Features
             "eldritch blast (because it is a spell-like ability, not a spell). However, the feat Ability Focus " +
             "(eldritch blast) increases the DC for all saving throws (if any) associated with a warlock's " +
             "eldritch blast by 2.";
+
+        [LocalizedString]
+        internal const string ShortDescription =
+            "A warlock attacks his foes with eldritch power, using baleful magical energy to deal damage and " +
+            "sometimes impart other debilitating effects.";
+
+
+        internal static readonly IMicroBlueprint<BlueprintFeature> Feature = new MicroBlueprint<BlueprintFeature>(GeneratedGuid.EldritchBlastFeature);
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> CreateFeature(BlueprintInitializationContext context)
         {
@@ -86,7 +91,7 @@ namespace HomebrewWarlock.Features
                     ability.EffectOnAlly = AbilityEffectOnUnit.None;
                     ability.EffectOnEnemy = AbilityEffectOnUnit.Harmful;
                     ability.Animation = UnitAnimationActionCastSpell.CastAnimationStyle.Directional;
-                    ability.ActionType = Kingmaker.UnitLogic.Commands.Base.UnitCommand.CommandType.Standard;
+                    ability.ActionType = UnitCommand.CommandType.Standard;
 
                     return ability;
                 });
@@ -131,6 +136,8 @@ namespace HomebrewWarlock.Features
                             if (psr.material.GetTexture(rampTextureName) is { } caTexture)
                             {
                                 var textureFormat = TextureFormat.RGBA32;
+
+                                var hdr = psr.material.name.ToLowerInvariant().Contains("hdr");
                                 
                                 if (caTexture is Texture2D t2d)
                                 {
@@ -223,7 +230,7 @@ namespace HomebrewWarlock.Features
                         obj.SetActive(wasActive);
                     }
 
-                    static Color RotateColor(Color color) => UnityUtil.RotateColorHue(color, +160);
+                    static Color RotateColor(Color color) => UnityUtil.RotateColorHue(color, 140);
 
                     bp = AssetUtils.CloneBlueprint(bp, GeneratedGuid.Get("EldritchBlastProjectile"), nameof(GeneratedGuid.EldritchBlastProjectile));
 
@@ -289,6 +296,7 @@ namespace HomebrewWarlock.Features
                 {
                     feature.m_DisplayName = LocalizedStrings.Features_EldritchBlast_DisplayName;
                     feature.m_Description = LocalizedStrings.Features_EldritchBlast_Description;
+                    feature.m_DescriptionShort = LocalizedStrings.Features_EldritchBlast_ShortDescription;
 
                     feature.m_Icon = getSprite();
 

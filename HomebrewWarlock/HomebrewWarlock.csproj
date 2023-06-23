@@ -7,6 +7,7 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <RootNamespace>$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
     <OutDir>$(SolutionDir)\bin\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName)</OutDir>
+    <SolutionDir Condition="'$(SolutionDir)' == ''">..\</SolutionDir>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -45,8 +46,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Assembly-CSharp" HintPath="$(SolutionDir)lib\Assembly-CSharp_public.dll" Private="False" />
-    <Reference Include="Owlcat.Runtime.UI" HintPath="$(SolutionDir)lib\Owlcat.Runtime.UI_public.dll" Private="False" />
+    <Reference Include="Assembly-CSharp" HintPath="$(SolutionDir)\lib\Assembly-CSharp_public.dll" Private="False" />
+    <Reference Include="Owlcat.Runtime.UI" HintPath="$(SolutionDir)\lib\Owlcat.Runtime.UI_public.dll" Private="False" />
   </ItemGroup>
 
   <ItemGroup>
@@ -61,6 +62,10 @@
     <None Update="Info.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\EldritchBlast\" />
   </ItemGroup>
 
   <Target Name="GenerateGuidsFileTarget" AfterTargets="Build">
