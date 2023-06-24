@@ -4,26 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Kingmaker;
 using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Items.Weapons;
-using Kingmaker.Enums;
-using Kingmaker.Enums.Damage;
-using Kingmaker.ResourceLinks;
-using Kingmaker.RuleSystem;
-using Kingmaker.RuleSystem.Rules.Damage;
-using Kingmaker.UnitLogic.Mechanics.Actions;
-using Kingmaker.UnitLogic.Abilities.Blueprints;
-using Kingmaker.UnitLogic.Abilities.Components;
-using Kingmaker.UnitLogic.FactLogic;
-using Kingmaker.UnitLogic.Mechanics;
-using Kingmaker.UnitLogic.Mechanics.Components;
-using Kingmaker.View;
-using Kingmaker.Visual.Animation.Kingmaker.Actions;
-
-using Kingmaker.Visual.MaterialEffects.RimLighting;
-using Kingmaker.Visual.MaterialEffects.Dissolve;
 
 using MicroWrath;
 using MicroWrath.Util.Assets;
@@ -37,65 +18,17 @@ using MicroWrath.Util;
 using MicroWrath.Util.Unity;
 
 using UnityEngine;
-using Kingmaker.UnitLogic.Commands.Base;
+using Kingmaker.Visual.MaterialEffects.RimLighting;
+using Kingmaker.Visual.MaterialEffects.Dissolve;
+using Kingmaker.ResourceLinks;
+using Kingmaker.View;
 
 namespace HomebrewWarlock.Features
 {
-    internal static partial class EldritchBlast
+    public static partial class EldritchBlast
     {
-        [LocalizedString]
-        internal const string DisplayName = "Eldritch Blast";
-
-        [LocalizedString]
-        internal static readonly string Description =
-            "The first ability a warlock learns is eldritch blast. A warlock attacks his foes " +
-            "with eldritch power, using baleful magical energy to deal damage and sometimes impart other " +
-            $"debilitating effects.{Environment.NewLine}" +
-            "An eldritch blast is a ray with a range of 60 feet. It is a ranged touch attack that affects a " +
-            "single target, allowing no saving throw. An eldritch blast deals 1d6 points of damage at 1st level " +
-            "and increases in power as the warlock rises in level. An eldritch blast is the equivalent of a " +
-            "1st-level spell. If you apply a blast shape or eldritch essence invocation to your eldritch blast, " +
-            $"your eldritch blast uses the level equivalent of the shape or essence.{Environment.NewLine}" +
-            "An eldritch blast is subject to spell resistance, although the Spell Penetration feat and other " +
-            "effects that improve caster level checks to overcome spell resistance also apply to eldritch " +
-            "blast. An eldritch blast deals half damage to objects. Metamagic feats cannot improve a warlock's " +
-            "eldritch blast (because it is a spell-like ability, not a spell). However, the feat Ability Focus " +
-            "(eldritch blast) increases the DC for all saving throws (if any) associated with a warlock's " +
-            "eldritch blast by 2.";
-
-        [LocalizedString]
-        internal const string ShortDescription =
-            "A warlock attacks his foes with eldritch power, using baleful magical energy to deal damage and " +
-            "sometimes impart other debilitating effects.";
-
-
-        internal static readonly IMicroBlueprint<BlueprintFeature> Feature = new MicroBlueprint<BlueprintFeature>(GeneratedGuid.EldritchBlastFeature);
-
-        internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> CreateFeature(BlueprintInitializationContext context)
+        internal static BlueprintInitializationContext.ContextInitializer<BlueprintProjectile> CreateProjectile(BlueprintInitializationContext context)
         {
-            static Sprite getSprite() => AssetUtils.Direct.GetSprite("fdfbce1816665e74584c528faebcc381", 21300000);
-
-            var ability = context.NewBlueprint<BlueprintAbility>(GeneratedGuid.Get("EldritchBlastAbility"), nameof(GeneratedGuid.EldritchBlastAbility))
-                .Map((BlueprintAbility ability) =>
-                {
-                    ability.m_DisplayName = LocalizedStrings.Features_EldritchBlast_DisplayName;
-                    ability.m_Description = LocalizedStrings.Features_EldritchBlast_Description;
-
-                    ability.m_Icon = getSprite();
-
-                    ability.Type = AbilityType.Special;
-                    ability.Range = AbilityRange.Close;
-
-                    ability.CanTargetEnemies = true;
-                    ability.SpellResistance = true;
-                    ability.EffectOnAlly = AbilityEffectOnUnit.None;
-                    ability.EffectOnEnemy = AbilityEffectOnUnit.Harmful;
-                    ability.Animation = UnitAnimationActionCastSpell.CastAnimationStyle.Directional;
-                    ability.ActionType = UnitCommand.CommandType.Standard;
-
-                    return ability;
-                });
-
             var projectile = context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.Disintegrate00)
                 .Map((BlueprintProjectile bp) =>
                 {
@@ -114,7 +47,7 @@ namespace HomebrewWarlock.Features
                             {
                                 var sb = new StringBuilder();
                                 sb.AppendLine($"Renderer {psr.name}");
-                                
+
                                 sb.AppendLine($" Material: {psr.material.name}");
 
                                 sb.AppendLine($" Shader: {psr.material.shader.name}");
@@ -132,13 +65,13 @@ namespace HomebrewWarlock.Features
                             });
 
                             const string rampTextureName = "_ColorAlphaRamp";
-                            
+
                             if (psr.material.GetTexture(rampTextureName) is { } caTexture)
                             {
                                 var textureFormat = TextureFormat.RGBA32;
 
                                 var hdr = psr.material.name.ToLowerInvariant().Contains("hdr");
-                                
+
                                 if (caTexture is Texture2D t2d)
                                 {
                                     textureFormat = t2d.format;
@@ -147,7 +80,7 @@ namespace HomebrewWarlock.Features
                                 {
                                     MicroLogger.Warning($"{caTexture.name} is not {typeof(Texture2D)}");
                                 }
-                                
+
                                 var newTex = new Texture2D(
                                     caTexture.width,
                                     caTexture.height,
@@ -155,9 +88,9 @@ namespace HomebrewWarlock.Features
                                     mipCount: caTexture.mipmapCount,
                                     false);
                                 Graphics.CopyTexture(caTexture, newTex);
-                                
+
                                 var logLevel = MicroLogger.LogLevel;
-                                
+
                                 if (logLevel == MicroLogger.Severity.Debug)
                                     MicroLogger.LogLevel = MicroLogger.Severity.Info;
 
@@ -191,7 +124,7 @@ namespace HomebrewWarlock.Features
                             }
 
                             var cot = ps.colorOverLifetime;
-                            
+
                             var main = ps.main;
                             var sc = main.startColor;
 
@@ -212,7 +145,7 @@ namespace HomebrewWarlock.Features
 
                             var c = al.m_Color;
                             var col = al.m_ColorOverLifetime;
-                            
+
                             al.m_Color = f(c);
                             al.m_ColorOverLifetime = UnityUtil.ChangeGradientColors(col, f);
                         }
@@ -261,7 +194,7 @@ namespace HomebrewWarlock.Features
                         ChangeAllColors(hfx, RotateColor);
                     });
 
-                    bp.ProjectileHit.HitSnapFx = bp.ProjectileHit.HitSnapFx.CreateDynamicProxy(hsfx => 
+                    bp.ProjectileHit.HitSnapFx = bp.ProjectileHit.HitSnapFx.CreateDynamicProxy(hsfx =>
                     {
                         hsfx.name = "EldritchBlast_HitSnapFX";
 
@@ -291,81 +224,7 @@ namespace HomebrewWarlock.Features
                     return bp;
                 });
 
-            var feature = context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get("EldritchBlastFeature"), nameof(GeneratedGuid.EldritchBlastFeature))
-                .Map((BlueprintFeature feature) =>
-                {
-                    feature.m_DisplayName = LocalizedStrings.Features_EldritchBlast_DisplayName;
-                    feature.m_Description = LocalizedStrings.Features_EldritchBlast_Description;
-                    feature.m_DescriptionShort = LocalizedStrings.Features_EldritchBlast_ShortDescription;
-
-                    feature.m_Icon = getSprite();
-
-                    feature.Ranks = 9;
-                    
-                    return feature;
-                })
-                .Combine(ability)
-                .Combine(projectile)
-                .Map(fa =>
-                {
-                    var (feature, ability, projectile) = fa.Flatten();
-
-                    feature.AddAddFeatureIfHasFact(c =>
-                    {
-                        c.m_CheckedFact = ability.ToReference<BlueprintUnitFactReference>();
-                        c.m_Feature = ability.ToReference<BlueprintUnitFactReference>();
-
-                        c.Not = true;
-                    });
-
-                    ability.AddComponent<AbilityDeliverProjectile>(c =>
-                    {
-                        c.m_Projectiles = new[]
-                        {
-                            //BlueprintsDb.Owlcat.BlueprintProjectile.Disintegrate00.ToReference<BlueprintProjectile, BlueprintProjectileReference>()
-                            projectile.ToReference<BlueprintProjectileReference>()
-                        };
-
-                        c.m_Length = new();
-                        c.m_LineWidth = new() { m_Value = 5 };
-
-                        c.NeedAttackRoll = true;
-
-                        c.m_Weapon = BlueprintsDb.Owlcat.BlueprintItemWeapon.RayItem.ToReference<BlueprintItemWeapon, BlueprintItemWeaponReference>();
-                    });
-
-                    ability.AddComponent<AbilityEffectRunAction>(c =>
-                    {
-                        c.Actions.Add(
-                            GameActions.ContextActionDealDamage(action =>
-                            {
-                                action.m_Type = ContextActionDealDamage.Type.Damage;
-                               
-                                action.DamageType.Type = DamageType.Energy;
-                                action.DamageType.Energy = DamageEnergyType.Magic;
-
-                                action.Value.DiceType = DiceType.D6;
-
-                                action.Value.DiceCountValue.ValueType = ContextValueType.Rank;
-                                action.Value.DiceCountValue.Value = 1;
-                                action.Value.DiceCountValue.ValueRank = AbilityRankType.DamageDice;
-                            }));
-                    });
-
-                    ability.AddContextRankConfig(c =>
-                    {
-                        c.m_Type = AbilityRankType.DamageDice;
-                        c.m_BaseValueType = ContextRankBaseValueType.FeatureRank;
-                        c.m_Feature = feature.ToReference<BlueprintFeatureReference>();
-                        c.m_Progression = ContextRankProgression.AsIs;
-                        c.m_StartLevel = 0;
-                        c.m_StepLevel = 1;
-                    });
-
-                    return feature;
-                });
-
-            return feature;
+            return projectile;
         }
     }
 }
