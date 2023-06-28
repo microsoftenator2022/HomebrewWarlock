@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+
+using HomebrewWarlock.Features.Invocations;
 
 using Kingmaker;
 using Kingmaker.Blueprints;
@@ -31,9 +34,9 @@ using MicroWrath.Localization;
 using MicroWrath.Util;
 
 using UnityEngine;
+using UnityEngine.UI;
 
-
-namespace HomebrewWarlock.Features
+namespace HomebrewWarlock.Features.EldritchBlast
 {
     public static partial class EldritchBlast
     {
@@ -62,23 +65,22 @@ namespace HomebrewWarlock.Features
             "A warlock attacks his foes with eldritch power, using baleful magical energy to deal damage and " +
             "sometimes impart other debilitating effects.";
 
+        public static readonly IMicroBlueprint<BlueprintFeature> Feature = new MicroBlueprint<BlueprintFeature>(GeneratedGuid.EldritchBlastFeature);
 
-        internal static readonly IMicroBlueprint<BlueprintFeature> Feature = new MicroBlueprint<BlueprintFeature>(GeneratedGuid.EldritchBlastFeature);
-
-        internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> CreateFeature(BlueprintInitializationContext context)
+        internal static BlueprintInitializationContext.ContextInitializer<BlueprintAbility> RangedBlastTemplate(
+            BlueprintInitializationContext context,
+            BlueprintGuid guid,
+            string name,
+            BlueprintInitializationContext.ContextInitializer<BlueprintProjectile> projectile,
+            int equivalentSpellLevel)
         {
-            static Sprite getSprite() => AssetUtils.Direct.GetSprite("fdfbce1816665e74584c528faebcc381", 21300000);
-
-            var ability = context.NewBlueprint<BlueprintAbility>(GeneratedGuid.Get("EldritchBlastAbility"), nameof(GeneratedGuid.EldritchBlastAbility))
-                .Map((BlueprintAbility ability) =>
+            return context.NewBlueprint<BlueprintAbility>(guid, name)
+                .Combine(projectile)
+                .Map(bps =>
                 {
-                    ability.m_DisplayName = LocalizedStrings.Features_EldritchBlast_DisplayName;
-                    ability.m_Description = LocalizedStrings.Features_EldritchBlast_Description;
-
-                    ability.m_Icon = getSprite();
+                    var (ability, projectile) = bps;
 
                     ability.Type = AbilityType.Special;
-                    ability.Range = AbilityRange.Close;
 
                     ability.CanTargetEnemies = true;
                     ability.SpellResistance = true;
@@ -87,45 +89,13 @@ namespace HomebrewWarlock.Features
                     ability.Animation = UnitAnimationActionCastSpell.CastAnimationStyle.Directional;
                     ability.ActionType = UnitCommand.CommandType.Standard;
 
-                    return ability;
-                });
-
-            var projectile = CreateProjectile(context);
-
-            var feature = context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get("EldritchBlastFeature"), nameof(GeneratedGuid.EldritchBlastFeature))
-                .Map((BlueprintFeature feature) =>
-                {
-                    feature.m_DisplayName = LocalizedStrings.Features_EldritchBlast_DisplayName;
-                    feature.m_Description = LocalizedStrings.Features_EldritchBlast_Description;
-                    feature.m_DescriptionShort = LocalizedStrings.Features_EldritchBlast_ShortDescription;
-
-                    feature.m_Icon = getSprite();
-
-                    feature.Ranks = 9;
-                    
-                    return feature;
-                })
-                .Combine(ability)
-                .Combine(projectile)
-                .Map(fa =>
-                {
-                    var (feature, ability, projectile) = fa.Flatten();
-
-                    feature.AddAddFeatureIfHasFact(c =>
-                    {
-                        c.m_CheckedFact = ability.ToReference<BlueprintUnitFactReference>();
-                        c.m_Feature = ability.ToReference<BlueprintUnitFactReference>();
-
-                        c.Not = true;
-                    });
-
                     ability.AddComponent<AbilityDeliverProjectile>(c =>
                     {
                         c.m_Projectiles = new[]
                         {
                             //BlueprintsDb.Owlcat.BlueprintProjectile.Disintegrate00.ToReference<BlueprintProjectile, BlueprintProjectileReference>()
                             projectile.ToReference<BlueprintProjectileReference>()
-                        };
+                    };
 
                         c.m_Length = new();
                         c.m_LineWidth = new() { m_Value = 5 };
@@ -135,42 +105,105 @@ namespace HomebrewWarlock.Features
                         c.m_Weapon = BlueprintsDb.Owlcat.BlueprintItemWeapon.RayItem.ToReference<BlueprintItemWeapon, BlueprintItemWeaponReference>();
                     });
 
+                    ability.AddInvocationComponents(equivalentSpellLevel);
+
                     AddOnHitEffectToAbility(ability);
 
-                    //ability.AddComponent<AbilityEffectRunAction>(c =>
+                    return ability;
+                });
+        }
+
+        internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> CreateFeature(
+            BlueprintInitializationContext context,
+            BlueprintInitializationContext.ContextInitializer<BlueprintProjectile> projectile)
+        {
+            Sprite? sprite = null;
+
+            Sprite getSprite()
+            {
+                sprite ??= AssetUtils.GetSpriteAssemblyResource(Assembly.GetExecutingAssembly(), $"{nameof(HomebrewWarlock)}.Resources.eb_icon.png");
+
+                if (sprite is null)
+                    MicroLogger.Error("Missing sprite");
+                
+                return sprite!;
+
+                //return AssetUtils.Direct.GetSprite("fdfbce1816665e74584c528faebcc381", 21300000);
+            }
+
+            var ability = RangedBlastTemplate(
+                context,
+                GeneratedGuid.Get("EldritchBlastAbility"),
+                nameof(GeneratedGuid.EldritchBlastAbility),
+                projectile,
+                1)
+                .Map((BlueprintAbility ability) =>
+                {
+                    ability.m_DisplayName = LocalizedStrings.Features_EldritchBlast_EldritchBlast_DisplayName;
+                    ability.m_Description = LocalizedStrings.Features_EldritchBlast_EldritchBlast_Description;
+
+                    ability.m_Icon = getSprite();
+
+                    //ability.Type = AbilityType.Special;
+                    ability.Range = AbilityRange.Close;
+
+                    //ability.CanTargetEnemies = true;
+                    //ability.SpellResistance = true;
+                    //ability.EffectOnAlly = AbilityEffectOnUnit.None;
+                    //ability.EffectOnEnemy = AbilityEffectOnUnit.Harmful;
+                    //ability.Animation = UnitAnimationActionCastSpell.CastAnimationStyle.Directional;
+                    //ability.ActionType = UnitCommand.CommandType.Standard;
+
+                    return ability;
+                });
+
+            var feature = context.NewBlueprint<BlueprintFeature>(
+                GeneratedGuid.Get("EldritchBlastFeature"),
+                nameof(GeneratedGuid.EldritchBlastFeature))
+                .Map((BlueprintFeature feature) =>
+                {
+                    feature.m_DisplayName = LocalizedStrings.Features_EldritchBlast_EldritchBlast_DisplayName;
+                    feature.m_Description = LocalizedStrings.Features_EldritchBlast_EldritchBlast_Description;
+                    feature.m_DescriptionShort = LocalizedStrings.Features_EldritchBlast_EldritchBlast_ShortDescription;
+
+                    feature.m_Icon = getSprite();
+
+                    feature.Ranks = 9;
+                    
+                    return feature;
+                })
+                .Combine(ability)
+                .Map(fa =>
+                {
+                    var (feature, ability) = fa;
+
+                    feature.AddAddFeatureIfHasFact(c =>
+                    {
+                        c.m_CheckedFact = ability.ToReference<BlueprintUnitFactReference>();
+                        c.m_Feature = ability.ToReference<BlueprintUnitFactReference>();
+
+                        c.Not = true;
+                    });
+
+                    //ability.AddComponent<AbilityDeliverProjectile>(c =>
                     //{
-                    //    c.Actions.Add(
-                    //        GameActions.ContextActionDealDamage(action =>
-                    //        {
-                    //            action.m_Type = ContextActionDealDamage.Type.Damage;
-                               
-                    //            action.DamageType.Type = DamageType.Energy;
-                    //            action.DamageType.Energy = DamageEnergyType.Magic;
+                    //    c.m_Projectiles = new[]
+                    //    {
+                    //        //BlueprintsDb.Owlcat.BlueprintProjectile.Disintegrate00.ToReference<BlueprintProjectile, BlueprintProjectileReference>()
+                    //        projectile.ToReference<BlueprintProjectileReference>()
+                    //    };
 
-                    //            action.Value.DiceType = DiceType.D6;
+                    //    c.m_Length = new();
+                    //    c.m_LineWidth = new() { m_Value = 5 };
 
-                    //            action.Value.DiceCountValue.ValueType = ContextValueType.Rank;
-                    //            action.Value.DiceCountValue.Value = 1;
-                    //            action.Value.DiceCountValue.ValueRank = AbilityRankType.DamageDice;
-                    //        }));
+                    //    c.NeedAttackRoll = true;
+
+                    //    c.m_Weapon = BlueprintsDb.Owlcat.BlueprintItemWeapon.RayItem.ToReference<BlueprintItemWeapon, BlueprintItemWeaponReference>();
                     //});
 
-                    //ability.AddContextRankConfig(c =>
-                    //{
-                    //    c.m_Type = AbilityRankType.DamageDice;
-                    //    c.m_BaseValueType = ContextRankBaseValueType.FeatureRank;
-                    //    c.m_Feature = feature.ToReference<BlueprintFeatureReference>();
-                    //    c.m_Progression = ContextRankProgression.AsIs;
-                    //    c.m_StartLevel = 0;
-                    //    c.m_StepLevel = 1;
-                    //});
+                    //ability.AddInvocationComponents(1);
 
-                    //ability.AddComponent<ContextCalculateAbilityParams>(c =>
-                    //{
-                    //    c.StatType = StatType.Charisma;
-                    //    c.ReplaceSpellLevel = true;
-                    //    c.SpellLevel = 1;
-                    //});
+                    //AddOnHitEffectToAbility(ability);
 
                     return feature;
                 });
@@ -178,59 +211,6 @@ namespace HomebrewWarlock.Features
             return feature;
         }
 
-        internal class EssenceComponent : ActivatableAbilityGroupComponent<EssenceComponent>
-        {
-            public int EquivalentSpellLevel = 1;
-        }
-
-        //public class DCCalc : ContextAbilityParamsCalculator
-        //{
-        //    public override AbilityParams Calculate(MechanicsContext context)
-        //    {
-        //        MicroLogger.Debug(() => $"{nameof(DCCalc)}.{nameof(Calculate)}");
-
-        //        if (context.MaybeCaster is not UnitEntityData caster)
-        //        {
-        //            MicroLogger.Debug(() => "Caster is null");
-        //            return context.Params;
-        //        }
-        //        var ability = context.SourceAbilityContext?.Ability;
-
-        //        MicroLogger.Debug(() => $"Ability: {ability?.ToString() ?? "&lt; null &gt;"}");
-        //        MicroLogger.Debug(() => $"Blueprint: {context.AssociatedBlueprint}");
-
-        //        var ruleCalculateAbilityParams = (ability is not null) ?
-        //            new RuleCalculateAbilityParams(caster, ability) :
-        //            new RuleCalculateAbilityParams(caster, context.AssociatedBlueprint, null);
-
-        //        var essence = context.MaybeCaster.ActivatableAbilities.Enumerable
-        //            .FirstOrDefault(ability => ability.Components.OfType<EssenceComponent>().Any() && ability.IsOn)
-        //                ?.Components
-        //                ?.OfType<EssenceComponent>()
-        //                ?.OrderByDescending(c => c.EquivalentSpellLevel)
-        //                ?.FirstOrDefault();
-
-        //        ruleCalculateAbilityParams.ReplaceSpellLevel = essence?.EquivalentSpellLevel ?? 1;
-        //        ruleCalculateAbilityParams.ReplaceStat = StatType.Charisma;
-        //        ruleCalculateAbilityParams.ReplaceCasterLevel = 0;
-
-        //        var result = context.TriggerRule(ruleCalculateAbilityParams).Result;
-
-        //        MicroLogger.Debug(() =>
-        //        {
-        //            var sb = new StringBuilder();
-        //            sb.AppendLine($"Source: {result.SpellSource}");
-        //            sb.AppendLine($"Is changed? {result.IsChanged}");
-        //            sb.AppendLine($"Caster level: {result.CasterLevel}");
-        //            sb.AppendLine($"Spell level: {result.SpellLevel}");
-        //            sb.AppendLine($"Rank bonus: {result.RankBonus}");
-        //            sb.AppendLine($"DC: {result.DC}");
-
-        //            return sb.ToString();
-        //        });
-
-        //        return result;
-        //    }
-        //}
+        //internal class EssenceComponent : ActivatableAbilityGroupComponent<EssenceComponent> { }
     }
 }

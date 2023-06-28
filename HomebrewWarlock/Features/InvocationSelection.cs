@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using HomebrewWarlock.Features.EldritchBlast;
+
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Selection;
@@ -14,6 +16,7 @@ using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.Extensions;
 using MicroWrath.Extensions.Components;
 using MicroWrath.Localization;
+using MicroWrath.Util;
 
 namespace HomebrewWarlock.Features
 {
@@ -41,6 +44,11 @@ namespace HomebrewWarlock.Features
             "his warlock level." + Environment.NewLine +
             "The save DC for an invocation (if it allows a save) is 10 + equivalent spell level + the warlock's " +
             "Charisma modifier." + Environment.NewLine +
+            "The four grades of invocations, in order of their relative power, are least, lesser, greater, and " +
+            "dark. A warlock begins with knowledge of one invocation, which must be of the lowest grade (least). " +
+            Environment.NewLine +
+            "Lesser invocations are available starting from level 7th level, greater invocations from 13th level, " +
+            "and dark invocations from 16th level." + Environment.NewLine +
             "Unlike other spell-like abilities, invocations are subject to arcane spell failure chance.";
 
         [LocalizedString]
@@ -52,7 +60,9 @@ namespace HomebrewWarlock.Features
         internal static readonly IMicroBlueprint<BlueprintFeatureSelection> Selection =
             new MicroBlueprint<BlueprintFeatureSelection>(GeneratedGuid.WarlockInvocationSelection);
 
-        internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeatureSelection> CreateSelection(BlueprintInitializationContext context)
+        internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeatureSelection> CreateSelection(
+            BlueprintInitializationContext context,
+            BlueprintInitializationContext.ContextInitializer<EldritchBlastFeatures> ebFeatures)
         {
             var placeholderFeature = context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get("WarlockInvocationPlaceholder"), "WarlockInvocationPlaceholder")
                 .Map((BlueprintFeature feature) =>
@@ -67,16 +77,17 @@ namespace HomebrewWarlock.Features
             return context.NewBlueprint<BlueprintFeatureSelection>(
                 GeneratedGuid.Get("WarlockInvocationSelection"),
                 "WarlockInvocationSelection")
+                .Combine(Invocations.LeastInvocationSelection.CreateSelection(context, ebFeatures))
                 .Combine(placeholderFeature)
                 .Map(features =>
                 {
-                    var (selection, placeholder) = features;
+                    var (selection, least, placeholder) = features.Expand();
 
                     selection.m_DisplayName = LocalizedStrings.Features_InvocationSelection_DisplayName;
                     selection.m_Description = LocalizedStrings.Features_InvocationSelection_Description;
                     selection.m_DescriptionShort = LocalizedStrings.Features_InvocationSelection_ShortDescription;
 
-                    selection.AddFeatures(new[] { placeholder.ToMicroBlueprint() });
+                    selection.AddFeatures(least.ToMicroBlueprint(), placeholder.ToMicroBlueprint());
 
                     return selection;
                 });

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
@@ -19,6 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\*.*" />
     <AdditionalFiles Include="$(WrathPath)\Bundles\cheatdata.json" />
     <AdditionalFiles Include="guids.json" />
   </ItemGroup>
@@ -62,10 +63,6 @@
     <None Update="Info.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Features\EldritchBlast\" />
   </ItemGroup>
 
   <Target Name="GenerateGuidsFileTarget" AfterTargets="Build">

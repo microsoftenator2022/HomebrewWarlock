@@ -23,7 +23,7 @@ using Kingmaker.Visual.MaterialEffects.Dissolve;
 using Kingmaker.ResourceLinks;
 using Kingmaker.View;
 
-namespace HomebrewWarlock.Features
+namespace HomebrewWarlock.Features.EldritchBlast
 {
     public static partial class EldritchBlast
     {
@@ -87,6 +87,7 @@ namespace HomebrewWarlock.Features
                                     textureFormat: textureFormat,
                                     mipCount: caTexture.mipmapCount,
                                     false);
+
                                 Graphics.CopyTexture(caTexture, newTex);
 
                                 var logLevel = MicroLogger.LogLevel;

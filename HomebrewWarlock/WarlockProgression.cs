@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using HomebrewWarlock.Features;
+using HomebrewWarlock.Features.EldritchBlast;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
@@ -23,7 +24,7 @@ namespace HomebrewWarlock
     {
         record class ClassFeatures(
             BlueprintFeature? Proficiencies = null,
-            BlueprintFeature? EldritchBlast = null,
+            EldritchBlastFeatures? EldritchBlastFeatures = null,
             BlueprintFeature? RayCalculateFeature = null,
             BlueprintFeature? DetectMagic = null,
             BlueprintFeature? InvocationSelection = null,
@@ -34,15 +35,17 @@ namespace HomebrewWarlock
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintProgression> Create(BlueprintInitializationContext context)
         {
+            var ebFeatures = EldritchBlastFeatures.Create(context);
+
             var features = WarlockProficiencies.Create(context)
                 .Map(p => new ClassFeatures() with { Proficiencies = p })
-                .Combine(EldritchBlast.CreateFeature(context))
-                .Map(fs => fs.Left with { EldritchBlast = fs.Right })
+                .Combine(ebFeatures)
+                .Map(fs => fs.Left with { EldritchBlastFeatures = fs.Right })
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintFeature.RayCalculateFeature))
                 .Map(fs => fs.Left with { RayCalculateFeature = fs.Right })
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintFeature.DetectMagic))
                 .Map(fs => fs.Left with { DetectMagic = fs.Right })
-                .Combine(InvocationSelection.CreateSelection(context))
+                .Combine(InvocationSelection.CreateSelection(context, ebFeatures))
                 .Map(fs => fs.Left with { InvocationSelection = fs.Right })
                 .Combine(EnergyResistance.Create(context))
                 .Map(fs => fs.Left with { EnergyResistance = fs.Right })
@@ -59,8 +62,10 @@ namespace HomebrewWarlock
                 {
                     var (progression, features) = progressionAndFeatures;
 
+                    var eldritchBlastFeatures = features.EldritchBlastFeatures!;
+                    var eldritchBlast = eldritchBlastFeatures.EldritchBlastBaseFeature!;
+
                     var proficiencies = features.Proficiencies!;
-                    var eldritchBlast = features.EldritchBlast!;
                     var rayCalculateFeature = features.RayCalculateFeature!;
                     var detectMagic = features.DetectMagic!;
                     var invocationSelection = features.InvocationSelection!;

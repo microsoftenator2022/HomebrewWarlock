@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using HomebrewWarlock.Features;
+using HomebrewWarlock.Features.EldritchBlast;
 
 using Kingmaker;
 using Kingmaker.Blueprints;
@@ -39,6 +40,9 @@ namespace HomebrewWarlock
             "harnessing his innate magical gift through fearsome determination and force of will, a " +
             "warlock can perform feats of supernatural stealth, beguile the weak-minded, or scour his foes " +
             "with blasts of eldritch power.";
+
+        internal static readonly IMicroBlueprint<BlueprintCharacterClass> Blueprint =
+            new MicroBlueprint<BlueprintCharacterClass>(GeneratedGuid.WarlockClass);
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintCharacterClass> Create(BlueprintInitializationContext context) =>
             context.NewBlueprint<BlueprintCharacterClass>(GeneratedGuid.Get(nameof(WarlockClass)), nameof(WarlockClass))

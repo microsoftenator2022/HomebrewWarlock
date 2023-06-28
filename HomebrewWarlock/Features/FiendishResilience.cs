@@ -178,7 +178,6 @@ namespace HomebrewWarlock.Features
                     {
                         c.m_Resource = resource.ToReference<BlueprintAbilityResourceReference>();
                         c.RestoreAmount = true;
-                        c.RestoreOnLevelUp = true;
                     });
 
                     return feature;

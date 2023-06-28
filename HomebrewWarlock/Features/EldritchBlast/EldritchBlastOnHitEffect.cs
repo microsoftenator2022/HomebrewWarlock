@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using HomebrewWarlock.Features.Invocations;
+
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.EntitySystem.Stats;
@@ -18,16 +20,11 @@ using Kingmaker.UnitLogic.Mechanics.Actions;
 using Kingmaker.UnitLogic.Mechanics.Components;
 
 using MicroWrath;
-using MicroWrath.BlueprintInitializationContext;
-using MicroWrath.BlueprintsDb;
 using MicroWrath.Extensions;
 using MicroWrath.Extensions.Components;
 using MicroWrath.GameActions;
-using MicroWrath.Localization;
-using MicroWrath.Util;
 
-
-namespace HomebrewWarlock.Features
+namespace HomebrewWarlock.Features.EldritchBlast
 {
     public static partial class EldritchBlast
     {
@@ -59,13 +56,6 @@ namespace HomebrewWarlock.Features
                 c.m_Progression = ContextRankProgression.AsIs;
                 c.m_StartLevel = 0;
                 c.m_StepLevel = 1;
-            });
-
-            ability.AddComponent<ContextCalculateAbilityParams>(c =>
-            {
-                c.StatType = StatType.Charisma;
-                c.ReplaceSpellLevel = true;
-                c.SpellLevel = 1;
             });
 
             return ability;
