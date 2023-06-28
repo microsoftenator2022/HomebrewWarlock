@@ -23,6 +23,11 @@ namespace HomebrewWarlock.Features.EldritchBlast
         [LocalizedString]
         internal const string DisplayName = "Eldritch Spear";
 
+        [LocalizedString]
+        internal const string Description =
+            "This blast shape invocation extends your eldritch blast attacks to great distances. Eldritch spear " +
+            "increases the range of an eldritch blast attack to 250 feet with no range increment.";
+
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(
             BlueprintInitializationContext context,
             BlueprintInitializationContext.ContextInitializer<BlueprintProjectile> projectile)
@@ -36,7 +41,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 .Map(ability =>
                 {
                     ability.m_DisplayName = LocalizedStrings.Features_EldritchBlast_EldritchSpear_DisplayName;
-                    ability.m_Description = LocalizedStrings.Features_InvocationSelection_PlaceholderName;
+                    ability.m_Description = LocalizedStrings.Features_EldritchBlast_EldritchSpear_Description;
 
                     ability.m_Icon = AssetUtils.GetSpriteAssemblyResource(
                         Assembly.GetExecutingAssembly(), $"{nameof(HomebrewWarlock)}.Resources.es_icon.png");
