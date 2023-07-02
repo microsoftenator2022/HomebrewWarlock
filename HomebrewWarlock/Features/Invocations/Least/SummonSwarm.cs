@@ -6,22 +6,25 @@ using System.Threading.Tasks;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Classes.Experience;
+using Kingmaker.Blueprints.Classes.Spells;
+using Kingmaker.UnitLogic.Abilities.Blueprints;
+using Kingmaker.UnitLogic.Abilities.Components;
+using Kingmaker.UnitLogic.Buffs.Components;
+using Kingmaker.UnitLogic.Buffs.Blueprints;
+using Kingmaker.UnitLogic.FactLogic;
+using Kingmaker.UnitLogic.Mechanics.Actions;
 
 using MicroWrath;
 using MicroWrath.BlueprintsDb;
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.Extensions;
 using MicroWrath.Extensions.Components;
+using MicroWrath.GameActions;
 using MicroWrath.Localization;
 using MicroWrath.Util;
-using Kingmaker.Blueprints.Classes.Experience;
-using Kingmaker.UnitLogic.Abilities.Blueprints;
-using Kingmaker.Blueprints.Classes.Spells;
-using Kingmaker.UnitLogic.Abilities.Components;
-using Kingmaker.UnitLogic.Mechanics.Actions;
-using Kingmaker.UnitLogic.Buffs.Blueprints;
-using Kingmaker.UnitLogic.Mechanics.Components;
-using MicroWrath.GameActions;
+using MicroWrath.Util.Linq;
+using HarmonyLib;
 
 namespace HomebrewWarlock.Features.Invocations
 {
@@ -59,9 +62,6 @@ namespace HomebrewWarlock.Features.Invocations
 
                     unit.m_Faction = summonedFaction.ToReference<BlueprintFactionReference>();
 
-                    //unit.Visual.DismemberFx = unit.Visual.BloodPuddleFx;
-                    //unit.Visual.IsNotUseDismember = false;
-
                     return unit;
                 });
 
@@ -70,12 +70,11 @@ namespace HomebrewWarlock.Features.Invocations
                 GeneratedGuid.Get("SummonSwarmSpell"),
                 nameof(GeneratedGuid.SummonSwarmSpell))
                 .Combine(unit)
-                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintBuff.GenericSwarmBuff))
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintSpellList.ClericSpellList))
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintSpellList.ShamanSpelllist))
                 .Map(bps =>
                 {
-                    var (spell, unit, swarmBuff, clericSpellList, shamanSpellList) = bps.Expand();
+                    var (spell, unit, clericSpellList, shamanSpellList) = bps.Expand();
 
                     spell.m_DisplayName = LocalizedStrings.Features_Invocations_SummonSwarm_DisplayName;
                     spell.m_Description = LocalizedStrings.Features_Invocations_SummonSwarm_SpellDescription;
@@ -88,14 +87,6 @@ namespace HomebrewWarlock.Features.Invocations
                         .First();
                         
                     spawnAction.m_Blueprint = unit.ToReference<BlueprintUnitReference>();
-                    spawnAction.AfterSpawn.Add(
-                        GameActions.ContextActionRemoveBuff(a => a.m_Buff = swarmBuff.ToReference<BlueprintBuffReference>()),
-                        GameActions.ContextActionApplyBuff(a =>
-                        {
-                            a.m_Buff = swarmBuff.ToReference<BlueprintBuffReference>();
-                            a.IsNotDispelable = true;
-                            a.DurationValue = spawnAction.DurationValue;
-                        }));
 
                     var spellListComponents = spell.Components.OfType<SpellListComponent>();
 

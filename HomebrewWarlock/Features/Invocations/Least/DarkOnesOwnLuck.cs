@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 using HarmonyLib;
 
+using HomebrewWarlock.Resources;
+
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Spells;
@@ -19,6 +21,7 @@ using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Commands.Base;
 using Kingmaker.UnitLogic.FactLogic;
+using Kingmaker.UnitLogic.Parts;
 
 using MicroWrath;
 using MicroWrath.BlueprintInitializationContext;
@@ -35,6 +38,23 @@ namespace HomebrewWarlock.Features.Invocations
     internal static class DarkOnesOwnLuck
     {
         internal const ActivatableAbilityGroup AbilityGroup = unchecked((ActivatableAbilityGroup)0x8fdde668);
+
+        [HarmonyPatch(typeof(UnitPartActivatableAbility))]
+        static class ActivatableAbilityGroupSize_Patch
+        {
+            [HarmonyPatch(nameof(UnitPartActivatableAbility.GetGroupSize))]
+            [HarmonyPrefix]
+            static bool GetGroupSize_Prefix(ActivatableAbilityGroup group, ref int __result)
+            {
+                if (group == AbilityGroup)
+                {
+                    __result = 1;
+                    return false;
+                }
+
+                return true;
+            }
+        }
 
         internal class SaveBonusComponent : UnitFactComponentDelegate
         {
@@ -120,10 +140,7 @@ namespace HomebrewWarlock.Features.Invocations
                     save = SavingThrowType.Reflex,
                     ability = ab.Left,
                     buff = ab.Right,
-                    spriteOverlay =
-                        AssetUtils.GetSpriteAssemblyResource(
-                            Assembly.GetExecutingAssembly(),
-                            $"{nameof(HomebrewWarlock)}.Resources.dol_icon_Ref.png")
+                    spriteOverlay = Sprites.DarkOnesOwnLuck.Reflex
                 });
 
 
@@ -146,10 +163,7 @@ namespace HomebrewWarlock.Features.Invocations
                     save = SavingThrowType.Fortitude,
                     ability = ab.Left,
                     buff = ab.Right,
-                    spriteOverlay =
-                        AssetUtils.GetSpriteAssemblyResource(
-                            Assembly.GetExecutingAssembly(),
-                            $"{nameof(HomebrewWarlock)}.Resources.dol_icon_Fort.png")
+                    spriteOverlay = Sprites.DarkOnesOwnLuck.Fortitude
                 });
 
             var willBuff = context.NewBlueprint<BlueprintBuff>(
@@ -171,10 +185,7 @@ namespace HomebrewWarlock.Features.Invocations
                     save = SavingThrowType.Will,
                     ability = ab.Left,
                     buff = ab.Right,
-                    spriteOverlay =
-                        AssetUtils.GetSpriteAssemblyResource(
-                            Assembly.GetExecutingAssembly(),
-                            $"{nameof(HomebrewWarlock)}.Resources.dol_icon_Will.png")
+                    spriteOverlay = Sprites.DarkOnesOwnLuck.Will
                 });
 
             var baseAbility = context.NewBlueprint<BlueprintActivatableAbility>(
@@ -199,10 +210,7 @@ namespace HomebrewWarlock.Features.Invocations
                     baseAbility.m_Description = feature.m_Description =
                         LocalizedStrings.Features_Invocations_DarkOnesOwnLuck_Description;
 
-                    baseAbility.m_Icon = feature.m_Icon =
-                        AssetUtils.GetSpriteAssemblyResource(
-                            Assembly.GetExecutingAssembly(),
-                            $"{nameof(HomebrewWarlock)}.Resources.dool_icon.png");
+                    baseAbility.m_Icon = feature.m_Icon = Sprites.DarkOnesOwnLuck.Base;
 
                     foreach (var (save, buff, ability, spriteOverlay) in abilities.Select(x => (x.save, x.buff, x.ability, x.spriteOverlay)))
                     {
@@ -221,7 +229,8 @@ namespace HomebrewWarlock.Features.Invocations
 
                         ability.m_Buff = buff.ToReference<BlueprintBuffReference>();
 
-                        ability.ActivationType = AbilityActivationType.Immediately;
+                        ability.ActivationType = AbilityActivationType.WithUnitCommand;
+                        ability.m_ActivateWithUnitCommand = UnitCommand.CommandType.Standard;
 
                         ability.HiddenInUI = true;
 

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using HomebrewWarlock.Features.EldritchBlast;
 
 using Kingmaker.Blueprints.Classes.Selection;
+using Kingmaker.UnitLogic.Abilities.Blueprints;
 
 using MicroWrath;
 using MicroWrath.BlueprintInitializationContext;
@@ -32,8 +33,6 @@ namespace HomebrewWarlock.Features.Invocations
                 .Combine(BeguilingInfluence.Create(context))
                 .Combine(DarkOnesOwnLuck.Create(context))
                 .Combine(OtherworldlyWhispers.Create(context))
-                .Combine(FrightfulBlast.Create(context))
-                .Combine(SickeningBlast.Create(context))
                 .Combine(ebFeatures)
                 .Combine(EldritchGlaive.Create(context))
                 .Map(sf =>
@@ -42,8 +41,6 @@ namespace HomebrewWarlock.Features.Invocations
                         beguilingInfluence,
                         darkOnesOwnLuck,
                         otherworldlyWhispers,
-                        frightfulBlast,
-                        sickeningBlast,
                         eldritchBlastFeatures,
                         eldritchGlaive) = sf.Expand();
 
@@ -54,10 +51,13 @@ namespace HomebrewWarlock.Features.Invocations
                         beguilingInfluence.ToMicroBlueprint(),
                         darkOnesOwnLuck.ToMicroBlueprint(),
                         otherworldlyWhispers.ToMicroBlueprint(),
-                        frightfulBlast.ToMicroBlueprint(),
-                        sickeningBlast.ToMicroBlueprint(),
-                        eldritchBlastFeatures.EldritchSpearFeature!.ToMicroBlueprint(),
-                        eldritchGlaive.ToMicroBlueprint());
+                        eldritchBlastFeatures.FrightfulBlast.Value!.feature.ToMicroBlueprint(),
+                        //sickeningBlast.ToMicroBlueprint(),
+                        eldritchBlastFeatures.EldritchSpear.Value!.ToMicroBlueprint()
+                        #if DEBUG
+                        , eldritchGlaive.ToMicroBlueprint()
+                        #endif
+                        );
 
                     return selection;
                 })

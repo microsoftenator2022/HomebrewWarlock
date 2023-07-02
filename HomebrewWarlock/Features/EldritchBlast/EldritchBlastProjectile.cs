@@ -27,6 +27,8 @@ namespace HomebrewWarlock.Features.EldritchBlast
 {
     public static partial class EldritchBlast
     {
+        static readonly IMicroBlueprint<BlueprintProjectile> ProjectileRef = new MicroBlueprint<BlueprintProjectile>(GeneratedGuid.EldritchBlastProjectile);
+
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintProjectile> CreateProjectile(BlueprintInitializationContext context)
         {
             var projectile = context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.Disintegrate00)

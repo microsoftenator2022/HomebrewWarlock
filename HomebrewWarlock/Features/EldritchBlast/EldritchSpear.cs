@@ -18,6 +18,12 @@ using MicroWrath.Util;
 
 namespace HomebrewWarlock.Features.EldritchBlast
 {
+    using BaseBlastFeatures =
+        (BlueprintFeature baseFeature,
+        BlueprintFeature rankFeature,
+        BlueprintAbility baseAbility,
+        BlueprintProjectile projectile);
+
     internal static class EldritchSpear
     {
         [LocalizedString]
@@ -26,20 +32,20 @@ namespace HomebrewWarlock.Features.EldritchBlast
         [LocalizedString]
         internal const string Description =
             "This blast shape invocation extends your eldritch blast attacks to great distances. Eldritch spear " +
-            "increases the range of an eldritch blast attack to 250 feet with no range increment.";
+            "increases the range of an eldritch blast attack to long range.";
 
-        internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(
+        internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> CreateBlast(
             BlueprintInitializationContext context,
-            BlueprintInitializationContext.ContextInitializer<BlueprintProjectile> projectile)
+            BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures)
         {
-            var ability = EldritchBlast.RangedBlastTemplate(
-                context,
-                GeneratedGuid.Get("EldritchSpearAbility"),
-                nameof(GeneratedGuid.EldritchSpearAbility),
-                projectile,
-                2)
-                .Map(ability =>
+            var ability = baseFeatures
+                .Map(bps =>
                 {
+                    var ability = AssetUtils.CloneBlueprint(
+                        bps.baseAbility,
+                        GeneratedGuid.EldritchSpearAbility,
+                        nameof(GeneratedGuid.EldritchSpearAbility));
+
                     ability.m_DisplayName = LocalizedStrings.Features_EldritchBlast_EldritchSpear_DisplayName;
                     ability.m_Description = LocalizedStrings.Features_EldritchBlast_EldritchSpear_Description;
 
@@ -52,7 +58,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("EldritchSpearFeature"),
+                GeneratedGuid.EldritchSpearFeature,
                 nameof(GeneratedGuid.EldritchSpearFeature))
                 .Combine(ability)
                 .Map(bps =>
@@ -69,6 +75,44 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 });
 
             return feature;
+
+            //var ability = EldritchBlast.RangedBlastTemplate(
+            //    context,
+            //    GeneratedGuid.Get("EldritchSpearAbility"),
+            //    nameof(GeneratedGuid.EldritchSpearAbility),
+            //    baseFeatures.projectile,
+            //    2)
+            //    .Map(ability =>
+            //    {
+            //        ability.m_DisplayName = LocalizedStrings.Features_EldritchBlast_EldritchSpear_DisplayName;
+            //        ability.m_Description = LocalizedStrings.Features_EldritchBlast_EldritchSpear_Description;
+
+            //        ability.m_Icon = AssetUtils.GetSpriteAssemblyResource(
+            //            Assembly.GetExecutingAssembly(), $"{nameof(HomebrewWarlock)}.Resources.es_icon.png");
+
+            //        ability.Range = AbilityRange.Long;
+
+            //        return ability;
+            //    });
+
+            //var blast = context.NewBlueprint<BlueprintFeature>(
+            //    GeneratedGuid.Get("EldritchSpearFeature"),
+            //    nameof(GeneratedGuid.EldritchSpearFeature))
+            //    .Combine(ability)
+            //    .Map(bps =>
+            //    {
+            //        var (feature, ability) = bps;
+
+            //        feature.m_DisplayName = ability.m_DisplayName;
+            //        feature.m_Description = ability.m_Description;
+            //        feature.m_Icon = ability.m_Icon;
+
+            //        feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
+
+            //        return (feature, ability);
+            //    });
+
+            //return blast;
         }
     }
 }

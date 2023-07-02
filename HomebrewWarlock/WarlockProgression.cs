@@ -35,17 +35,17 @@ namespace HomebrewWarlock
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintProgression> Create(BlueprintInitializationContext context)
         {
-            var ebFeatures = EldritchBlastFeatures.Create(context);
-
+            var blastFeatures = EldritchBlastFeatures.CreateFeatures(context);
+            
             var features = WarlockProficiencies.Create(context)
                 .Map(p => new ClassFeatures() with { Proficiencies = p })
-                .Combine(ebFeatures)
+                .Combine(blastFeatures)
                 .Map(fs => fs.Left with { EldritchBlastFeatures = fs.Right })
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintFeature.RayCalculateFeature))
                 .Map(fs => fs.Left with { RayCalculateFeature = fs.Right })
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintFeature.DetectMagic))
                 .Map(fs => fs.Left with { DetectMagic = fs.Right })
-                .Combine(InvocationSelection.CreateSelection(context, ebFeatures))
+                .Combine(InvocationSelection.CreateSelection(context, blastFeatures))
                 .Map(fs => fs.Left with { InvocationSelection = fs.Right })
                 .Combine(EnergyResistance.Create(context))
                 .Map(fs => fs.Left with { EnergyResistance = fs.Right })
@@ -63,7 +63,8 @@ namespace HomebrewWarlock
                     var (progression, features) = progressionAndFeatures;
 
                     var eldritchBlastFeatures = features.EldritchBlastFeatures!;
-                    var eldritchBlast = eldritchBlastFeatures.EldritchBlastBaseFeature!;
+                    var eldritchBlastBase = eldritchBlastFeatures.EldritchBlastBase.Value!;
+                    var eldritchBlastRank = eldritchBlastFeatures.EldritchBlastRank.Value!;
 
                     var proficiencies = features.Proficiencies!;
                     var rayCalculateFeature = features.RayCalculateFeature!;
@@ -76,28 +77,28 @@ namespace HomebrewWarlock
 
                     progression.AddFeatures(1,
                         proficiencies,
-                        eldritchBlast,
+                        eldritchBlastBase,
                         rayCalculateFeature,
                         invocationSelection);
 
                     progression.AddFeatures(2, detectMagic, invocationSelection);
-                    progression.AddFeatures(3, eldritchBlast, damageReduction);
+                    progression.AddFeatures(3, eldritchBlastRank, damageReduction);
                     progression.AddFeatures(4, invocationSelection, deceiveItem);
-                    progression.AddFeatures(5, eldritchBlast);
+                    progression.AddFeatures(5, eldritchBlastRank);
                     progression.AddFeatures(6, invocationSelection);
-                    progression.AddFeatures(7, eldritchBlast, damageReduction);
+                    progression.AddFeatures(7, eldritchBlastRank, damageReduction);
                     progression.AddFeatures(8, invocationSelection, fiendishResilience);
-                    progression.AddFeatures(9, eldritchBlast);
+                    progression.AddFeatures(9, eldritchBlastRank);
                     progression.AddFeatures(10, invocationSelection, energyResist.baseFeature, energyResist.selection, energyResist.selection);
-                    progression.AddFeatures(11, eldritchBlast, invocationSelection, damageReduction);
+                    progression.AddFeatures(11, eldritchBlastRank, invocationSelection, damageReduction);
                     progression.AddFeatures(13, invocationSelection, fiendishResilience);
-                    progression.AddFeatures(14, eldritchBlast);
+                    progression.AddFeatures(14, eldritchBlastRank);
                     progression.AddFeatures(15, invocationSelection, damageReduction);
                     progression.AddFeatures(16, invocationSelection);
-                    progression.AddFeatures(17, eldritchBlast);
+                    progression.AddFeatures(17, eldritchBlastRank);
                     progression.AddFeatures(18, invocationSelection, fiendishResilience);
                     progression.AddFeatures(19, damageReduction);
-                    progression.AddFeatures(20, eldritchBlast, invocationSelection, energyResist.baseFeature);
+                    progression.AddFeatures(20, eldritchBlastRank, invocationSelection, energyResist.baseFeature);
 
                     return progression;
                 });

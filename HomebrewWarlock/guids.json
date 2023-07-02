@@ -41,6 +41,8 @@
   "SummonSwarmAbility": "8cc68b15-7c46-4068-b90c-885456888656",
   "CR1_SummonedSpiderSwarm": "dfab85d5-c818-4548-88eb-3da90a871c97",
   "SummonSwarmSpell": "76928bde-b1bd-47bf-8f84-a65c21d0f2e4",
-  "GenericSwarmBuffForSummon": "cdb7924a-e1ff-4b36-b9e8-af649e746124",
-  "EldritchSpearAbility": "b59d5054-2155-4f22-88c2-2ef433163981"
+  "EldritchSpearAbility": "b59d5054-2155-4f22-88c2-2ef433163981",
+  "FrightfulBlastEssenceBuff": "f22f35d3-85bb-4ad4-ad69-54a9e574decf",
+  "FrigthfulBlastAbility": "df350b04-bb01-4ea0-9601-ef5cf516dcea",
+  "EldritchBlastRank": "fd3b8695-e6ae-4219-b249-dd0fd493d1bb"
 }
