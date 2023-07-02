@@ -54,45 +54,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 m_StepLevel = 1
             };
 
-        //[Obsolete]
-        //internal static (ContextActionDealDamage damageAction, ContextRankConfig contextRankConfig)
-        //    GetEldritchBlastBaseDamageAndConfig(
-        //    BlueprintFeatureReference ebRankFeature,
-        //    DamageEnergyType damageType = DamageEnergyType.Magic)
-        //{
-        //    return
-        //        (GetEldritchBlastDamage(damageType),
-        //        GetContextRankConfig(ebRankFeature));
-        //}
-
-        //internal static BlueprintInitializationContext.ContextInitializer<BlueprintComponentList> BlastComponents(
-        //    BlueprintInitializationContext context,
-        //    BlueprintInitializationContext.ContextInitializer<BlueprintFeature> eldritchBlastRankFeature)
-        //{
-        //    return context.NewBlueprint<BlueprintComponentList>(GeneratedGuid.Get("EldritchBlastComponents"), nameof(GeneratedGuid.EldritchBlastComponents))
-        //        .Combine(eldritchBlastRankFeature)
-        //        .Map(((BlueprintComponentList, BlueprintFeature) bps) =>
-        //        {
-        //            var (bp, ebRankFeature) = bps;
-
-        //            bp.AddComponent<ArcaneSpellFailureComponent>();
-
-        //            bp.AddComponent<ContextRankConfig>(c =>
-        //            {
-        //                c.m_Type = AbilityRankType.DamageDice;
-        //                c.m_BaseValueType = ContextRankBaseValueType.FeatureRank;
-        //                c.m_Feature = ebRankFeature.ToReference<BlueprintFeatureReference>();
-        //                c.m_Progression = ContextRankProgression.AsIs;
-        //                c.m_StartLevel = 0;
-        //                c.m_StepLevel = 1;
-        //            });
-                    
-
-        //            return bp;
-        //        });
-        //}
-
-        internal static ContextActionDealDamage GetEldritchBlastDamage(DamageEnergyType damageType = DamageEnergyType.Magic) =>
+        private static ContextActionDealDamage GetEldritchBlastDamage(DamageEnergyType damageType = DamageEnergyType.Magic) =>
             GameActions.ContextActionDealDamage(action =>
             {
                 action.m_Type = ContextActionDealDamage.Type.Damage;
@@ -127,7 +89,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
             var runAction = ability.EnsureComponent<AbilityEffectRunAction>();
 
             var conditionalEffects = new ConditionalList();
-            conditionalEffects.ConditionsChecker.Operation = Operation.Or;
+            conditionalEffects.Operation = Operation.Or;
 
             conditionalEffects.IfFalse.Add(GetEldritchBlastDamage());
 
@@ -150,7 +112,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
                     casterHasBuff.IfTrue.Add(ee.OnHitActions().ToArray());
                 });
 
-                conditionalEffects.Conditionals.Add(onHit);
+                conditionalEffects.Conditionals.Add((ee.EssenceBuff.ToReference<BlueprintBuffReference>(), onHit));
 
                 if (projectiles is null) continue;
                 if (ee.Projectiles is null || ee.Projectiles(projectiles.Type) is not { } p)
@@ -169,55 +131,59 @@ namespace HomebrewWarlock.Features.EldritchBlast
         }
     }
 
-    internal class ConditionalList : Conditional
+    internal class ConditionalList : GameAction
     {
-        public List<Conditional> Conditionals = new();
+        public List<(BlueprintBuffReference, Conditional)> Conditionals = new();
+
+        public Operation Operation = Operation.Or;
+        public ActionList IfTrue = new();
+        public ActionList IfFalse = new();
+
+        public override string GetCaption() => $"{nameof(ConditionalList)} ({Owner}, {name})";
 
         public ConditionalList() : base()
         {
-            ConditionsChecker ??= new();
-            IfTrue ??= new();
-            IfFalse ??= new();
         }
 
         public override void RunAction()
         {
-            if (ConditionsChecker.Check())
+            var results = new List<(Conditional, bool result)>();
+
+            foreach (var (buff, conditional) in Conditionals)
             {
-                var results = new List<(Conditional, bool result)>();
-
-                foreach (var conditional in Conditionals)
+                if (conditional.ConditionsChecker.Check())
                 {
-                    if (conditional.ConditionsChecker.Check())
-                    {
-                        results.Add((conditional, true));
-                        conditional.IfTrue.Run();
-                    }
-                    else
-                    {
-                        results.Add((conditional, false));
-                        conditional.IfFalse.Run();
-                    }
-                }
+                    MicroLogger.Debug(() => $"{buff} passed");
 
-                switch (ConditionsChecker.Operation)
+                    results.Add((conditional, true));
+                    conditional.IfTrue.Run();
+                }
+                else
                 {
-                    case Operation.And:
-                        if (results.Select(x => x.result).All(Functional.Identity))
-                        {
-                            IfTrue.Run();
-                            return;
-                        }
-                        break;
+                    MicroLogger.Debug(() => $"{buff} failed");
 
-                    case Operation.Or:
-                        if (results.Select(x => x.result).Any(Functional.Identity))
-                        {
-                            IfTrue.Run();
-                            return;
-                        }
-                        break;
+                    results.Add((conditional, false));
+                    conditional.IfFalse.Run();
                 }
+            }
+
+            switch (Operation)
+            {
+                case Operation.And:
+                    if (results.Select(x => x.result).All(Functional.Identity))
+                    {
+                        IfTrue.Run();
+                        return;
+                    }
+                    break;
+
+                case Operation.Or:
+                    if (results.Select(x => x.result).Any(Functional.Identity))
+                    {
+                        IfTrue.Run();
+                        return;
+                    }
+                    break;
             }
 
             IfFalse.Run();
@@ -226,20 +192,6 @@ namespace HomebrewWarlock.Features.EldritchBlast
 
     internal class AbilityDeliverProjectileVariant : AbilityDeliverProjectile
     {
-        //[HarmonyPatch(typeof(AbilityDeliverProjectile), nameof(AbilityDeliverProjectile.Projectiles), MethodType.Getter)]
-        //static class get_Projectiles_Patch
-        //{
-        //    static bool Prefix(AbilityDeliverProjectile __instance,
-        //        ref ReferenceArrayProxy<BlueprintProjectile, BlueprintProjectileReference> __result)
-        //    {
-        //        if (__instance is not AbilityDeliverProjectileVariant pv)
-        //            return true;
-
-        //        __result = pv.GetProjectiles().ToArray();
-        //        return false;
-        //    }
-        //}
-
         public List<Variant> Variants = new();
 
         private BlueprintProjectileReference[]? defaultProjectiles;

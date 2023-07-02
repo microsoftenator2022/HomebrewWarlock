@@ -52,7 +52,7 @@ namespace HomebrewWarlock.Features.Invocations
                         darkOnesOwnLuck.ToMicroBlueprint(),
                         otherworldlyWhispers.ToMicroBlueprint(),
                         eldritchBlastFeatures.FrightfulBlast.Value!.feature.ToMicroBlueprint(),
-                        //sickeningBlast.ToMicroBlueprint(),
+                        eldritchBlastFeatures.SickeningBlast.Value!.feature.ToMicroBlueprint(),
                         eldritchBlastFeatures.EldritchSpear.Value!.ToMicroBlueprint()
                         #if DEBUG
                         , eldritchGlaive.ToMicroBlueprint()

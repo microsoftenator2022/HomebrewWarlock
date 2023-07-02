@@ -36,6 +36,7 @@ namespace HomebrewWarlock.Features.Invocations
         [LocalizedString]
         internal const string DisplayName = "Frightful Blast";
 
+        [LocalizedString]
         internal const string Description =
             "This eldritch essence invocation allows you to change your eldritch blast into a frightful blast. Any " +
             "creature struck by a frightful blast must succeed on a Will save or become shaken for 1 minute. A " +
@@ -66,39 +67,11 @@ namespace HomebrewWarlock.Features.Invocations
                     var (ability, essenceBuff, debuff) = bps.Expand();
 
                     ability.m_DisplayName = LocalizedStrings.Features_Invocations_FrightfulBlast_DisplayName;
+                    ability.m_Description = LocalizedStrings.Features_Invocations_FrightfulBlast_Description;
 
                     ability.m_Buff = essenceBuff.ToReference<BlueprintBuffReference>();
 
-                    //foreach (var blast in blasts.AllBlasts.Select(b => b.ability))
-                    //{
-                    //    var runAction = blast.GetComponent<AbilityEffectRunAction>();
-
-                    //    runAction.Actions.Add(EldritchBlast.EldritchBlast.CreateEssenceEffect(essenceBuff,
-                    //        GameActions.Conditional(targetIsShaken =>
-                    //        {
-                    //            targetIsShaken.ConditionsChecker.Add(Conditions.ContextConditionHasBuffWithDescriptor(
-                    //                condition =>
-                    //                {
-                    //                    condition.SpellDescriptor = SpellDescriptor.Shaken;
-                    //                }));
-
-                    //            targetIsShaken.IfFalse.Add(
-                    //                GameActions.ContextActionSavingThrow(wavingThrow =>
-                    //                {
-                    //                    wavingThrow.Type = SavingThrowType.Will;
-                    //                    wavingThrow.Actions.Add(
-                    //                        GameActions.ContextActionConditionalSaved(save => save.Failed.Add(
-                    //                            GameActions.ContextActionApplyBuff(applyBuff =>
-                    //                            {
-                    //                                applyBuff.m_Buff = debuff.ToReference<BlueprintBuffReference>();
-                    //                                applyBuff.DurationValue.Rate = DurationRate.Minutes;
-                    //                                applyBuff.DurationValue.BonusValue = 1;
-                    //                            }))));
-                    //                }));
-                    //        })));
-                    //}
-
-                    var onHit = GameActions.Conditional(targetIsShaken =>
+                    var onHit = () => GameActions.Conditional(targetIsShaken =>
                     {
                         targetIsShaken.ConditionsChecker.Add(Conditions.ContextConditionHasBuffWithDescriptor(
                             condition =>
@@ -107,10 +80,10 @@ namespace HomebrewWarlock.Features.Invocations
                             }));
 
                         targetIsShaken.IfFalse.Add(
-                            GameActions.ContextActionSavingThrow(wavingThrow =>
+                            GameActions.ContextActionSavingThrow(savingThrow =>
                             {
-                                wavingThrow.Type = SavingThrowType.Will;
-                                wavingThrow.Actions.Add(
+                                savingThrow.Type = SavingThrowType.Will;
+                                savingThrow.Actions.Add(
                                     GameActions.ContextActionConditionalSaved(save => save.Failed.Add(
                                         GameActions.ContextActionApplyBuff(applyBuff =>
                                         {
@@ -121,7 +94,7 @@ namespace HomebrewWarlock.Features.Invocations
                             }));
                     });
 
-                    return (ability, new EldritchBlastComponents.EssenceEffect(essenceBuff, () => new[] { onHit }));
+                    return (ability, new EldritchBlastComponents.EssenceEffect(essenceBuff, () => new[] { onHit() }));
                 });
 
             var featureAndEssenceEffect = context.NewBlueprint<BlueprintFeature>(
@@ -133,7 +106,7 @@ namespace HomebrewWarlock.Features.Invocations
                     var (feature, ability, essenceEffect) = bps.Flatten();
 
                     feature.m_DisplayName = LocalizedStrings.Features_Invocations_FrightfulBlast_DisplayName;
-                    feature.m_Description = LocalizedStrings.Features_InvocationSelection_PlaceholderName;
+                    feature.m_Description = LocalizedStrings.Features_Invocations_FrightfulBlast_Description;
 
                     feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
 

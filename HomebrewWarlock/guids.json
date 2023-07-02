@@ -44,5 +44,7 @@
   "EldritchSpearAbility": "b59d5054-2155-4f22-88c2-2ef433163981",
   "FrightfulBlastEssenceBuff": "f22f35d3-85bb-4ad4-ad69-54a9e574decf",
   "FrigthfulBlastAbility": "df350b04-bb01-4ea0-9601-ef5cf516dcea",
-  "EldritchBlastRank": "fd3b8695-e6ae-4219-b249-dd0fd493d1bb"
+  "EldritchBlastRank": "fd3b8695-e6ae-4219-b249-dd0fd493d1bb",
+  "SickeningBlastAbility": "636e7698-dd87-4b78-906e-d2cb5604d690",
+  "SickeningBlastEssenceBuff": "c1c5680e-051d-491a-a6fe-e2b1e5350643"
 }

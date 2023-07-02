@@ -75,44 +75,6 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 });
 
             return feature;
-
-            //var ability = EldritchBlast.RangedBlastTemplate(
-            //    context,
-            //    GeneratedGuid.Get("EldritchSpearAbility"),
-            //    nameof(GeneratedGuid.EldritchSpearAbility),
-            //    baseFeatures.projectile,
-            //    2)
-            //    .Map(ability =>
-            //    {
-            //        ability.m_DisplayName = LocalizedStrings.Features_EldritchBlast_EldritchSpear_DisplayName;
-            //        ability.m_Description = LocalizedStrings.Features_EldritchBlast_EldritchSpear_Description;
-
-            //        ability.m_Icon = AssetUtils.GetSpriteAssemblyResource(
-            //            Assembly.GetExecutingAssembly(), $"{nameof(HomebrewWarlock)}.Resources.es_icon.png");
-
-            //        ability.Range = AbilityRange.Long;
-
-            //        return ability;
-            //    });
-
-            //var blast = context.NewBlueprint<BlueprintFeature>(
-            //    GeneratedGuid.Get("EldritchSpearFeature"),
-            //    nameof(GeneratedGuid.EldritchSpearFeature))
-            //    .Combine(ability)
-            //    .Map(bps =>
-            //    {
-            //        var (feature, ability) = bps;
-
-            //        feature.m_DisplayName = ability.m_DisplayName;
-            //        feature.m_Description = ability.m_Description;
-            //        feature.m_Icon = ability.m_Icon;
-
-            //        feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
-
-            //        return (feature, ability);
-            //    });
-
-            //return blast;
         }
     }
 }

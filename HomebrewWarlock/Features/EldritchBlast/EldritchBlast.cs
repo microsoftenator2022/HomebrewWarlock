@@ -76,51 +76,6 @@ namespace HomebrewWarlock.Features.EldritchBlast
         public static readonly IMicroBlueprint<BlueprintFeature> FeatureRef = new MicroBlueprint<BlueprintFeature>(GeneratedGuid.EldritchBlastFeature);
         public static readonly IMicroBlueprint<BlueprintFeature> RankFeatureRef = new MicroBlueprint<BlueprintFeature>(GeneratedGuid.EldritchBlastRank);
 
-        //internal static BlueprintInitializationContext.ContextInitializer<BlueprintAbility> RangedBlastTemplate(
-        //    BlueprintInitializationContext context,
-        //    BlueprintGuid guid,
-        //    string name,
-        //    BlueprintInitializationContext.ContextInitializer<BlueprintProjectile> projectile,
-        //    int equivalentSpellLevel)
-        //{
-        //    return context.NewBlueprint<BlueprintAbility>(guid, name)
-        //        .Combine(projectile)
-        //        .Map(bps =>
-        //        {
-        //            var (ability, projectile) = bps;
-
-        //            ability.Type = AbilityType.Special;
-
-        //            ability.CanTargetEnemies = true;
-        //            ability.SpellResistance = true;
-        //            ability.EffectOnAlly = AbilityEffectOnUnit.None;
-        //            ability.EffectOnEnemy = AbilityEffectOnUnit.Harmful;
-        //            ability.Animation = UnitAnimationActionCastSpell.CastAnimationStyle.Directional;
-        //            ability.ActionType = UnitCommand.CommandType.Standard;
-
-        //            ability.AddComponent<AbilityDeliverProjectile>(c =>
-        //            {
-        //                c.m_Projectiles = new[]
-        //                {
-        //                    projectile.ToReference<BlueprintProjectileReference>()
-        //                };
-
-        //                c.m_Length = new();
-        //                c.m_LineWidth = new() { m_Value = 5 };
-
-        //                c.NeedAttackRoll = true;
-
-        //                c.m_Weapon = BlueprintsDb.Owlcat.BlueprintItemWeapon.RayItem.ToReference<BlueprintItemWeapon, BlueprintItemWeaponReference>();
-        //            });
-
-        //            ability.AddInvocationComponents(equivalentSpellLevel);
-
-        //            AddDamageEffect(ability);
-
-        //            return ability;
-        //        });
-        //}
-
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintAbility> CreateAbility(
             BlueprintInitializationContext context,
             BlueprintInitializationContext.ContextInitializer<BlueprintProjectile> projectile,
@@ -175,38 +130,6 @@ namespace HomebrewWarlock.Features.EldritchBlast
             BlueprintInitializationContext.ContextInitializer<BlueprintProjectile> projectile,
             BlueprintInitializationContext.ContextInitializer<IEnumerable<EldritchBlastComponents.EssenceEffect>> essenceEffects)
         {
-            //Sprite? sprite = null;
-
-            //Sprite getSprite()
-            //{
-            //    sprite ??= AssetUtils.GetSpriteAssemblyResource(Assembly.GetExecutingAssembly(), $"{nameof(HomebrewWarlock)}.Resources.eb_icon.png");
-
-            //    if (sprite is null)
-            //        MicroLogger.Error("Missing sprite");
-
-            //    return sprite!;
-            //}
-
-            //var ability = RangedBlastTemplate(
-            //    context,
-            //    GeneratedGuid.Get("EldritchBlastAbility"),
-            //    nameof(GeneratedGuid.EldritchBlastAbility),
-            //    projectile,
-            //    1)
-            //    .Map((BlueprintAbility ability) =>
-            //    {
-            //        ability.m_DisplayName = LocalizedStrings.Features_EldritchBlast_EldritchBlast_DisplayName;
-            //        ability.m_Description = LocalizedStrings.Features_EldritchBlast_EldritchBlast_Description;
-
-            //        ability.m_Icon = getSprite();
-
-            //        ability.Range = AbilityRange.Close;
-
-            //        return ability;
-            //    });
-
-
-            //var projectile = CreateProjectile(context);
             var ability = CreateAbility(context, projectile, essenceEffects);
 
             var rankFeature = context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get("EldritchBlastRank"), nameof(GeneratedGuid.EldritchBlastRank))

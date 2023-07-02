@@ -24,6 +24,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
         public Option<BlueprintFeature> EldritchSpear { get; private set; } = Option<BlueprintFeature>.None;
 
         public Option<EssenceFeature> FrightfulBlast { get; private set; } = Option<EssenceFeature>.None;
+        public Option<EssenceFeature> SickeningBlast { get; private set; } = Option<EssenceFeature>.None;
 
         private EldritchBlastFeatures() { }
 
@@ -36,20 +37,32 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 .Map(() => new EldritchBlastFeatures());
 
             var frightfulBlast = Invocations.FrightfulBlast.Create(context);
+            var sickeningBlast = Invocations.SickeningBlast.Create(context);
 
             ebFeatures = ebFeatures
                 .Combine(frightfulBlast)
+                .Combine(sickeningBlast)
                 .Map(features =>
                 {
-                    var (ebFeatures, fb) = features;
+                    var (ebFeatures, fb, sb) = features.Expand();
                     ebFeatures.FrightfulBlast = Option.Some(fb);
+                    ebFeatures.SickeningBlast = Option.Some(sb);
                     return ebFeatures;
                 });
 
             var essenceEffects = frightfulBlast
-                .Map(fb =>
+                .Combine(sickeningBlast)
+                .Map(es =>
                 {
-                    return EnumerableExtensions.Singleton(fb.Item2);
+                    var (fb, sb) = es;
+
+                    IEnumerable<EldritchBlastComponents.EssenceEffect> ees = new[]
+                    {
+                        fb.Item2,
+                        sb.Item2
+                    };
+
+                    return ees;
                 });
 
             var baseFeatures = EldritchBlast.CreateEldritchBlast(context, projectile, essenceEffects);
