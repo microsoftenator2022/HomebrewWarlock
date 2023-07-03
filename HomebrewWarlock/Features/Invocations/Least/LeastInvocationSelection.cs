@@ -34,43 +34,34 @@ namespace HomebrewWarlock.Features.Invocations
                 .Combine(DarkOnesOwnLuck.Create(context))
                 .Combine(OtherworldlyWhispers.Create(context))
                 .Combine(ebFeatures)
-                .Combine(EldritchGlaive.Create(context))
                 .Map(sf =>
                 {
                     var (selection,
                         beguilingInfluence,
                         darkOnesOwnLuck,
                         otherworldlyWhispers,
-                        eldritchBlastFeatures,
-                        eldritchGlaive) = sf.Expand();
+                        eldritchBlastFeatures) = sf.Expand();
 
                     selection.m_DisplayName = LocalizedStrings.Features_Invocations_LeastInvocationSelection_DisplayName;
                     selection.m_Description = LocalizedStrings.Features_InvocationSelection_Description;
 
                     selection.AddFeatures(
-                        beguilingInfluence.ToMicroBlueprint(),
-                        darkOnesOwnLuck.ToMicroBlueprint(),
-                        otherworldlyWhispers.ToMicroBlueprint(),
-                        eldritchBlastFeatures.FrightfulBlast.Value!.feature.ToMicroBlueprint(),
-                        eldritchBlastFeatures.SickeningBlast.Value!.feature.ToMicroBlueprint(),
-                        eldritchBlastFeatures.EldritchSpear.Value!.ToMicroBlueprint()
-                        #if DEBUG
-                        , eldritchGlaive.ToMicroBlueprint()
-                        #endif
-                        );
+                        beguilingInfluence,
+                        darkOnesOwnLuck,
+                        otherworldlyWhispers,
+                        eldritchBlastFeatures.Essence.Least.FrightfulBlast.Feature,
+                        eldritchBlastFeatures.Essence.Least.SickeningBlast.Feature,
+                        eldritchBlastFeatures.Blasts.Least.EldritchSpear);
 
                     return selection;
                 })
-                .Combine(HideousBlow.Create(context))
                 .Combine(SummonSwarm.CreateFeature(context))
                 .Map(sf =>
                 {
                     var (selection,
-                        hideousBlow,
-                        summonSwarm) = sf.Expand();
+                        summonSwarm) = sf;
 
                     selection.AddFeatures(
-                        hideousBlow.ToMicroBlueprint(),
                         summonSwarm.ToMicroBlueprint());
 
                     return selection;

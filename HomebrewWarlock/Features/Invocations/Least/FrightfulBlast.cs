@@ -44,7 +44,7 @@ namespace HomebrewWarlock.Features.Invocations
             "takes damage normally. Creatures with immunity to mind-affecting spells and abilities or fear effects " +
             "cannot be shaken by a frightful blast.";
 
-        internal static BlueprintInitializationContext.ContextInitializer<(BlueprintFeature, EldritchBlastComponents.EssenceEffect)> Create(
+        internal static BlueprintInitializationContext.ContextInitializer<EssenceFeature> Create(
             BlueprintInitializationContext context)
         {
             var essenceBuff = context.NewBlueprint<BlueprintBuff>(
@@ -70,6 +70,8 @@ namespace HomebrewWarlock.Features.Invocations
                     ability.m_Description = LocalizedStrings.Features_Invocations_FrightfulBlast_Description;
 
                     ability.m_Buff = essenceBuff.ToReference<BlueprintBuffReference>();
+
+                    ability.Group = Invocation.ActivatableAbilityGroup;
 
                     var onHit = () => GameActions.Conditional(targetIsShaken =>
                     {
@@ -110,7 +112,7 @@ namespace HomebrewWarlock.Features.Invocations
 
                     feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
 
-                    return (feature, essenceEffect);
+                    return new EssenceFeature(feature, essenceEffect);
                 });
 
             return featureAndEssenceEffect;

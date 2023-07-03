@@ -63,8 +63,8 @@ namespace HomebrewWarlock
                     var (progression, features) = progressionAndFeatures;
 
                     var eldritchBlastFeatures = features.EldritchBlastFeatures!;
-                    var eldritchBlastBase = eldritchBlastFeatures.EldritchBlastBase.Value!;
-                    var eldritchBlastRank = eldritchBlastFeatures.EldritchBlastRank.Value!;
+                    var eldritchBlastBase = eldritchBlastFeatures.EldritchBlastBase;
+                    var eldritchBlastRank = eldritchBlastFeatures.EldritchBlastRank;
 
                     var proficiencies = features.Proficiencies!;
                     var rayCalculateFeature = features.RayCalculateFeature!;

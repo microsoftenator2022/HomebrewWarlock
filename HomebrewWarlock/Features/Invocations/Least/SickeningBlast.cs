@@ -30,7 +30,14 @@ namespace HomebrewWarlock.Features.Invocations
         [LocalizedString]
         internal const string DisplayName = "Sickening Blast";
 
-        internal static BlueprintInitializationContext.ContextInitializer<(BlueprintFeature, EldritchBlastComponents.EssenceEffect)> Create(
+        [LocalizedString]
+        internal const string Description =
+            "This eldritch essence invocation allows you to change your eldritch blast into a sickening blast. Any " +
+            "living creature struck by a sickening blast must make a Fortitude save or become sickened for 1 " +
+            "minute. A sickened creature struck by a second sickening blast is not affected by the sickening aspect " +
+            "of the blast but still takes damage normally.";
+
+        internal static BlueprintInitializationContext.ContextInitializer<EssenceFeature> Create(
             BlueprintInitializationContext context)
         {
             var essenceBuff = context.NewBlueprint<BlueprintBuff>(
@@ -53,9 +60,11 @@ namespace HomebrewWarlock.Features.Invocations
                     var (ability, essenceBuff, debuff) = bps.Expand();
 
                     ability.m_DisplayName = LocalizedStrings.Features_Invocations_SickeningBlast_DisplayName;
-                    ability.m_Description = LocalizedStrings.Features_InvocationSelection_PlaceholderName;
+                    ability.m_Description = LocalizedStrings.Features_Invocations_SickeningBlast_Description;
 
                     ability.m_Buff = essenceBuff.ToReference<BlueprintBuffReference>();
+
+                    ability.Group = Invocation.ActivatableAbilityGroup;
 
                     var onHit = () => GameActions.Conditional(targetIsShaken =>
                     {
@@ -92,11 +101,11 @@ namespace HomebrewWarlock.Features.Invocations
                     var (feature, ability, essenceEffect) = bps.Flatten();
 
                     feature.m_DisplayName = LocalizedStrings.Features_Invocations_SickeningBlast_DisplayName;
-                    feature.m_Description = LocalizedStrings.Features_InvocationSelection_PlaceholderName;
+                    feature.m_Description = LocalizedStrings.Features_Invocations_SickeningBlast_Description;
 
                     feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
 
-                    return (feature, essenceEffect);
+                    return new EssenceFeature(feature, essenceEffect);
                 });
 
             return featureAndEssenceEffect;

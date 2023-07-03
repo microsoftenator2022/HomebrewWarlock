@@ -19,6 +19,8 @@ namespace HomebrewWarlock.Features.Invocations
 {
     internal static class Invocation
     {
+        internal static readonly ExtraActivatableAbilityGroup ActivatableAbilityGroup = new(0x8a31cafe);
+
         internal static void AddInvocationComponents(this BlueprintAbility invocation, int equivalentSpellLevel = 1)
         {
             invocation.AddComponent<ContextCalculateAbilityParams>(c =>

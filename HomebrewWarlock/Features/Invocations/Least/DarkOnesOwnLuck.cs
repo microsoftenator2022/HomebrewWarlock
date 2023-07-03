@@ -37,24 +37,26 @@ namespace HomebrewWarlock.Features.Invocations
 {
     internal static class DarkOnesOwnLuck
     {
-        internal const ActivatableAbilityGroup AbilityGroup = unchecked((ActivatableAbilityGroup)0x8fdde668);
+        //internal const ActivatableAbilityGroup AbilityGroup = unchecked((ActivatableAbilityGroup)0x8fdde668);
 
-        [HarmonyPatch(typeof(UnitPartActivatableAbility))]
-        static class ActivatableAbilityGroupSize_Patch
-        {
-            [HarmonyPatch(nameof(UnitPartActivatableAbility.GetGroupSize))]
-            [HarmonyPrefix]
-            static bool GetGroupSize_Prefix(ActivatableAbilityGroup group, ref int __result)
-            {
-                if (group == AbilityGroup)
-                {
-                    __result = 1;
-                    return false;
-                }
+        internal static readonly ExtraActivatableAbilityGroup AbilityGroup = new(0x8fdde668);
 
-                return true;
-            }
-        }
+        //[HarmonyPatch(typeof(UnitPartActivatableAbility))]
+        //static class ActivatableAbilityGroupSize_Patch
+        //{
+        //    [HarmonyPatch(nameof(UnitPartActivatableAbility.GetGroupSize))]
+        //    [HarmonyPrefix]
+        //    static bool GetGroupSize_Prefix(ActivatableAbilityGroup group, ref int __result)
+        //    {
+        //        if (group == AbilityGroup)
+        //        {
+        //            __result = 1;
+        //            return false;
+        //        }
+
+        //        return true;
+        //    }
+        //}
 
         internal class SaveBonusComponent : UnitFactComponentDelegate
         {

@@ -79,15 +79,22 @@ namespace HomebrewWarlock.Features
                 "WarlockInvocationSelection")
                 .Combine(Invocations.LeastInvocationSelection.CreateSelection(context, ebFeatures))
                 .Combine(placeholderFeature)
+                .Combine(ebFeatures)
                 .Map(features =>
                 {
-                    var (selection, least, placeholder) = features.Expand();
+                    var (selection, least, placeholder, ebFeatures) = features.Expand();
 
                     selection.m_DisplayName = LocalizedStrings.Features_InvocationSelection_DisplayName;
                     selection.m_Description = LocalizedStrings.Features_InvocationSelection_Description;
                     selection.m_DescriptionShort = LocalizedStrings.Features_InvocationSelection_ShortDescription;
 
-                    selection.AddFeatures(least.ToMicroBlueprint(), placeholder.ToMicroBlueprint());
+                    selection.AddFeatures(
+                        least,
+                        placeholder
+#if DEBUG
+                        , ebFeatures.Essence.Lesser.BrimstoneBlast.Feature
+#endif
+                        );
 
                     return selection;
                 });

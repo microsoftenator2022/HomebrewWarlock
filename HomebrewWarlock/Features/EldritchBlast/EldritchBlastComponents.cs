@@ -27,6 +27,8 @@ using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Mechanics.Actions;
 using Kingmaker.UnitLogic.Mechanics.Components;
+using Kingmaker.UnitLogic.Mechanics.Conditions;
+using Kingmaker.Utility;
 
 using MicroWrath;
 using MicroWrath.BlueprintInitializationContext;
@@ -36,6 +38,10 @@ using MicroWrath.Extensions;
 using MicroWrath.Extensions.Components;
 using MicroWrath.GameActions;
 using MicroWrath.Util;
+
+using Newtonsoft.Json;
+
+using Owlcat.Runtime.Core.Utils;
 
 using UnityEngine;
 
@@ -73,7 +79,8 @@ namespace HomebrewWarlock.Features.EldritchBlast
             BlueprintBuff EssenceBuff,
             Func<IEnumerable<GameAction>> OnHitActions,
             DamageEnergyType DamageType = DamageEnergyType.Magic,
-            Func<AbilityProjectileType, BlueprintProjectileReference[]?>? Projectiles = null);
+            IEnumerable<(AbilityProjectileType type, BlueprintProjectileReference[] projectiles)>?
+            Projectiles = null);
 
         internal static BlueprintAbility AddBlastComponents(
             BlueprintAbility ability,
@@ -115,7 +122,11 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 conditionalEffects.Conditionals.Add((ee.EssenceBuff.ToReference<BlueprintBuffReference>(), onHit));
 
                 if (projectiles is null) continue;
-                if (ee.Projectiles is null || ee.Projectiles(projectiles.Type) is not { } p)
+                if (ee.Projectiles is null ||
+                    ee.Projectiles
+                        .Where(p => p.type == projectiles.Type)
+                        .Select(p => p.projectiles)
+                        .FirstOrDefault() is not { } p)
                     continue;
 
                 var variant = new AbilityDeliverProjectileVariant.Variant();
@@ -194,29 +205,42 @@ namespace HomebrewWarlock.Features.EldritchBlast
     {
         public List<Variant> Variants = new();
 
+        [JsonIgnore]
         private BlueprintProjectileReference[]? defaultProjectiles;
 
         public BlueprintProjectileReference[] Default => defaultProjectiles ??= base.m_Projectiles;
 
         public BlueprintProjectileReference[] GetProjectiles() => Variants
-            .Where(v => v.ConditionsChecker.Check())
+            .Where(v => v.Check())
             .Select(v => v.Projectiles)
             .FirstOrDefault() ?? Default;
 
-        public override IEnumerator<AbilityDeliveryTarget> Deliver(AbilityExecutionContext context, Kingmaker.Utility.TargetWrapper target)
+        public override IEnumerator<AbilityDeliveryTarget> Deliver(AbilityExecutionContext context, TargetWrapper target)
         {
             defaultProjectiles ??= base.m_Projectiles;
 
-            m_Projectiles = GetProjectiles();
+            using (context.GetDataScope(target))
+                m_Projectiles = GetProjectiles();
 
             return base.Deliver(context, target);
         }
 
-        public class Variant
+        public class Variant : ContextAction
         {
-            public ConditionsChecker ConditionsChecker = new();
+            public ConditionsChecker ConditionsChecker = MicroWrath.Default.ConditionsChecker;
 
             public BlueprintProjectileReference[]? Projectiles;
+
+            public override string GetCaption() => $"{this}";
+            public override void RunAction() => result = ConditionsChecker.Check();
+
+            [JsonIgnore]
+            private bool result;
+            public bool Check()
+            {
+                RunAction();
+                return result;
+            }
         }
     }
 }
