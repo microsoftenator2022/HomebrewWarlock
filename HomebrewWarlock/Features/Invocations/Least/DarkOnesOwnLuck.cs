@@ -142,7 +142,7 @@ namespace HomebrewWarlock.Features.Invocations
                     save = SavingThrowType.Reflex,
                     ability = ab.Left,
                     buff = ab.Right,
-                    spriteOverlay = Sprites.DarkOnesOwnLuck.Reflex
+                    sprite = Sprites.DarkOnesOwnLuck.Reflex
                 });
 
 
@@ -165,7 +165,7 @@ namespace HomebrewWarlock.Features.Invocations
                     save = SavingThrowType.Fortitude,
                     ability = ab.Left,
                     buff = ab.Right,
-                    spriteOverlay = Sprites.DarkOnesOwnLuck.Fortitude
+                    sprite = Sprites.DarkOnesOwnLuck.Fortitude
                 });
 
             var willBuff = context.NewBlueprint<BlueprintBuff>(
@@ -187,7 +187,7 @@ namespace HomebrewWarlock.Features.Invocations
                     save = SavingThrowType.Will,
                     ability = ab.Left,
                     buff = ab.Right,
-                    spriteOverlay = Sprites.DarkOnesOwnLuck.Will
+                    sprite = Sprites.DarkOnesOwnLuck.Will
                 });
 
             var baseAbility = context.NewBlueprint<BlueprintActivatableAbility>(
@@ -214,7 +214,7 @@ namespace HomebrewWarlock.Features.Invocations
 
                     baseAbility.m_Icon = feature.m_Icon = Sprites.DarkOnesOwnLuck.Base;
 
-                    foreach (var (save, buff, ability, spriteOverlay) in abilities.Select(x => (x.save, x.buff, x.ability, x.spriteOverlay)))
+                    foreach (var (save, buff, ability, sprite) in abilities.Select(x => (x.save, x.buff, x.ability, x.sprite)))
                     {
                         buff.m_Description = ability.m_Description = feature.m_Description;
 
@@ -236,7 +236,7 @@ namespace HomebrewWarlock.Features.Invocations
 
                         ability.HiddenInUI = true;
 
-                        ability.m_Icon = spriteOverlay;
+                        ability.m_Icon = sprite;
 
                         //ability.AddComponent<UI.ForeIcon>(c => c.Icon = spriteOverlay);
                     }

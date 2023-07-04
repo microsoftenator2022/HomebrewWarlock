@@ -91,6 +91,7 @@ namespace HomebrewWarlock
                     progression.AddFeatures(9, eldritchBlastRank);
                     progression.AddFeatures(10, invocationSelection, energyResist.baseFeature, energyResist.selection, energyResist.selection);
                     progression.AddFeatures(11, eldritchBlastRank, invocationSelection, damageReduction);
+                    // progression.AddFeatures(12, imbueItem);
                     progression.AddFeatures(13, invocationSelection, fiendishResilience);
                     progression.AddFeatures(14, eldritchBlastRank);
                     progression.AddFeatures(15, invocationSelection, damageReduction);
@@ -99,6 +100,15 @@ namespace HomebrewWarlock
                     progression.AddFeatures(18, invocationSelection, fiendishResilience);
                     progression.AddFeatures(19, damageReduction);
                     progression.AddFeatures(20, eldritchBlastRank, invocationSelection, energyResist.baseFeature);
+
+                    progression.UIGroups = new UIGroup[]
+                    {
+                        new() { m_Features = new()
+                        {
+                            eldritchBlastBase.ToReference<BlueprintFeatureBaseReference>(),
+                            eldritchBlastRank.ToReference<BlueprintFeatureBaseReference>()
+                        } }
+                    };
 
                     return progression;
                 });

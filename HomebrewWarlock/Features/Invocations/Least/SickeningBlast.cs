@@ -89,7 +89,7 @@ namespace HomebrewWarlock.Features.Invocations
                             }));
                     });
 
-                    return (ability, new EldritchBlastComponents.EssenceEffect(essenceBuff, () => new[] { onHit() }));
+                    return (ability, new EldritchBlastComponents.EssenceEffect(essenceBuff, () => new[] { onHit() }, 2));
                 });
 
             var featureAndEssenceEffect = context.NewBlueprint<BlueprintFeature>(

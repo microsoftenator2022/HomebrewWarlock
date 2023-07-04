@@ -11,14 +11,19 @@ using HomebrewWarlock.Features.Invocations;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Controllers.Projectiles;
+using Kingmaker.Designers;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
+using Kingmaker.Designers.EventConditionActionSystem.ContextData;
 using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Enums;
 using Kingmaker.Enums.Damage;
 using Kingmaker.ResourceLinks;
 using Kingmaker.RuleSystem;
+using Kingmaker.RuleSystem.Rules.Abilities;
 using Kingmaker.RuleSystem.Rules.Damage;
+using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Components;
@@ -78,9 +83,9 @@ namespace HomebrewWarlock.Features.EldritchBlast
         internal record class EssenceEffect(
             BlueprintBuff EssenceBuff,
             Func<IEnumerable<GameAction>> OnHitActions,
+            int EquivalentSpellLevel,
             DamageEnergyType DamageType = DamageEnergyType.Magic,
-            IEnumerable<(AbilityProjectileType type, BlueprintProjectileReference[] projectiles)>?
-            Projectiles = null);
+            IEnumerable<(AbilityProjectileType type, BlueprintProjectileReference[] projectiles)>? Projectiles = null);
 
         internal static BlueprintAbility AddBlastComponents(
             BlueprintAbility ability,
@@ -89,7 +94,11 @@ namespace HomebrewWarlock.Features.EldritchBlast
             IEnumerable<EssenceEffect> essenceEffects,
             Action<AbilityDeliverProjectile>? initProjectile = null)
         {
-            ability.AddInvocationComponents(equivalentSpellLevel);
+            //ability.AddInvocationComponents(equivalentSpellLevel);
+
+            ability.AddComponent<ArcaneSpellFailureComponent>();
+
+            ability.AddComponent(new EldritchBlastCalculateSpellLevel(equivalentSpellLevel));
 
             ability.AddComponent(GetContextRankConfig(ebRankFeature));
 
@@ -108,6 +117,10 @@ namespace HomebrewWarlock.Features.EldritchBlast
 
             foreach (var ee in essenceEffects)
             {
+                var esl = ee.EssenceBuff.EnsureComponent<EldritchBlastEssenceComponent>();
+                
+                esl.EquivalentSpellLevel = Math.Max(esl.EquivalentSpellLevel, ee.EquivalentSpellLevel);
+
                 var buffCondition = Conditions.ContextConditionCasterHasFact(condition =>
                     condition.m_Fact = ee.EssenceBuff.ToReference<BlueprintUnitFactReference>());
 
@@ -241,6 +254,69 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 RunAction();
                 return result;
             }
+        }
+    }
+
+    internal class EldritchBlastCalculateSpellLevel : ContextCalculateAbilityParams
+    {
+        public EldritchBlastCalculateSpellLevel() : this(1) { }
+
+        public EldritchBlastCalculateSpellLevel(int equivalentSpellLevel)
+        {
+            SpellLevel = BaseEquivalentSpellLevel = equivalentSpellLevel;
+            StatType = StatType.Charisma;
+            ReplaceSpellLevel = true;
+        }
+
+        public int BaseEquivalentSpellLevel;
+
+        public override AbilityParams Calculate(MechanicsContext context)
+        {
+            RecalculateSpellLevel(context);
+
+            return base.Calculate(context);
+        }
+
+        public void RecalculateSpellLevel(MechanicsContext context)
+        {
+            if (context.MaybeOwner is not { } owner) return;
+
+            if (owner.Buffs.Enumerable
+                .Where(b => b.IsTurnedOn)
+                .SelectMany(b => b.Blueprint.ComponentsArray.OfType<EldritchBlastEssenceComponent>())
+                .FirstOrDefault() is { } essence)
+                this.SpellLevel = Math.Max(essence.EquivalentSpellLevel, this.BaseEquivalentSpellLevel);
+            else this.SpellLevel = this.BaseEquivalentSpellLevel;
+        }
+    }
+
+    internal class EldritchBlastEssenceComponent : UnitFactComponentDelegate
+    {
+        public int EquivalentSpellLevel = 1;
+
+        void RecalculateBlastDCs()
+        {
+            if (Context is null || Owner is null) return;
+
+            foreach (var component in Owner.Abilities.Enumerable
+                .SelectMany(a => a.Blueprint.Components.OfType<EldritchBlastCalculateSpellLevel>()))
+            {
+                component.RecalculateSpellLevel(Context);
+            }
+        }
+
+        public override void OnTurnOn()
+        {
+            RecalculateBlastDCs();
+
+            base.OnTurnOn();
+        }
+
+        public override void OnTurnOff()
+        {
+            RecalculateBlastDCs();
+
+            base.OnTurnOff();
         }
     }
 }

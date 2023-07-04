@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using HomebrewWarlock.Resources;
+
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Enums;
@@ -33,7 +35,7 @@ namespace HomebrewWarlock.Features.Invocations
                     feature.m_DisplayName = LocalizedStrings.Features_Invocations_BeguilingInfluence_DisplayName;
                     feature.m_Description = LocalizedStrings.Features_Invocations_BeguilingInfluence_Description;
 
-                    feature.m_Icon = AssetUtils.Direct.GetSprite("494cc3f31fcb2a24cb7e69ec5df0055c", 21300000);
+                    feature.m_Icon = Sprites.BeguilingInfluence;
 
                     feature.AddAddStatBonus(c =>
                     {

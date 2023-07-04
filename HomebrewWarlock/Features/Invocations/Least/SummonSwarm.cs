@@ -25,6 +25,7 @@ using MicroWrath.Localization;
 using MicroWrath.Util;
 using MicroWrath.Util.Linq;
 using HarmonyLib;
+using HomebrewWarlock.Resources;
 
 namespace HomebrewWarlock.Features.Invocations
 {
@@ -79,7 +80,7 @@ namespace HomebrewWarlock.Features.Invocations
                     spell.m_DisplayName = LocalizedStrings.Features_Invocations_SummonSwarm_DisplayName;
                     spell.m_Description = LocalizedStrings.Features_Invocations_SummonSwarm_SpellDescription;
 
-                    spell.m_Icon = AssetUtils.Direct.GetSprite("4abed12203b403a47b0b32425580e5bb", 21300000);
+                    spell.m_Icon = Sprites.SummonSwarm;
 
                     var spawnAction = spell.Components
                         .OfType<AbilityEffectRunAction>()

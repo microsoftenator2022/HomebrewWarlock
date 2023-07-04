@@ -204,12 +204,12 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                                 ab.m_Buff = applyBuff.ToReference<BlueprintBuffReference>();
                                 ab.DurationValue.BonusValue = 1;
                             }))));
-
                     });
 
                     return (ability, new EldritchBlastComponents.EssenceEffect(
                     essenceBuff,
-                    () => new GameAction[] { onHit() },
+                    () => new[] { onHit() },
+                    3,
                     DamageEnergyType.Fire,
                     new []
                     { 

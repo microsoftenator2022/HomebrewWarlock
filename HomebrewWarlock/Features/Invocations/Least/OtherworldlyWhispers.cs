@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using HomebrewWarlock.Resources;
+
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.EntitySystem.Stats;
 
@@ -34,7 +36,7 @@ namespace HomebrewWarlock.Features.Invocations
                     feature.m_DisplayName = LocalizedStrings.Features_Invocations_OtherworldlyWhispers_DisplayName;
                     feature.m_Description = LocalizedStrings.Features_Invocations_OtherworldlyWhispers_Description;
 
-                    feature.m_Icon = AssetUtils.Direct.GetSprite("aec14e47a17206049aea57b6e325b900", 21300000);
+                    feature.m_Icon = Sprites.OtherworldlyWhispers;
 
                     feature.AddAddStatBonus(c =>
                     {
