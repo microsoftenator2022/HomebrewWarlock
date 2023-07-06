@@ -52,5 +52,9 @@
   "BrimstoneBlastEssenceBuff": "f072082f-ec36-42d7-af8e-420e9584207a",
   "BrimstoneBlastFeature": "6a1aba86-1092-4c35-9e65-621fb8a82c97",
   "BrimstoneBlastPerRoundDamage": "1fb3206c-af9d-40e5-9865-3b0fa2e429fc",
-  "BrimstoneBlastApplyPerRoundDamage": "10c3df14-c4df-40bf-9c2f-10c5b7b0011a"
+  "BrimstoneBlastApplyPerRoundDamage": "10c3df14-c4df-40bf-9c2f-10c5b7b0011a",
+  "HideousBlowAbility": "225b5e0d-1811-48ad-96a8-9dabbde3087c",
+  "HideousBlowWeaponEnchantment": "989bb850-4a4b-4e77-9c38-4c72547bfee0",
+  "HideousBlowOnHitAbility": "5ca6b666-6019-47fc-938a-9c03cc3e7272",
+  "HideousBlowAttackAbility": "b28e9e8a-4772-41c2-a2c7-b45485630c9c"
 }

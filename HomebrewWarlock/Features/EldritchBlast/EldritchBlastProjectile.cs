@@ -5,23 +5,28 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Kingmaker.Blueprints;
+using Kingmaker.ResourceLinks;
+using Kingmaker.View;
+using Kingmaker.Visual.MaterialEffects.RimLighting;
+using Kingmaker.Visual.MaterialEffects.Dissolve;
+
+
+
 
 using MicroWrath;
-using MicroWrath.Util.Assets;
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.BlueprintsDb;
 using MicroWrath.Extensions;
 using MicroWrath.Extensions.Components;
 using MicroWrath.GameActions;
 using MicroWrath.Localization;
+using MicroWrath.Util.Assets;
 using MicroWrath.Util;
 using MicroWrath.Util.Unity;
 
 using UnityEngine;
-using Kingmaker.Visual.MaterialEffects.RimLighting;
-using Kingmaker.Visual.MaterialEffects.Dissolve;
-using Kingmaker.ResourceLinks;
-using Kingmaker.View;
+using UnityEngine.Rendering;
+using Unity.Collections;
 
 namespace HomebrewWarlock.Features.EldritchBlast
 {
@@ -61,42 +66,58 @@ namespace HomebrewWarlock.Features.EldritchBlast
 
                 const string rampTextureName = "_ColorAlphaRamp";
 
-                if (psr.material.GetTexture(rampTextureName) is { } caTexture)
+                if (psr.material.GetTexture(rampTextureName) is Texture2D caTexture)
                 {
                     var textureFormat = TextureFormat.RGBA32;
 
-                    var hdr = psr.material.name.ToLowerInvariant().Contains("hdr");
+                    var readOnly = !caTexture.isReadable;
 
-                    if (caTexture is Texture2D t2d)
+                    if (readOnly)
                     {
-                        textureFormat = t2d.format;
+                        var copy = new Texture2D(caTexture.width, caTexture.height, TextureFormat.RGBA32, false);
+
+                        Graphics.ConvertTexture(caTexture, copy);
+
+                        var request = AsyncGPUReadback.Request(copy, 0, TextureFormat.RGBA32);
+                        
+                        request.WaitForCompletion();
+
+                        var data = request.GetData<Color32>(0);
+
+                        var newTexture = new Texture2D(caTexture.width, caTexture.height, TextureFormat.RGBA32, false);
+                        
+                        newTexture.LoadRawTextureData(data);
+                        newTexture.Apply();
+
+                        caTexture = newTexture;
                     }
                     else
                     {
-                        MicroLogger.Warning($"{caTexture.name} is not {typeof(Texture2D)}");
+                        var newTexture = new Texture2D(
+                            caTexture.width,
+                            caTexture.height,
+                            textureFormat: textureFormat,
+                            mipCount: caTexture.mipmapCount,
+                            false);
+
+                        Graphics.CopyTexture(caTexture, newTexture);
+
+                        caTexture = newTexture;
                     }
-
-                    var newTex = new Texture2D(
-                        caTexture.width,
-                        caTexture.height,
-                        textureFormat: textureFormat,
-                        mipCount: caTexture.mipmapCount,
-                        false);
-
-                    Graphics.CopyTexture(caTexture, newTex);
 
                     var logLevel = MicroLogger.LogLevel;
 
                     if (logLevel == MicroLogger.Severity.Debug)
                         MicroLogger.LogLevel = MicroLogger.Severity.Info;
 
-                    var newPixels = newTex.GetPixels().Select(f).ToArray();
+                    var newPixels = caTexture.GetPixels().Select(f).ToArray();
 
                     MicroLogger.LogLevel = logLevel;
 
                     if (textureFormat.SupportsSetPixel())
                     {
-                        newTex.SetPixels(newPixels);
+                        caTexture.SetPixels(newPixels);
+                        caTexture.Apply();
                     }
                     else
                     {
@@ -109,14 +130,13 @@ namespace HomebrewWarlock.Features.EldritchBlast
 
                         tempRGBA.SetPixels(newPixels);
                         tempRGBA.Compress(false);
-                        tempRGBA.Apply(true, true);
+                        tempRGBA.Apply(true, readOnly);
 
-                        Graphics.CopyTexture(tempRGBA, newTex);
+                        Graphics.CopyTexture(tempRGBA, caTexture);
+                        UnityEngine.Object.Destroy(tempRGBA);
                     }
 
-                    newTex.Apply();
-
-                    psr.material.SetTexture(rampTextureName, newTex);
+                    psr.material.SetTexture(rampTextureName, caTexture);
                 }
 
                 var cot = ps.colorOverLifetime;

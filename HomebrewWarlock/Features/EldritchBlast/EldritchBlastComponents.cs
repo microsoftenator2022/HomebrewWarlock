@@ -10,6 +10,7 @@ using HomebrewWarlock.Features.Invocations;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Controllers.Projectiles;
 using Kingmaker.Designers;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
@@ -19,8 +20,10 @@ using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Enums;
 using Kingmaker.Enums.Damage;
+using Kingmaker.PubSubSystem;
 using Kingmaker.ResourceLinks;
 using Kingmaker.RuleSystem;
+using Kingmaker.RuleSystem.Rules;
 using Kingmaker.RuleSystem.Rules.Abilities;
 using Kingmaker.RuleSystem.Rules.Damage;
 using Kingmaker.UnitLogic;
@@ -87,38 +90,17 @@ namespace HomebrewWarlock.Features.EldritchBlast
             DamageEnergyType DamageType = DamageEnergyType.Magic,
             IEnumerable<(AbilityProjectileType type, BlueprintProjectileReference[] projectiles)>? Projectiles = null);
 
-        internal static BlueprintAbility AddBlastComponents(
-            BlueprintAbility ability,
-            int equivalentSpellLevel,
-            BlueprintFeatureReference ebRankFeature,
-            IEnumerable<EssenceEffect> essenceEffects,
-            Action<AbilityDeliverProjectile>? initProjectile = null)
+        internal static ConditionalList GetOnHitEffect(IEnumerable<EssenceEffect> essenceEffects)
         {
-            //ability.AddInvocationComponents(equivalentSpellLevel);
-
-            ability.AddComponent<ArcaneSpellFailureComponent>();
-
-            ability.AddComponent(new EldritchBlastCalculateSpellLevel(equivalentSpellLevel));
-
-            ability.AddComponent(GetContextRankConfig(ebRankFeature));
-
-            var runAction = ability.EnsureComponent<AbilityEffectRunAction>();
-
             var conditionalEffects = new ConditionalList();
             conditionalEffects.Operation = Operation.Or;
 
             conditionalEffects.IfFalse.Add(GetEldritchBlastDamage());
 
-            AbilityDeliverProjectileVariant? projectiles = null;
-            if (initProjectile is not null)
-            {
-                projectiles = ability.AddComponent<AbilityDeliverProjectileVariant>(initProjectile);
-            }
-
             foreach (var ee in essenceEffects)
             {
                 var esl = ee.EssenceBuff.EnsureComponent<EldritchBlastEssenceComponent>();
-                
+
                 esl.EquivalentSpellLevel = Math.Max(esl.EquivalentSpellLevel, ee.EquivalentSpellLevel);
 
                 var buffCondition = Conditions.ContextConditionCasterHasFact(condition =>
@@ -133,6 +115,55 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 });
 
                 conditionalEffects.Conditionals.Add((ee.EssenceBuff.ToReference<BlueprintBuffReference>(), onHit));
+            }
+
+            return conditionalEffects;
+        }
+
+        internal static BlueprintAbility AddBlastComponents(
+            BlueprintAbility ability,
+            int equivalentSpellLevel,
+            BlueprintFeatureReference ebRankFeature,
+            IEnumerable<EssenceEffect> essenceEffects,
+            Action<AbilityDeliverProjectile>? initProjectile = null)
+        {
+            ability.AddComponent<ArcaneSpellFailureComponent>();
+
+            ability.AddComponent(new EldritchBlastCalculateSpellLevel(equivalentSpellLevel));
+
+            ability.AddComponent(GetContextRankConfig(ebRankFeature));
+
+            var runAction = ability.EnsureComponent<AbilityEffectRunAction>();
+
+            //var conditionalEffects = new ConditionalList();
+            //conditionalEffects.Operation = Operation.Or;
+
+            //conditionalEffects.IfFalse.Add(GetEldritchBlastDamage());
+
+            AbilityDeliverProjectileVariant? projectiles = null;
+            if (initProjectile is not null)
+            {
+                projectiles = ability.AddComponent<AbilityDeliverProjectileVariant>(initProjectile);
+            }
+
+            foreach (var ee in essenceEffects)
+            {
+                //var esl = ee.EssenceBuff.EnsureComponent<EldritchBlastEssenceComponent>();
+
+                //esl.EquivalentSpellLevel = Math.Max(esl.EquivalentSpellLevel, ee.EquivalentSpellLevel);
+
+                var buffCondition = Conditions.ContextConditionCasterHasFact(condition =>
+                    condition.m_Fact = ee.EssenceBuff.ToReference<BlueprintUnitFactReference>());
+
+                //var onHit = GameActions.Conditional(casterHasBuff =>
+                //{
+                //    casterHasBuff.ConditionsChecker.Add(buffCondition);
+
+                //    casterHasBuff.IfTrue.Add(GetEldritchBlastDamage(ee.DamageType));
+                //    casterHasBuff.IfTrue.Add(ee.OnHitActions().ToArray());
+                //});
+
+                //conditionalEffects.Conditionals.Add((ee.EssenceBuff.ToReference<BlueprintBuffReference>(), onHit));
 
                 if (projectiles is null) continue;
                 if (ee.Projectiles is null ||
@@ -149,7 +180,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 projectiles.Variants.Add(variant);
             }
 
-            runAction.AddActions(conditionalEffects);
+            runAction.AddActions(GetOnHitEffect(essenceEffects));
 
             return ability;
         }
@@ -177,14 +208,14 @@ namespace HomebrewWarlock.Features.EldritchBlast
             {
                 if (conditional.ConditionsChecker.Check())
                 {
-                    MicroLogger.Debug(() => $"{buff} passed");
+                    //MicroLogger.Debug(() => $"{buff} passed");
 
                     results.Add((conditional, true));
                     conditional.IfTrue.Run();
                 }
                 else
                 {
-                    MicroLogger.Debug(() => $"{buff} failed");
+                    //MicroLogger.Debug(() => $"{buff} failed");
 
                     results.Add((conditional, false));
                     conditional.IfFalse.Run();
@@ -317,6 +348,20 @@ namespace HomebrewWarlock.Features.EldritchBlast
             RecalculateBlastDCs();
 
             base.OnTurnOff();
+        }
+    }
+
+    internal class EnchantmentRemoveSelf : ContextAction
+    {
+        public override string GetCaption() => "Remove self";
+        public override void RunAction()
+        {
+            ItemEnchantment.Data data = ContextData<ItemEnchantment.Data>.Current;
+
+            var enchant = data.ItemEnchantment;
+
+            enchant.DestroyFx();
+            enchant.Owner.RemoveEnchantment(enchant);
         }
     }
 }

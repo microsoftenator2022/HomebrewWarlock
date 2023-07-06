@@ -14,8 +14,6 @@ using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.Util;
 using MicroWrath.Util.Linq;
 
-using static HomebrewWarlock.Features.EldritchBlast.EldritchBlastFeatures.BlastFeatures;
-
 namespace HomebrewWarlock.Features.EldritchBlast
 {
     //using EssenceFeature = (BlueprintFeature feature, EldritchBlastComponents.EssenceEffect essence);
@@ -29,6 +27,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
             internal class LeastBlasts
             {
                 public BlueprintFeature EldritchSpear = null!;
+                public BlueprintFeature HideousBlow = null!;
             }
             public readonly LeastBlasts Least = new();
 
@@ -149,15 +148,18 @@ namespace HomebrewWarlock.Features.EldritchBlast
                     return ebFeatures;
                 });
 
-            var eldritchSpear = Features.EldritchBlast.EldritchSpear.CreateBlast(context, baseFeatures);
+            var eldritchSpear = EldritchSpear.CreateBlast(context, baseFeatures);
+            var hideousBlow = HideousBlow.Create(context, baseFeatures, essenceEffects);
 
             ebFeatures = ebFeatures
                 .Combine(eldritchSpear)
+                .Combine(hideousBlow)
                 .Map(features =>
                 {
-                    var (ebFeatures, es) = features;
+                    var (ebFeatures, es, hb) = features.Expand();
 
                     ebFeatures.Blasts.Least.EldritchSpear = es;
+                    ebFeatures.Blasts.Least.HideousBlow = hb;
 
                     return ebFeatures;
                 });

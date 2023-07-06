@@ -51,7 +51,8 @@ namespace HomebrewWarlock.Features.Invocations
                         otherworldlyWhispers,
                         eldritchBlastFeatures.Essence.Least.FrightfulBlast.Feature,
                         eldritchBlastFeatures.Essence.Least.SickeningBlast.Feature,
-                        eldritchBlastFeatures.Blasts.Least.EldritchSpear);
+                        eldritchBlastFeatures.Blasts.Least.EldritchSpear,
+                        eldritchBlastFeatures.Blasts.Least.HideousBlow);
 
                     return selection;
                 })
