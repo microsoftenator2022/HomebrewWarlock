@@ -13,21 +13,30 @@ using Kingmaker.ResourceLinks;
 using Kingmaker.UI.GenericSlot;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Components;
+using Kingmaker.UnitLogic.Abilities.Components.Base;
+using Kingmaker.UnitLogic.Abilities.Components.CasterCheckers;
 using Kingmaker.UnitLogic.Commands.Base;
 using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Mechanics.Components;
+using Kingmaker.Utility;
+using Kingmaker.Visual;
 using Kingmaker.Visual.Animation.Kingmaker.Actions;
 
 using MicroWrath;
-using MicroWrath.BlueprintsDb;
 using MicroWrath.BlueprintInitializationContext;
+using MicroWrath.BlueprintsDb;
 using MicroWrath.Components;
 using MicroWrath.Extensions;
 using MicroWrath.Extensions.Components;
 using MicroWrath.GameActions;
 using MicroWrath.Localization;
 using MicroWrath.Util;
-using Kingmaker.UnitLogic.Abilities.Components.CasterCheckers;
+using MicroWrath.Util.Assets;
+using MicroWrath.Util.Unity;
+
+using UniRx.Triggers;
+
+using UnityEngine;
 
 namespace HomebrewWarlock.Features.Invocations
 {
@@ -54,17 +63,16 @@ namespace HomebrewWarlock.Features.Invocations
             BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures,
             BlueprintInitializationContext.ContextInitializer<IEnumerable<EldritchBlastComponents.EssenceEffect>> essenceEffects)
         {
-            //var ebRankFeature = baseFeatures.Map(bf => bf.rankFeature.ToReference<BlueprintFeatureReference>());
-
             var onHitAbility = context.NewBlueprint<BlueprintAbility>(
                 GeneratedGuid.Get("HideousBlowOnHitAbility"),
                 nameof(GeneratedGuid.HideousBlowOnHitAbility))
                 .Combine(baseFeatures)
                 .Combine(essenceEffects)
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintItemWeapon.TouchItem))
+                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.Disintegrate00))
                 .Map(bps =>
                 {
-                    var (ability, baseFeatures, essenceEffects, touchWeapon) = bps.Expand();
+                    var (ability, baseFeatures, essenceEffects, touchWeapon, disintegrateProjectile) = bps.Expand();
 
                     ability.m_DisplayName = baseFeatures.baseFeature.m_DisplayName;
 
@@ -91,9 +99,10 @@ namespace HomebrewWarlock.Features.Invocations
                 nameof(GeneratedGuid.HideousBlowWeaponEnchantment))
                 .Combine(onHitAbility)
                 .Combine(baseFeatures)
+                .Combine(essenceEffects)
                 .Map(bps =>
                 {
-                    var (enchant, onHitAbility, baseFeatures) = bps.Expand();
+                    var (enchant, onHitAbility, baseFeatures, essenceEffects) = bps.Expand();
 
                     enchant.AddComponent<AddInitiatorAttackWithWeaponTrigger>(c =>
                     {
@@ -111,7 +120,30 @@ namespace HomebrewWarlock.Features.Invocations
                         c.Action.Add(new EnchantmentRemoveSelf());
                     });
 
-                    enchant.WeaponFxPrefab = new PrefabLink() { AssetId = "d7b9bfb16264e4d4aad2abef2c80f835" };
+                    enchant.WeaponFxPrefab = (new PrefabLink() { AssetId = "10e570e1da0d99f4ab69893791b17af4" }).CreateDynamicProxy(fx =>
+                    {
+                        var lightning = fx.transform.Find("Lightning")?.gameObject;
+                        UnityEngine.Object.DestroyImmediate(lightning);
+
+                        var sparks = fx.transform.Find("Sparks")?.gameObject;
+                        UnityEngine.Object.DestroyImmediate(sparks);
+
+                        var eod = fx.transform.Find("ElectricityOverDistance")?.gameObject;
+                        UnityEngine.Object.DestroyImmediate(eod);
+
+                        var ek = fx.transform.Find("ElectroKatyshki")?.gameObject;
+                        UnityEngine.Object.DestroyImmediate(ek);
+
+                        var electricity = fx.transform.Find("Electricity")?.gameObject;
+                        UnityEngine.Object.DestroyImmediate(electricity);
+
+                        EldritchBlast.EldritchBlast.ChangeAllColors(fx, c =>
+                        {
+                            UnityEngine.Color.RGBToHSV(UnityUtil.RotateColorHue(c, 25), out var h, out var s, out var v);
+                            
+                            return UnityEngine.Color.HSVToRGB(h, Mathf.Clamp01((float)(s * 1.15)), (float)(v * 0.85));
+                        });
+                    });
 
                     return enchant;
                 });
@@ -149,7 +181,7 @@ namespace HomebrewWarlock.Features.Invocations
                     ability.Range = AbilityRange.Weapon;
 
                     ability.CanTargetEnemies = true;
-                    //ability.SpellResistance = true;
+
                     ability.EffectOnAlly = AbilityEffectOnUnit.None;
                     ability.EffectOnEnemy = AbilityEffectOnUnit.Harmful;
                     ability.Animation = UnitAnimationActionCastSpell.CastAnimationStyle.Immediate;

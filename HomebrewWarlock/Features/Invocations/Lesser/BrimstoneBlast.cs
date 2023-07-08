@@ -11,6 +11,7 @@ using Kingmaker.Enums;
 using Kingmaker.Enums.Damage;
 using Kingmaker.ResourceLinks;
 using Kingmaker.RuleSystem;
+using Kingmaker.RuleSystem.Rules.Damage;
 using Kingmaker.UnitLogic.Abilities.Components;
 using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
@@ -47,7 +48,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     bp.View = bp.View.CreateDynamicMonobehaviourProxy<ProjectileView, ProjectileLink>(pv =>
                     {
-                        pv.gameObject.name = "EldritchBlast_projectile";
+                        pv.gameObject.name = "BrimstoneBlast_projectile";
 
                         MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(pv.gameObject)}");
 
@@ -56,7 +57,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     bp.CastFx = bp.CastFx.CreateDynamicProxy(cfx =>
                     {
-                        cfx.name = "EldritchBlast_CastFX";
+                        cfx.name = "BrimstoneBlast_CastFX";
 
                         MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(cfx)}");
 
@@ -65,7 +66,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     bp.ProjectileHit.HitFx = bp.ProjectileHit.HitFx.CreateDynamicProxy(hfx =>
                     {
-                        hfx.name = "EldritchBlast_HitFX";
+                        hfx.name = "BrimstoneBlast_HitFX";
 
                         MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(hfx)}");
 
@@ -74,7 +75,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     bp.ProjectileHit.HitSnapFx = bp.ProjectileHit.HitSnapFx.CreateDynamicProxy(hsfx =>
                     {
-                        hsfx.name = "EldritchBlast_HitSnapFX";
+                        hsfx.name = "BrimstoneBlast_HitSnapFX";
 
                         MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(hsfx)}");
 
@@ -83,7 +84,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     bp.ProjectileHit.MissFx = bp.ProjectileHit.MissFx.CreateDynamicProxy(mfx =>
                     {
-                        mfx.name = "EldritchBlast_MissFX";
+                        mfx.name = "BrimstoneBlast_MissFX";
 
                         MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(mfx)}");
 
@@ -92,7 +93,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     bp.ProjectileHit.MissDecalFx = bp.ProjectileHit.MissDecalFx.CreateDynamicProxy(mdfx =>
                     {
-                        mdfx.name = "EldritchBlast_MissDecalFX";
+                        mdfx.name = "BrimstoneBlast_MissDecalFX";
 
                         MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(mdfx)}");
 
@@ -138,7 +139,18 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 nameof(GeneratedGuid.BrimstoneBlastPerRoundDamage))
                 .Map(buff =>
                 {
-                    buff.AddDamageOverTime(c => c.Damage = new() { m_Rolls = 2, m_Dice = DiceType.D6 });
+                    buff.AddComponent<AddFactContextActions>(c =>
+                    {
+                        c.NewRound.Add(GameActions.ContextActionDealDamage(a =>
+                        {
+                            a.DamageType.Type = DamageType.Energy;
+                            a.DamageType.Energy = DamageEnergyType.Fire;
+                            a.Value.DiceType = DiceType.D6;
+                            a.Value.DiceCountValue = 2;
+                        }));
+                    });
+
+                    buff.m_Flags = BlueprintBuff.Flags.Harmful;
 
                     return buff;
                 });
@@ -154,7 +166,6 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                     applyBuff.AddActionsOnBuffApply(c => c.Actions.Add(GameActions.ContextActionApplyBuff(ab =>
                     {
                         ab.m_Buff = dotBuff.ToReference<BlueprintBuffReference>();
-                        ab.AsChild = false;
                         ab.DurationValue.BonusValue.ValueType = ContextValueType.Rank;
                         ab.IsNotDispelable = true;
                     })));
@@ -169,6 +180,9 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                         c.m_Progression = ContextRankProgression.DelayedStartPlusDivStep;
                         c.m_StepLevel = 5;
                     });
+
+                    applyBuff.m_Flags = BlueprintBuff.Flags.Harmful;
+                    applyBuff.Stacking = StackingType.Stack;
 
                     return applyBuff;
                 });

@@ -10,9 +10,6 @@ using Kingmaker.View;
 using Kingmaker.Visual.MaterialEffects.RimLighting;
 using Kingmaker.Visual.MaterialEffects.Dissolve;
 
-
-
-
 using MicroWrath;
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.BlueprintsDb;
