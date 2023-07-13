@@ -16,7 +16,7 @@ using MicroWrath.Extensions.Components;
 using MicroWrath.Localization;
 using MicroWrath.Util;
 
-namespace HomebrewWarlock.Features.Invocations
+namespace HomebrewWarlock.Features.Invocations.Least
 {
     internal static class OtherworldlyWhispers
     {
@@ -33,8 +33,8 @@ namespace HomebrewWarlock.Features.Invocations
             var feature = context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get(nameof(OtherworldlyWhispers)), nameof(OtherworldlyWhispers))
                 .Map((BlueprintFeature feature) =>
                 {
-                    feature.m_DisplayName = LocalizedStrings.Features_Invocations_OtherworldlyWhispers_DisplayName;
-                    feature.m_Description = LocalizedStrings.Features_Invocations_OtherworldlyWhispers_Description;
+                    feature.m_DisplayName = LocalizedStrings.Features_Invocations_Least_OtherworldlyWhispers_DisplayName;
+                    feature.m_Description = LocalizedStrings.Features_Invocations_Least_OtherworldlyWhispers_Description;
 
                     feature.m_Icon = Sprites.OtherworldlyWhispers;
 

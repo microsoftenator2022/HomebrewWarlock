@@ -16,7 +16,7 @@ using MicroWrath.Extensions.Components;
 using MicroWrath.Localization;
 using MicroWrath.Util;
 
-namespace HomebrewWarlock.Features.Invocations
+namespace HomebrewWarlock.Features.Invocations.Least
 {
     internal static class LeastInvocationSelection
     {
@@ -42,8 +42,8 @@ namespace HomebrewWarlock.Features.Invocations
                         otherworldlyWhispers,
                         eldritchBlastFeatures) = sf.Expand();
 
-                    selection.m_DisplayName = LocalizedStrings.Features_Invocations_LeastInvocationSelection_DisplayName;
-                    selection.m_Description = LocalizedStrings.Features_InvocationSelection_Description;
+                    selection.m_DisplayName = LocalizedStrings.Features_Invocations_Least_LeastInvocationSelection_DisplayName;
+                    //selection.m_Description = LocalizedStrings.Features_InvocationSelection_Description;
 
                     selection.AddFeatures(
                         beguilingInfluence,
@@ -57,13 +57,16 @@ namespace HomebrewWarlock.Features.Invocations
                     return selection;
                 })
                 .Combine(SummonSwarm.CreateFeature(context))
+                .Combine(Least.SeeTheUnseen.Create(context))
                 .Map(sf =>
                 {
                     var (selection,
-                        summonSwarm) = sf;
+                        summonSwarm,
+                        seeTheUnseem) = sf.Expand();
 
                     selection.AddFeatures(
-                        summonSwarm.ToMicroBlueprint());
+                        summonSwarm.ToMicroBlueprint(),
+                        seeTheUnseem.ToMicroBlueprint());
 
                     return selection;
                 });

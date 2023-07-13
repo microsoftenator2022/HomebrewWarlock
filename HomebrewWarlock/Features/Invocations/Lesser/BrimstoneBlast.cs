@@ -2,6 +2,7 @@
 using System.Linq;
 
 using HomebrewWarlock.Features.EldritchBlast;
+using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
@@ -181,8 +182,9 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                         c.m_StepLevel = 5;
                     });
 
-                    applyBuff.m_Flags = BlueprintBuff.Flags.Harmful;
                     applyBuff.Stacking = StackingType.Stack;
+
+                    applyBuff.m_Flags = BlueprintBuff.Flags.Harmful | BlueprintBuff.Flags.HiddenInUi;
 
                     return applyBuff;
                 });
@@ -205,11 +207,13 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                     applyBuff.m_Description = dotBuff.m_Description = ability.m_Description =
                         LocalizedStrings.Features_Invocations_Lesser_BrimstoneBlast_Description;
 
+                    dotBuff.m_Icon = ability.m_Icon = Sprites.BrimstoneBlast;
+
                     ability.m_Buff = essenceBuff.ToReference<BlueprintBuffReference>();
 
-                    ability.Group = Invocation.ActivatableAbilityGroup;
+                    ability.Group = Invocation.EssenceInvocationAbilityGroup;
 
-                    var onHit = () => GameActions.ContextActionSavingThrow(savingThrow =>
+                    ContextActionSavingThrow onHit() => GameActions.ContextActionSavingThrow(savingThrow =>
                     {
                         savingThrow.Type = SavingThrowType.Reflex;
                         savingThrow.Actions.Add(GameActions.ContextActionConditionalSaved(save => save.Failed.Add(
@@ -243,6 +247,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     feature.m_DisplayName = ability.m_DisplayName;
                     feature.m_Description = ability.m_Description;
+                    feature.m_Icon = ability.m_Icon;
 
                     feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
 

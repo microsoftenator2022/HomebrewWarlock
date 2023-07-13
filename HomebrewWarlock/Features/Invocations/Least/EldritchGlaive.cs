@@ -10,7 +10,7 @@ using MicroWrath;
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.Localization;
 
-namespace HomebrewWarlock.Features.Invocations
+namespace HomebrewWarlock.Features.Invocations.Least
 {
     internal static class EldritchGlaive
     {
@@ -22,7 +22,7 @@ namespace HomebrewWarlock.Features.Invocations
             return context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get("EldritchGlaiveFeature"), nameof(GeneratedGuid.EldritchGlaiveFeature))
                 .Map(feature =>
                 {
-                    feature.m_DisplayName = LocalizedStrings.Features_Invocations_EldritchGlaive_DisplayName;
+                    feature.m_DisplayName = LocalizedStrings.Features_Invocations_Least_EldritchGlaive_DisplayName;
                     feature.m_Description = LocalizedStrings.Features_InvocationSelection_PlaceholderName;
 
                     return feature;

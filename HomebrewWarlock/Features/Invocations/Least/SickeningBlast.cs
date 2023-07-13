@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 using HomebrewWarlock.Features.EldritchBlast;
+using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Spells;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
@@ -23,7 +25,7 @@ using MicroWrath.GameActions;
 using MicroWrath.Localization;
 using MicroWrath.Util;
 
-namespace HomebrewWarlock.Features.Invocations
+namespace HomebrewWarlock.Features.Invocations.Least
 {
     internal static class SickeningBlast
     {
@@ -59,14 +61,15 @@ namespace HomebrewWarlock.Features.Invocations
                 {
                     var (ability, essenceBuff, debuff) = bps.Expand();
 
-                    ability.m_DisplayName = LocalizedStrings.Features_Invocations_SickeningBlast_DisplayName;
-                    ability.m_Description = LocalizedStrings.Features_Invocations_SickeningBlast_Description;
+                    ability.m_DisplayName = LocalizedStrings.Features_Invocations_Least_SickeningBlast_DisplayName;
+                    ability.m_Description = LocalizedStrings.Features_Invocations_Least_SickeningBlast_Description;
+                    ability.m_Icon = Sprites.SickeningBlast;
 
                     ability.m_Buff = essenceBuff.ToReference<BlueprintBuffReference>();
 
-                    ability.Group = Invocation.ActivatableAbilityGroup;
+                    ability.Group = Invocation.EssenceInvocationAbilityGroup;
 
-                    var onHit = () => GameActions.Conditional(targetIsShaken =>
+                    Conditional onHit() => GameActions.Conditional(targetIsShaken =>
                     {
                         targetIsShaken.ConditionsChecker.Add(Conditions.ContextConditionHasBuffWithDescriptor(
                             condition =>
@@ -100,8 +103,9 @@ namespace HomebrewWarlock.Features.Invocations
                 {
                     var (feature, ability, essenceEffect) = bps.Flatten();
 
-                    feature.m_DisplayName = LocalizedStrings.Features_Invocations_SickeningBlast_DisplayName;
-                    feature.m_Description = LocalizedStrings.Features_Invocations_SickeningBlast_Description;
+                    feature.m_DisplayName = LocalizedStrings.Features_Invocations_Least_SickeningBlast_DisplayName;
+                    feature.m_Description = LocalizedStrings.Features_Invocations_Least_SickeningBlast_Description;
+                    feature.m_Icon = ability.m_Icon;
 
                     feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
 

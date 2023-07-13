@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using HomebrewWarlock.Features.Invocations;
+using HomebrewWarlock.Features.Invocations.Least;
 using HomebrewWarlock.Features.Invocations.Lesser;
 
 using Kingmaker.Blueprints.Classes;
@@ -62,6 +63,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
             internal class LesserEssence
             {
                 public EssenceFeature BrimstoneBlast = null!;
+                public EssenceFeature BeshadowedBlast = null!;
             }
             public readonly LesserEssence Lesser = new();
 
@@ -82,13 +84,8 @@ namespace HomebrewWarlock.Features.EldritchBlast
         public BlueprintFeature EldritchBlastBase = null!;
 
         public readonly BlastFeatures Blasts = new();
-        //public BlueprintFeature EldritchSpear { get; private set; } = null!;
         
         public readonly EssenceFeatures Essence = new();
-        //public EssenceFeature FrightfulBlast { get; private set; } = null!;
-        //public EssenceFeature SickeningBlast { get; private set; } = null!;
-
-        //public EssenceFeature BrimstoneBlast { get; private set; } = null!;
 
         private EldritchBlastFeatures() { }
 
@@ -100,35 +97,41 @@ namespace HomebrewWarlock.Features.EldritchBlast
             var ebFeatures = context.Empty
                 .Map(() => new EldritchBlastFeatures());
 
-            var frightfulBlast = Invocations.FrightfulBlast.Create(context);
-            var sickeningBlast = Invocations.SickeningBlast.Create(context);
-            var brimstoneBlast = Invocations.Lesser.BrimstoneBlast.Create(context);
+            var frightfulBlast = FrightfulBlast.Create(context);
+            var sickeningBlast = SickeningBlast.Create(context);
+            var brimstoneBlast = BrimstoneBlast.Create(context);
+            var beshadowedBlast = BeshadowedBlast.Create(context);
 
             ebFeatures = ebFeatures
                 .Combine(frightfulBlast)
                 .Combine(sickeningBlast)
                 .Combine(brimstoneBlast)
+                .Combine(beshadowedBlast)
                 .Map(features =>
                 {
-                    var (ebFeatures, fb, sb, bb) = features.Expand();
+                    var (ebFeatures, fb, sb, brimstone, beshadowed) = features.Expand();
                     ebFeatures.Essence.Least.FrightfulBlast = fb;
                     ebFeatures.Essence.Least.SickeningBlast = sb;
-                    ebFeatures.Essence.Lesser.BrimstoneBlast = bb;
+                    ebFeatures.Essence.Lesser.BrimstoneBlast = brimstone;
+                    ebFeatures.Essence.Lesser.BeshadowedBlast = beshadowed;
+                    
                     return ebFeatures;
                 });
 
             var essenceEffects = frightfulBlast
                 .Combine(sickeningBlast)
                 .Combine(brimstoneBlast)
+                .Combine(beshadowedBlast)
                 .Map(es =>
                 {
-                    var (fb, sb, bb) = es.Expand();
+                    var (fb, sb, brimstone, beshadowed) = es.Expand();
 
                     IEnumerable<EldritchBlastComponents.EssenceEffect> ees = new[]
                     {
                         fb.Essence,
                         sb.Essence,
-                        bb.Essence
+                        brimstone.Essence,
+                        beshadowed.Essence
                     };
 
                     return ees;

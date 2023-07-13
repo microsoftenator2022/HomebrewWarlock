@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using MicroWrath.Util;
+using MicroWrath.Util.Unity;
 
 using UnityEngine;
 
@@ -18,6 +19,8 @@ namespace HomebrewWarlock.Resources
 
         internal static Sprite EldritchBlast => GetAssemblyResourceSprite("eb_icon.png");
         internal static Sprite EldritchSpear => GetAssemblyResourceSprite("es_icon.png");
+        internal static Sprite EldritchBlastOverlay => GetAssemblyResourceSprite("eb_overlay.png");
+        internal static Sprite EldritchBlastOverlaySmall => GetAssemblyResourceSprite("eb_overlay_small.png");
         internal static class DarkOnesOwnLuck
         {
             internal static Sprite Base => GetAssemblyResourceSprite("dool_icon.png");
@@ -25,8 +28,24 @@ namespace HomebrewWarlock.Resources
             internal static Sprite Fortitude => GetAssemblyResourceSprite("dol_icon_Fort.png");
             internal static Sprite Will => GetAssemblyResourceSprite("dol_icon_Will.png");
         }
+
         internal static Sprite SummonSwarm => AssetUtils.Direct.GetSprite("4abed12203b403a47b0b32425580e5bb", 21300000);
         internal static Sprite BeguilingInfluence => AssetUtils.Direct.GetSprite("494cc3f31fcb2a24cb7e69ec5df0055c", 21300000);
         internal static Sprite OtherworldlyWhispers => AssetUtils.Direct.GetSprite("aec14e47a17206049aea57b6e325b900", 21300000);
+        internal static Sprite Sickened => AssetUtils.Direct.GetSprite("d03c40abdab34d9498d7c492e4e8fecc", 21300000);
+        internal static Sprite Shaken => AssetUtils.Direct.GetSprite("45798f988ea9f254780b54f6355a7ada", 21300000);
+        internal static Sprite HellfireRay => AssetUtils.Direct.GetSprite("e9c468f1ba0bf304dbf34082cdecf2d2", 21300000);
+        internal static Sprite Blind => AssetUtils.Direct.GetSprite("e1166369a1fd8184c8622aba232bec13", 21300000);
+        internal static Sprite IceBlast => AssetUtils.Direct.GetSprite("056c53cea683cc544bf89b92f0b23000", 21300000);
+        internal static Sprite TouchOfChaos => AssetUtils.Direct.GetSprite("1ad80155704e5764fb5e7540f7bb4b18", 21300000);
+        internal static Sprite MoltenOrb => AssetUtils.Direct.GetSprite("50c4b1f118ead514fa88324ea210c3cb", 21300000);
+
+        internal static Sprite EssenceSprite(Sprite baseSprite) => Sprite.Create(UnityUtil.AlphaBlend(
+            UnityUtil.CopyReadable(baseSprite.texture), EldritchBlastOverlay.texture), baseSprite.rect, baseSprite.pivot);
+
+        internal static Sprite SickeningBlast => EssenceSprite(Sickened);
+        internal static Sprite FrightfulBlast => EssenceSprite(Shaken);
+        internal static Sprite BrimstoneBlast => EssenceSprite(MoltenOrb);
+        internal static Sprite BeshadowedBlast => EssenceSprite(Blind);
     }
 }

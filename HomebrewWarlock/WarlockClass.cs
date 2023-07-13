@@ -132,7 +132,7 @@ namespace HomebrewWarlock
                     @class.m_SignatureAbilities = new[]
                     {
                         EldritchBlast.FeatureRef.ToReference<BlueprintFeature, BlueprintFeatureReference>(),
-                        InvocationSelection.Selection.ToReference<BlueprintFeature, BlueprintFeatureReference>()
+                        WarlockProgression.BasicInvocations.ToReference<BlueprintFeature, BlueprintFeatureReference>()
                     };
 
                     Game.Instance.BlueprintRoot.Progression.m_CharacterClasses =

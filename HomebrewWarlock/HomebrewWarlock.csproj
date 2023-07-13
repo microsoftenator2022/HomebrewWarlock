@@ -20,6 +20,8 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\*.png" />
+    <None Remove="Resources\eb_overlay.png" />
+    <None Remove="Resources\eb_overlay_small.png" />
     <AdditionalFiles Include="$(WrathPath)\Bundles\cheatdata.json" />
     <AdditionalFiles Include="guids.json" />
   </ItemGroup>

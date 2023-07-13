@@ -27,7 +27,7 @@ using MicroWrath.Util.Linq;
 using HarmonyLib;
 using HomebrewWarlock.Resources;
 
-namespace HomebrewWarlock.Features.Invocations
+namespace HomebrewWarlock.Features.Invocations.Least
 {
     internal static class SummonSwarm
     {
@@ -77,10 +77,12 @@ namespace HomebrewWarlock.Features.Invocations
                 {
                     var (spell, unit, clericSpellList, shamanSpellList) = bps.Expand();
 
-                    spell.m_DisplayName = LocalizedStrings.Features_Invocations_SummonSwarm_DisplayName;
-                    spell.m_Description = LocalizedStrings.Features_Invocations_SummonSwarm_SpellDescription;
+                    spell.m_DisplayName = LocalizedStrings.Features_Invocations_Least_SummonSwarm_DisplayName;
+                    spell.m_Description = LocalizedStrings.Features_Invocations_Least_SummonSwarm_SpellDescription;
 
                     spell.m_Icon = Sprites.SummonSwarm;
+
+                    spell.Type = AbilityType.Spell;
 
                     var spawnAction = spell.Components
                         .OfType<AbilityEffectRunAction>()
@@ -116,14 +118,9 @@ namespace HomebrewWarlock.Features.Invocations
 
                     ability.Type = AbilityType.SpellLike;
                     
-                    ability.Components = ability.Components.Where(c => c is not SpellListComponent).ToArray();
+                    //ability.Components = ability.Components.Where(c => c is not SpellListComponent).ToArray();
 
-                    ability.AddInvocationComponents(
-                        spell.Components
-                        .OfType<SpellListComponent>()
-                        .Select(c => c.SpellLevel)
-                        .OrderByDescending(Functional.Identity)
-                        .First());
+                    ability.AddInvocationComponents(2);
 
                     return ability;
                 });
@@ -136,8 +133,8 @@ namespace HomebrewWarlock.Features.Invocations
                 {
                     var (feature, ability) = bps;
 
-                    feature.m_DisplayName = LocalizedStrings.Features_Invocations_SummonSwarm_DisplayName;
-                    feature.m_Description = LocalizedStrings.Features_Invocations_SummonSwarm_FeatureDescription;
+                    feature.m_DisplayName = LocalizedStrings.Features_Invocations_Least_SummonSwarm_DisplayName;
+                    feature.m_Description = LocalizedStrings.Features_Invocations_Least_SummonSwarm_FeatureDescription;
 
                     feature.m_Icon = ability.m_Icon;
 

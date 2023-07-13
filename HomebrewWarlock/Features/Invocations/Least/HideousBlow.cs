@@ -38,13 +38,42 @@ using UniRx.Triggers;
 
 using UnityEngine;
 
-namespace HomebrewWarlock.Features.Invocations
+namespace HomebrewWarlock.Features.Invocations.Least
 {
     using BaseBlastFeatures =
         (BlueprintFeature baseFeature,
         BlueprintFeature rankFeature,
         BlueprintAbility baseAbility,
         BlueprintProjectile projectile);
+
+    internal static class WeaponFxPrefabs
+    {
+        internal static PrefabLink Standard =>
+            new PrefabLink() { AssetId = "10e570e1da0d99f4ab69893791b17af4" }.CreateDynamicProxy(fx =>
+            {
+                var lightning = fx.transform.Find("Lightning")?.gameObject;
+                UnityEngine.Object.DestroyImmediate(lightning);
+
+                var sparks = fx.transform.Find("Sparks")?.gameObject;
+                UnityEngine.Object.DestroyImmediate(sparks);
+
+                var eod = fx.transform.Find("ElectricityOverDistance")?.gameObject;
+                UnityEngine.Object.DestroyImmediate(eod);
+
+                var ek = fx.transform.Find("ElectroKatyshki")?.gameObject;
+                UnityEngine.Object.DestroyImmediate(ek);
+
+                var electricity = fx.transform.Find("Electricity")?.gameObject;
+                UnityEngine.Object.DestroyImmediate(electricity);
+
+                EldritchBlast.EldritchBlast.ChangeAllColors(fx, c =>
+                {
+                    UnityEngine.Color.RGBToHSV(UnityUtil.RotateColorHue(c, 20), out var h, out var s, out var v);
+
+                    return UnityEngine.Color.HSVToRGB(h, Mathf.Clamp01((float)(s * 1.15)), (float)(v * 0.85));
+                });
+            });
+    }
 
     internal static class HideousBlow
     {
@@ -120,30 +149,7 @@ namespace HomebrewWarlock.Features.Invocations
                         c.Action.Add(new EnchantmentRemoveSelf());
                     });
 
-                    enchant.WeaponFxPrefab = (new PrefabLink() { AssetId = "10e570e1da0d99f4ab69893791b17af4" }).CreateDynamicProxy(fx =>
-                    {
-                        var lightning = fx.transform.Find("Lightning")?.gameObject;
-                        UnityEngine.Object.DestroyImmediate(lightning);
-
-                        var sparks = fx.transform.Find("Sparks")?.gameObject;
-                        UnityEngine.Object.DestroyImmediate(sparks);
-
-                        var eod = fx.transform.Find("ElectricityOverDistance")?.gameObject;
-                        UnityEngine.Object.DestroyImmediate(eod);
-
-                        var ek = fx.transform.Find("ElectroKatyshki")?.gameObject;
-                        UnityEngine.Object.DestroyImmediate(ek);
-
-                        var electricity = fx.transform.Find("Electricity")?.gameObject;
-                        UnityEngine.Object.DestroyImmediate(electricity);
-
-                        EldritchBlast.EldritchBlast.ChangeAllColors(fx, c =>
-                        {
-                            UnityEngine.Color.RGBToHSV(UnityUtil.RotateColorHue(c, 25), out var h, out var s, out var v);
-                            
-                            return UnityEngine.Color.HSVToRGB(h, Mathf.Clamp01((float)(s * 1.15)), (float)(v * 0.85));
-                        });
-                    });
+                    enchant.WeaponFxPrefab = WeaponFxPrefabs.Standard;
 
                     return enchant;
                 });
@@ -172,10 +178,10 @@ namespace HomebrewWarlock.Features.Invocations
                     var (ability, enchant, attackAbility) = bps.Expand();
 
                     attackAbility.m_DisplayName = ability.m_DisplayName =
-                        LocalizedStrings.Features_Invocations_HideousBlow_DisplayName;
+                        LocalizedStrings.Features_Invocations_Least_HideousBlow_DisplayName;
 
                     attackAbility.m_Description = ability.m_Description =
-                        LocalizedStrings.Features_Invocations_HideousBlow_Description;
+                        LocalizedStrings.Features_Invocations_Least_HideousBlow_Description;
 
                     ability.Type = AbilityType.Special;
                     ability.Range = AbilityRange.Weapon;
@@ -220,10 +226,12 @@ namespace HomebrewWarlock.Features.Invocations
                     var (feature, ability) = bps;
 
                     feature.m_DisplayName =
-                        LocalizedStrings.Features_Invocations_HideousBlow_DisplayName;
+                        LocalizedStrings.Features_Invocations_Least_HideousBlow_DisplayName;
 
                     feature.m_Description =
-                        LocalizedStrings.Features_Invocations_HideousBlow_Description;
+                        LocalizedStrings.Features_Invocations_Least_HideousBlow_Description;
+
+                    feature.m_Icon = ability.m_Icon;
 
                     feature.AddAddFacts(c =>
                         c.m_Facts = new[]

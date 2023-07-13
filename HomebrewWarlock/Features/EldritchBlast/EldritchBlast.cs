@@ -6,22 +6,24 @@ using System.Text;
 using System.Threading.Tasks;
 
 using HomebrewWarlock.Features.Invocations;
+using HomebrewWarlock.Resources;
 
 using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Items.Weapons;
+using Kingmaker.Controllers.Projectiles;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Enums;
 using Kingmaker.Enums.Damage;
 using Kingmaker.RuleSystem;
 using Kingmaker.RuleSystem.Rules.Damage;
-using Kingmaker.UnitLogic.Mechanics.Actions;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Components;
-using Kingmaker.UnitLogic.Mechanics;
-using Kingmaker.UnitLogic.Mechanics.Components;
 using Kingmaker.UnitLogic.Commands.Base;
+using Kingmaker.UnitLogic.Mechanics;
+using Kingmaker.UnitLogic.Mechanics.Actions;
+using Kingmaker.UnitLogic.Mechanics.Components;
 using Kingmaker.Visual.Animation.Kingmaker.Actions;
 
 using MicroWrath;
@@ -35,8 +37,6 @@ using MicroWrath.Util;
 
 using UnityEngine;
 using UnityEngine.UI;
-using Kingmaker.Controllers.Projectiles;
-using HomebrewWarlock.Resources;
 
 namespace HomebrewWarlock.Features.EldritchBlast
 {
@@ -73,7 +73,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
             "A warlock attacks his foes with eldritch power, using baleful magical energy to deal damage and " +
             "sometimes impart other debilitating effects.";
 
-        public static readonly IMicroBlueprint<BlueprintFeature> FeatureRef = new MicroBlueprint<BlueprintFeature>(GeneratedGuid.EldritchBlastFeature);
+        public static readonly IMicroBlueprint<BlueprintFeature> FeatureRef = new MicroBlueprint<BlueprintFeature>(GeneratedGuid.EldritchBlastRank);
         public static readonly IMicroBlueprint<BlueprintFeature> RankFeatureRef = new MicroBlueprint<BlueprintFeature>(GeneratedGuid.EldritchBlastRank);
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintAbility> CreateAbility(
@@ -176,10 +176,13 @@ namespace HomebrewWarlock.Features.EldritchBlast
                         c.m_Facts = new[]
                         {
                             ability.ToReference<BlueprintUnitFactReference>(),
-                            rankFeature.ToReference<BlueprintUnitFactReference>(),
+                            //rankFeature.ToReference<BlueprintUnitFactReference>(),
                         };
 
                     });
+
+                    //feature.HideInCharacterSheetAndLevelUp = true;
+                    feature.HideInUI = true;
 
                     return bps.Expand();
                 });

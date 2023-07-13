@@ -33,30 +33,11 @@ using MicroWrath.Util.Unity;
 
 using UnityEngine;
 
-namespace HomebrewWarlock.Features.Invocations
+namespace HomebrewWarlock.Features.Invocations.Least
 {
     internal static class DarkOnesOwnLuck
     {
-        //internal const ActivatableAbilityGroup AbilityGroup = unchecked((ActivatableAbilityGroup)0x8fdde668);
-
         internal static readonly ExtraActivatableAbilityGroup AbilityGroup = new(0x8fdde668);
-
-        //[HarmonyPatch(typeof(UnitPartActivatableAbility))]
-        //static class ActivatableAbilityGroupSize_Patch
-        //{
-        //    [HarmonyPatch(nameof(UnitPartActivatableAbility.GetGroupSize))]
-        //    [HarmonyPrefix]
-        //    static bool GetGroupSize_Prefix(ActivatableAbilityGroup group, ref int __result)
-        //    {
-        //        if (group == AbilityGroup)
-        //        {
-        //            __result = 1;
-        //            return false;
-        //        }
-
-        //        return true;
-        //    }
-        //}
 
         internal class SaveBonusComponent : UnitFactComponentDelegate
         {
@@ -132,7 +113,7 @@ namespace HomebrewWarlock.Features.Invocations
                 nameof(GeneratedGuid.DarkOnesOwnLuckReflexAbility))
                 .Map(ability =>
                 {
-                    ability.m_DisplayName = LocalizedStrings.Features_Invocations_DarkOnesOwnLuck_DisplayNameReflex;
+                    ability.m_DisplayName = LocalizedStrings.Features_Invocations_Least_DarkOnesOwnLuck_DisplayNameReflex;
 
                     return ability;
                 })
@@ -155,7 +136,7 @@ namespace HomebrewWarlock.Features.Invocations
                 nameof(GeneratedGuid.DarkOnesOwnLuckFortitudeAbility))
                 .Map(ability =>
                 {
-                    ability.m_DisplayName = LocalizedStrings.Features_Invocations_DarkOnesOwnLuck_DisplayNameFortitude;
+                    ability.m_DisplayName = LocalizedStrings.Features_Invocations_Least_DarkOnesOwnLuck_DisplayNameFortitude;
 
                     return ability;
                 })
@@ -177,7 +158,7 @@ namespace HomebrewWarlock.Features.Invocations
                 nameof(GeneratedGuid.DarkOnesOwnLuckWillAbility))
                 .Map(ability =>
                 {
-                    ability.m_DisplayName = LocalizedStrings.Features_Invocations_DarkOnesOwnLuck_DisplayNameWill;
+                    ability.m_DisplayName = LocalizedStrings.Features_Invocations_Least_DarkOnesOwnLuck_DisplayNameWill;
 
                     return ability;
                 })
@@ -207,10 +188,10 @@ namespace HomebrewWarlock.Features.Invocations
                     var abilities = new[] { f, r, w };
 
                     baseAbility.m_DisplayName = feature.m_DisplayName =
-                        LocalizedStrings.Features_Invocations_DarkOnesOwnLuck_DisplayName;
+                        LocalizedStrings.Features_Invocations_Least_DarkOnesOwnLuck_DisplayName;
 
                     baseAbility.m_Description = feature.m_Description =
-                        LocalizedStrings.Features_Invocations_DarkOnesOwnLuck_Description;
+                        LocalizedStrings.Features_Invocations_Least_DarkOnesOwnLuck_Description;
 
                     baseAbility.m_Icon = feature.m_Icon = Sprites.DarkOnesOwnLuck.Base;
 
@@ -237,8 +218,6 @@ namespace HomebrewWarlock.Features.Invocations
                         ability.HiddenInUI = true;
 
                         ability.m_Icon = sprite;
-
-                        //ability.AddComponent<UI.ForeIcon>(c => c.Icon = spriteOverlay);
                     }
 
                     baseAbility.AddActivatableAbilityVariants(c =>

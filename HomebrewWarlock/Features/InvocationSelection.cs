@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using HomebrewWarlock.Features.EldritchBlast;
+using HomebrewWarlock.Features.Invocations.Least;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
@@ -47,7 +48,7 @@ namespace HomebrewWarlock.Features
             "The four grades of invocations, in order of their relative power, are least, lesser, greater, and " +
             "dark. A warlock begins with knowledge of one invocation, which must be of the lowest grade (least). " +
             Environment.NewLine +
-            "Lesser invocations are available starting from level 7th level, greater invocations from 13th level, " +
+            "Lesser invocations are available starting from level 6th level, greater invocations from 13th level, " +
             "and dark invocations from 16th level." + Environment.NewLine +
             "Unlike other spell-like abilities, invocations are subject to arcane spell failure chance.";
 
@@ -57,14 +58,26 @@ namespace HomebrewWarlock.Features
             "repertoire of attacks, defenses, and abilities known as invocations that require him to focus the wild " +
             "energy that suffuses his soul.";
 
-        internal static readonly IMicroBlueprint<BlueprintFeatureSelection> Selection =
-            new MicroBlueprint<BlueprintFeatureSelection>(GeneratedGuid.WarlockInvocationSelection);
+        [LocalizedString]
+        internal const string LesserInvocationsDisplayName = "Lesser Invocations";
 
-        internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeatureSelection> CreateSelection(
-            BlueprintInitializationContext context,
-            BlueprintInitializationContext.ContextInitializer<EldritchBlastFeatures> ebFeatures)
+        [LocalizedString]
+        internal const string GreaterInvocationsDisplayName = "Greater Invocations";
+
+        [LocalizedString]
+        internal const string DarkInvocationsDisplayName = "Dark Invocations";
+
+        internal static BlueprintInitializationContext.ContextInitializer<(
+            BlueprintFeatureSelection invocationSelection,
+            BlueprintFeature lesserPrerequisite,
+            BlueprintFeature greaterPrerequisite,
+            BlueprintFeature darkPrerequisite)> CreateSelection(
+                BlueprintInitializationContext context,
+                BlueprintInitializationContext.ContextInitializer<EldritchBlastFeatures> ebFeatures)
         {
-            var placeholderFeature = context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get("WarlockInvocationPlaceholder"), "WarlockInvocationPlaceholder")
+            var placeholderFeature = context.NewBlueprint<BlueprintFeature>(
+                GeneratedGuid.Get("WarlockInvocationPlaceholder"),
+                "WarlockInvocationPlaceholder")
                 .Map((BlueprintFeature feature) =>
                 {
                     feature.m_DisplayName = LocalizedStrings.Features_InvocationSelection_PlaceholderName;
@@ -74,15 +87,49 @@ namespace HomebrewWarlock.Features
                     return feature;
                 });
 
-            return context.NewBlueprint<BlueprintFeatureSelection>(
+            var lesserInvocationPrerequisite = context.NewBlueprint<BlueprintFeature>(
+                GeneratedGuid.LesserInvocationsPrerequisiteFeature,
+                nameof(GeneratedGuid.LesserInvocationsPrerequisiteFeature))
+                .Map(feature =>
+                {
+                    feature.m_DisplayName = LocalizedStrings.Features_InvocationSelection_LesserInvocationsDisplayName;
+
+                    return feature;
+                });
+
+            var lesserInvocationSelection =
+                Invocations.Lesser.LesserInvocationSelection.Create(context, ebFeatures, lesserInvocationPrerequisite);
+
+            var greaterInvocationsPrerequisite = context.NewBlueprint<BlueprintFeature>(
+                GeneratedGuid.Get("GreaterInvocationsPrerequisiteFeature"),
+                nameof(GeneratedGuid.GreaterInvocationsPrerequisiteFeature))
+                .Map(feature =>
+                {
+                    feature.m_DisplayName = LocalizedStrings.Features_InvocationSelection_GreaterInvocationsDisplayName;
+
+                    return feature;
+                });
+
+            var darkInvocationsPrerequisite = context.NewBlueprint<BlueprintFeature>(
+                GeneratedGuid.Get("DarkInvocationsPrerequisiteFeature"),
+                nameof(GeneratedGuid.DarkInvocationsPrerequisiteFeature))
+                .Map(feature =>
+                {
+                    feature.m_DisplayName = LocalizedStrings.Features_InvocationSelection_DarkInvocationsDisplayName;
+
+                    return feature;
+                });
+
+            var selection = context.NewBlueprint<BlueprintFeatureSelection>(
                 GeneratedGuid.Get("WarlockInvocationSelection"),
                 "WarlockInvocationSelection")
-                .Combine(Invocations.LeastInvocationSelection.CreateSelection(context, ebFeatures))
+                .Combine(LeastInvocationSelection.CreateSelection(context, ebFeatures))
                 .Combine(placeholderFeature)
                 .Combine(ebFeatures)
+                .Combine(lesserInvocationSelection)
                 .Map(features =>
                 {
-                    var (selection, least, placeholder, ebFeatures) = features.Expand();
+                    var (selection, least, placeholder, ebFeatures, lesser) = features.Expand();
 
                     selection.m_DisplayName = LocalizedStrings.Features_InvocationSelection_DisplayName;
                     selection.m_Description = LocalizedStrings.Features_InvocationSelection_Description;
@@ -90,14 +137,18 @@ namespace HomebrewWarlock.Features
 
                     selection.AddFeatures(
                         least,
+                        lesser,
                         placeholder
-#if DEBUG
-                        , ebFeatures.Essence.Lesser.BrimstoneBlast.Feature
-#endif
                         );
 
                     return selection;
                 });
+
+            return selection
+                .Combine(lesserInvocationPrerequisite)
+                .Combine(greaterInvocationsPrerequisite)
+                .Combine(darkInvocationsPrerequisite)
+                .Map(Functional.Expand);
         }
     }
 }

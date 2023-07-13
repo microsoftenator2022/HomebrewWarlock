@@ -17,7 +17,7 @@ using MicroWrath.Extensions.Components;
 using MicroWrath.Localization;
 using MicroWrath.Util;
 
-namespace HomebrewWarlock.Features.Invocations
+namespace HomebrewWarlock.Features.Invocations.Least
 {
     internal static class BeguilingInfluence
     {
@@ -32,8 +32,8 @@ namespace HomebrewWarlock.Features.Invocations
             context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get(nameof(BeguilingInfluence)), nameof(BeguilingInfluence))
                 .Map((BlueprintFeature feature) =>
                 {
-                    feature.m_DisplayName = LocalizedStrings.Features_Invocations_BeguilingInfluence_DisplayName;
-                    feature.m_Description = LocalizedStrings.Features_Invocations_BeguilingInfluence_Description;
+                    feature.m_DisplayName = LocalizedStrings.Features_Invocations_Least_BeguilingInfluence_DisplayName;
+                    feature.m_Description = LocalizedStrings.Features_Invocations_Least_BeguilingInfluence_Description;
 
                     feature.m_Icon = Sprites.BeguilingInfluence;
 

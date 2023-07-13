@@ -56,5 +56,16 @@
   "HideousBlowAbility": "225b5e0d-1811-48ad-96a8-9dabbde3087c",
   "HideousBlowWeaponEnchantment": "989bb850-4a4b-4e77-9c38-4c72547bfee0",
   "HideousBlowOnHitAbility": "5ca6b666-6019-47fc-938a-9c03cc3e7272",
-  "HideousBlowAttackAbility": "b28e9e8a-4772-41c2-a2c7-b45485630c9c"
+  "HideousBlowAttackAbility": "b28e9e8a-4772-41c2-a2c7-b45485630c9c",
+  "LesserInvocationsPrerequisiteFeature": "af0732af-344a-4423-ae9f-f1cda8b33852",
+  "LesserInvocationSelection": "be3621e7-59cb-47a2-9225-38b247b1f593",
+  "InvocationsBasicFeature": "4ecdf748-c47f-4e07-939a-9497ffe38d93",
+  "GreaterInvocationsPrerequisiteFeature": "9d3a9097-1753-45f4-a2a5-791523b3c9bb",
+  "DarkInvocationsPrerequisiteFeature": "e86ec3a7-1d0d-4fa9-a5c2-b7439bc6701a",
+  "SeeTheUnseenAbility": "05db03ae-d649-4d57-9326-b77abdd862db",
+  "SeeTheUnseenFeature": "d87d0a8f-d4ce-4409-9e15-b50d44a5c8e5",
+  "AbilityFocusEldritchBlast": "3e8bbf03-e300-45b2-a7db-bc9d68ef3e23",
+  "BeshadowedBlastFeature": "381c5f7d-d516-42be-96e3-3b656b9a97c8",
+  "BeshadowedBlastToggleAbility": "2f5319ac-e196-4dab-b76a-fdd59d3375f3",
+  "BeshadowedBlastEssenceBuff": "45641897-7240-4ed2-9201-3edf0f546fb0"
 }
