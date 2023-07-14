@@ -195,8 +195,8 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 .Combine(buff)
                 .Combine(dotBuff)
                 .Combine(applyDotBuff)
-                .Combine(CreateProjectile(context))
-                //.Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.HellfireRay00))
+                //.Combine(CreateProjectile(context))
+                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.HellfireRay00))
                 .Map(bps =>
                 {
                     var (ability, essenceBuff, dotBuff, applyBuff, projectile) = bps.Expand();

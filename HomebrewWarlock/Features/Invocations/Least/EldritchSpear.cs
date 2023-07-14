@@ -5,6 +5,9 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
+using HomebrewWarlock.Features.EldritchBlast;
+using HomebrewWarlock.Resources;
+
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
@@ -16,7 +19,7 @@ using MicroWrath.Extensions.Components;
 using MicroWrath.Localization;
 using MicroWrath.Util;
 
-namespace HomebrewWarlock.Features.EldritchBlast
+namespace HomebrewWarlock.Features.Invocations.Least
 {
     using BaseBlastFeatures =
         (BlueprintFeature baseFeature,
@@ -46,11 +49,12 @@ namespace HomebrewWarlock.Features.EldritchBlast
                         GeneratedGuid.EldritchSpearAbility,
                         nameof(GeneratedGuid.EldritchSpearAbility));
 
-                    ability.m_DisplayName = LocalizedStrings.Features_EldritchBlast_EldritchSpear_DisplayName;
-                    ability.m_Description = LocalizedStrings.Features_EldritchBlast_EldritchSpear_Description;
+                    ability.m_DisplayName = LocalizedStrings.Features_Invocations_Least_EldritchSpear_DisplayName;
+                    ability.m_Description = LocalizedStrings.Features_Invocations_Least_EldritchSpear_Description;
 
-                    ability.m_Icon = AssetUtils.GetSpriteAssemblyResource(
-                        Assembly.GetExecutingAssembly(), $"{nameof(HomebrewWarlock)}.Resources.es_icon.png");
+                    ability.m_Icon = Sprites.EldritchSpear;
+
+                    ability.GetComponent<EldritchBlastCalculateSpellLevel>().BaseEquivalentSpellLevel = 2;
 
                     ability.Range = AbilityRange.Long;
 

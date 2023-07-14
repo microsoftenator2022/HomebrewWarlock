@@ -67,5 +67,20 @@
   "AbilityFocusEldritchBlast": "3e8bbf03-e300-45b2-a7db-bc9d68ef3e23",
   "BeshadowedBlastFeature": "381c5f7d-d516-42be-96e3-3b656b9a97c8",
   "BeshadowedBlastToggleAbility": "2f5319ac-e196-4dab-b76a-fdd59d3375f3",
-  "BeshadowedBlastEssenceBuff": "45641897-7240-4ed2-9201-3edf0f546fb0"
+  "BeshadowedBlastEssenceBuff": "45641897-7240-4ed2-9201-3edf0f546fb0",
+  "CurseOfDespairBaseAbility": "847d6dee-8ef3-4c25-9799-14101adc9349",
+  "CurseOfDespairBuff": "f7e786b9-870d-4460-8894-dbc3e3830f7e",
+  "CurseOfDespairFeature": "b59d9fc2-5310-46c7-9fdd-bc509346506a",
+  "CurseOfDespairFeebleBodyCast": "103c6803-81f3-4b50-9466-148bae2e8bc2",
+  "CurseOfDespairFeebleBody": "8703fed8-599c-40ef-816e-15d0c480a181",
+  "CurseOfDespairIdiocyCast": "cc31ae70-19e0-4927-8d61-18e93373a584",
+  "CurseOfDespairIdiocy": "28c692db-7afc-4c36-9be1-e58bf0fc9c0f",
+  "CurseOfDespairWeaknessCast": "425b5572-2f89-49cb-9ca8-785d6fccd214",
+  "CurseOfDespairWeakness": "a2630d45-f56c-451b-8df0-a9f9a3368e6d",
+  "CurseOfDespairDeteriorationCast": "bf0d6697-b320-4b4f-8bb1-71152b607e45",
+  "CurseOfDespairDeterioration": "53174469-0ce2-4063-8fe4-6d45f4265727",
+  "FellFlightFeature": "4aa8b3c9-0c63-4a52-959b-342cb298c982",
+  "FellFlightAbility": "f7e74691-3b64-49d5-b307-1448277827d8",
+  "EldritchChainFeature": "9af7516c-8e50-4fb8-b9b8-7452113882c1",
+  "EldritchChainAbility": "614acf72-6057-431e-be58-916ded9d6c82"
 }

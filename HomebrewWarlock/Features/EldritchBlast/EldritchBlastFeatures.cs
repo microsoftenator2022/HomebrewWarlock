@@ -17,8 +17,6 @@ using MicroWrath.Util.Linq;
 
 namespace HomebrewWarlock.Features.EldritchBlast
 {
-    //using EssenceFeature = (BlueprintFeature feature, EldritchBlastComponents.EssenceEffect essence);
-
     internal record class EssenceFeature(BlueprintFeature Feature, EldritchBlastComponents.EssenceEffect Essence);
 
     internal class EldritchBlastFeatures
@@ -34,7 +32,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
 
             internal class LesserBlasts
             {
-
+                public BlueprintFeature EldritchChain = null!;
             }
             public readonly LesserBlasts Lesser = new();
 
@@ -78,6 +76,15 @@ namespace HomebrewWarlock.Features.EldritchBlast
 
             }
             public readonly DarkEssence Dark = new();
+
+            public IEnumerable<EldritchBlastComponents.EssenceEffect> EssenceEffects => new[]
+            {
+                Least.FrightfulBlast.Essence,
+                Least.SickeningBlast.Essence,
+
+                Lesser.BrimstoneBlast.Essence,
+                Lesser.BeshadowedBlast.Essence
+            };
         }
 
         public BlueprintFeature EldritchBlastRank = null!;
@@ -95,21 +102,15 @@ namespace HomebrewWarlock.Features.EldritchBlast
             var projectile = EldritchBlast.CreateProjectile(context);
 
             var ebFeatures = context.Empty
-                .Map(() => new EldritchBlastFeatures());
-
-            var frightfulBlast = FrightfulBlast.Create(context);
-            var sickeningBlast = SickeningBlast.Create(context);
-            var brimstoneBlast = BrimstoneBlast.Create(context);
-            var beshadowedBlast = BeshadowedBlast.Create(context);
-
-            ebFeatures = ebFeatures
-                .Combine(frightfulBlast)
-                .Combine(sickeningBlast)
-                .Combine(brimstoneBlast)
-                .Combine(beshadowedBlast)
+                .Map(() => new EldritchBlastFeatures())
+                .Combine(FrightfulBlast.Create(context))
+                .Combine(SickeningBlast.Create(context))
+                .Combine(BrimstoneBlast.Create(context))
+                .Combine(BeshadowedBlast.Create(context))
                 .Map(features =>
                 {
                     var (ebFeatures, fb, sb, brimstone, beshadowed) = features.Expand();
+
                     ebFeatures.Essence.Least.FrightfulBlast = fb;
                     ebFeatures.Essence.Least.SickeningBlast = sb;
                     ebFeatures.Essence.Lesser.BrimstoneBlast = brimstone;
@@ -118,24 +119,26 @@ namespace HomebrewWarlock.Features.EldritchBlast
                     return ebFeatures;
                 });
 
-            var essenceEffects = frightfulBlast
-                .Combine(sickeningBlast)
-                .Combine(brimstoneBlast)
-                .Combine(beshadowedBlast)
-                .Map(es =>
-                {
-                    var (fb, sb, brimstone, beshadowed) = es.Expand();
+            //var essenceEffects = frightfulBlast
+            //    .Combine(sickeningBlast)
+            //    .Combine(brimstoneBlast)
+            //    .Combine(beshadowedBlast)
+            //    .Map(es =>
+            //    {
+            //        var (fb, sb, brimstone, beshadowed) = es.Expand();
 
-                    IEnumerable<EldritchBlastComponents.EssenceEffect> ees = new[]
-                    {
-                        fb.Essence,
-                        sb.Essence,
-                        brimstone.Essence,
-                        beshadowed.Essence
-                    };
+            //        IEnumerable<EldritchBlastComponents.EssenceEffect> ees = new[]
+            //        {
+            //            fb.Essence,
+            //            sb.Essence,
+            //            brimstone.Essence,
+            //            beshadowed.Essence
+            //        };
 
-                    return ees;
-                });
+            //        return ees;
+            //    });
+
+            var essenceEffects = ebFeatures.Map(ebFeatures => ebFeatures.Essence.EssenceEffects);
 
             var baseFeatures = EldritchBlast.CreateEldritchBlast(context, projectile, essenceEffects);
 
@@ -151,18 +154,17 @@ namespace HomebrewWarlock.Features.EldritchBlast
                     return ebFeatures;
                 });
 
-            var eldritchSpear = EldritchSpear.CreateBlast(context, baseFeatures);
-            var hideousBlow = HideousBlow.Create(context, baseFeatures, essenceEffects);
-
             ebFeatures = ebFeatures
-                .Combine(eldritchSpear)
-                .Combine(hideousBlow)
+                .Combine(EldritchSpear.CreateBlast(context, baseFeatures))
+                .Combine(HideousBlow.Create(context, baseFeatures, essenceEffects))
+                .Combine(EldritchChain.CreateBlast(context, baseFeatures))
                 .Map(features =>
                 {
-                    var (ebFeatures, es, hb) = features.Expand();
+                    var (ebFeatures, es, hb, ec) = features.Expand();
 
                     ebFeatures.Blasts.Least.EldritchSpear = es;
                     ebFeatures.Blasts.Least.HideousBlow = hb;
+                    ebFeatures.Blasts.Lesser.EldritchChain = ec;
 
                     return ebFeatures;
                 });

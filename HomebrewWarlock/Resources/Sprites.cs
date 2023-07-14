@@ -39,13 +39,15 @@ namespace HomebrewWarlock.Resources
         internal static Sprite IceBlast => AssetUtils.Direct.GetSprite("056c53cea683cc544bf89b92f0b23000", 21300000);
         internal static Sprite TouchOfChaos => AssetUtils.Direct.GetSprite("1ad80155704e5764fb5e7540f7bb4b18", 21300000);
         internal static Sprite MoltenOrb => AssetUtils.Direct.GetSprite("50c4b1f118ead514fa88324ea210c3cb", 21300000);
+        internal static Sprite SkillFocus => AssetUtils.Direct.GetSprite("42cb25b90b7c7d34e956c7822a9349cb", 21300000);
+        internal static Sprite ChainLightning => AssetUtils.Direct.GetSprite("d22d729c1abd51d479a5571c69e7597e", 21300000);
 
         internal static Sprite EssenceSprite(Sprite baseSprite) => Sprite.Create(UnityUtil.AlphaBlend(
             UnityUtil.CopyReadable(baseSprite.texture), EldritchBlastOverlay.texture), baseSprite.rect, baseSprite.pivot);
 
         internal static Sprite SickeningBlast => EssenceSprite(Sickened);
         internal static Sprite FrightfulBlast => EssenceSprite(Shaken);
-        internal static Sprite BrimstoneBlast => EssenceSprite(MoltenOrb);
+        internal static Sprite BrimstoneBlast => EssenceSprite(HellfireRay);
         internal static Sprite BeshadowedBlast => EssenceSprite(Blind);
     }
 }

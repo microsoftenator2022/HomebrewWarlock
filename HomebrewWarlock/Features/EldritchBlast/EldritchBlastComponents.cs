@@ -91,7 +91,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
             DamageEnergyType DamageType = DamageEnergyType.Magic,
             IEnumerable<(AbilityProjectileType type, BlueprintProjectileReference[] projectiles)>? Projectiles = null);
 
-        internal static ConditionalList GetOnHitEffect(IEnumerable<EssenceEffect> essenceEffects)
+        internal static GameAction GetOnHitEffect(IEnumerable<EssenceEffect> essenceEffects)
         {
             var conditionalEffects = new ConditionalList();
             conditionalEffects.Operation = Operation.Or;

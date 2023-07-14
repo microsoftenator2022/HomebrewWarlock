@@ -34,9 +34,11 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 GeneratedGuid.Get(nameof(LesserInvocationSelection)), nameof(LesserInvocationSelection))
                 .Combine(ebFeatures)
                 .Combine(prerequisite)
+                .Combine(CurseOfDespair.Create(context))
+                .Combine(FellFlight.Create(context))
                 .Map(bps =>
                 {
-                    var (selection, ebFeatures, prerequisite) = bps.Expand();
+                    var (selection, ebFeatures, prerequisite, curseOfDespair, fellFlight) = bps.Expand();
 
                     selection.m_DisplayName =
                         LocalizedStrings.Features_Invocations_Lesser_LesserInvocationSelection_DisplayName;
@@ -46,7 +48,10 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 #endif
                     selection.AddFeatures(
                         ebFeatures.Essence.Lesser.BrimstoneBlast.Feature,
-                        ebFeatures.Essence.Lesser.BeshadowedBlast.Feature);
+                        ebFeatures.Essence.Lesser.BeshadowedBlast.Feature,
+                        curseOfDespair,
+                        fellFlight,
+                        ebFeatures.Blasts.Lesser.EldritchChain);
 
                     return selection;
 
