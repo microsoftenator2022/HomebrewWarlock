@@ -26,7 +26,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
         [LocalizedString]
         internal const string Description =
             "You hear whispers in your ears, revealing secrets of the multiverse. You gain a +6 bonus on Knowledge " +
-            "(arcana), Lore (religion) checks.";
+            "(Arcana) and Lore (Religion) checks.";
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {

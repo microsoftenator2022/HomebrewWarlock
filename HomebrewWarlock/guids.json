@@ -82,5 +82,8 @@
   "FellFlightFeature": "4aa8b3c9-0c63-4a52-959b-342cb298c982",
   "FellFlightAbility": "f7e74691-3b64-49d5-b307-1448277827d8",
   "EldritchChainFeature": "9af7516c-8e50-4fb8-b9b8-7452113882c1",
-  "EldritchChainAbility": "614acf72-6057-431e-be58-916ded9d6c82"
+  "EldritchChainAbility": "614acf72-6057-431e-be58-916ded9d6c82",
+  "TheDeadWalkFeature": "d23cb321-0aee-4c2a-adcf-8dd04553770f",
+  "TheDeadWalkAbility": "7e5f10ea-eea1-4d9e-9278-d80592ca0af3",
+  "Voidsense": "0ef9400e-0215-4e4d-9a11-229e744a4fa3"
 }
