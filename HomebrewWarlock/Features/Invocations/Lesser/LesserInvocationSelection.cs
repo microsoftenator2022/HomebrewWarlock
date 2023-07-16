@@ -38,6 +38,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 .Combine(FellFlight.Create(context))
                 .Combine(TheDeadWalk.Create(context))
                 .Combine(Voidsense.Create(context))
+                .Combine(WalkUnseen.Create(context))
                 .Map(bps =>
                 {
                     var (selection,
@@ -46,7 +47,8 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                         curseOfDespair,
                         fellFlight,
                         theDeadWalk,
-                        voidsense) = bps.Expand();
+                        voidsense,
+                        walkUnseen) = bps.Expand();
 
                     selection.m_DisplayName =
                         LocalizedStrings.Features_Invocations_Lesser_LesserInvocationSelection_DisplayName;
@@ -61,10 +63,21 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                         fellFlight,
                         ebFeatures.Blasts.Lesser.EldritchChain,
                         theDeadWalk,
-                        voidsense);
+                        voidsense,
+                        walkUnseen,
+                        ebFeatures.Essence.Lesser.HellrimeBlast.Feature);
 
                     return selection;
 
+                })
+                .Combine(VoraciousDispel.Create(context))
+                .Map(bps =>
+                {
+                    var (selection, voraciousDispel) = bps;
+
+                    selection.AddFeatures(voraciousDispel);
+
+                    return selection;
                 });
 
             return selection;

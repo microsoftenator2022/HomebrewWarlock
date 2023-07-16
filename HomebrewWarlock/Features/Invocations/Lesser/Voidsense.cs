@@ -20,20 +20,20 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
         [LocalizedString]
         internal const string Description =
-            "You can sharpen your hearing and sight when you use this invocation, gaining blindsense out to 30 feet.";
+            "You can sharpen your hearing and sight, gaining blindsense out to 30 feet.";
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
             var feature = context.NewBlueprint<BlueprintFeature>(
                 GeneratedGuid.Get(nameof(Voidsense)),
                 nameof(Voidsense))
-                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintFeature.DragonDiscipleBlindSense))
+                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintFeature.Blindsight))
                 .Map(bps =>
                 {
-                    var (feature, ddBlindsense) = bps;
+                    var (feature, blindsight) = bps;
 
                     feature.m_DisplayName = LocalizedStrings.Features_Invocations_Lesser_Voidsense_DisplayName;
                     feature.m_Description = LocalizedStrings.Features_Invocations_Lesser_Voidsense_Description;
-                    feature.m_Icon = ddBlindsense.m_Icon;
+                    feature.m_Icon = blindsight.m_Icon;
 
                     return feature;
                 });

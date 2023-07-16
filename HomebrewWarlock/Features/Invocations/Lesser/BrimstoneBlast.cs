@@ -210,9 +210,9 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     ability.m_Buff = essenceBuff.ToReference<BlueprintBuffReference>();
 
-                    ability.Group = Invocation.EssenceInvocationAbilityGroup;
+                    ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
 
-                    ContextActionSavingThrow onHit() => GameActions.ContextActionSavingThrow(savingThrow =>
+                    GameAction onHit() => GameActions.ContextActionSavingThrow(savingThrow =>
                     {
                         savingThrow.Type = SavingThrowType.Reflex;
                         savingThrow.Actions.Add(GameActions.ContextActionConditionalSaved(save => save.Failed.Add(

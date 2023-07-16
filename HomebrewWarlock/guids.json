@@ -85,5 +85,15 @@
   "EldritchChainAbility": "614acf72-6057-431e-be58-916ded9d6c82",
   "TheDeadWalkFeature": "d23cb321-0aee-4c2a-adcf-8dd04553770f",
   "TheDeadWalkAbility": "7e5f10ea-eea1-4d9e-9278-d80592ca0af3",
-  "Voidsense": "0ef9400e-0215-4e4d-9a11-229e744a4fa3"
+  "Voidsense": "0ef9400e-0215-4e4d-9a11-229e744a4fa3",
+  "WalkUnseenFeature": "bf67514a-e28a-4452-a89c-7a7cb6f52701",
+  "WalkUnseenToggleAbility": "42666e1a-201e-4b9a-a031-f4d6144a6ebe",
+  "HellrimeBlastEssenceBuff": "06282b63-2d30-473a-b402-e72c74557439",
+  "HellrimeBlastToggleAbility": "86d98fa7-8ec3-49a6-bfac-4a5fae1baab1",
+  "HellrimeBlastBuff": "33ae2eec-073e-478e-88eb-eec60fe74c8b",
+  "HellrimeBlastFeature": "cbad10a8-8fd8-43a0-80eb-c83604a700f2",
+  "VoraciousDispelBaseAbility": "dfa6e7f5-5457-49c4-8d42-39ac0f4bdbda",
+  "VoraciousDispel": "dc5cb776-7938-43b6-b653-2aad73b07552",
+  "VoraciousDispelTarget": "bf5337b1-b75a-4695-9934-3daf339ed678",
+  "VoraciousDispelPoint": "48f139ce-78a3-4fa6-989e-dde93e642fa6"
 }

@@ -72,7 +72,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     ability.m_Buff = essenceBuff.ToReference<BlueprintBuffReference>();
 
-                    ability.Group = Invocation.EssenceInvocationAbilityGroup;
+                    ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
 
                     Conditional onHit() => GameActions.Conditional(targetIsShaken =>
                     {

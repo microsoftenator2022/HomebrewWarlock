@@ -62,6 +62,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
             {
                 public EssenceFeature BrimstoneBlast = null!;
                 public EssenceFeature BeshadowedBlast = null!;
+                public EssenceFeature HellrimeBlast = null!;
             }
             public readonly LesserEssence Lesser = new();
 
@@ -83,7 +84,8 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 Least.SickeningBlast.Essence,
 
                 Lesser.BrimstoneBlast.Essence,
-                Lesser.BeshadowedBlast.Essence
+                Lesser.BeshadowedBlast.Essence,
+                Lesser.HellrimeBlast.Essence
             };
         }
 
@@ -107,14 +109,16 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 .Combine(SickeningBlast.Create(context))
                 .Combine(BrimstoneBlast.Create(context))
                 .Combine(BeshadowedBlast.Create(context))
+                .Combine(HellrimeBlast.Create(context))
                 .Map(features =>
                 {
-                    var (ebFeatures, fb, sb, brimstone, beshadowed) = features.Expand();
+                    var (ebFeatures, fb, sb, brimstone, beshadowed, hellrime) = features.Expand();
 
                     ebFeatures.Essence.Least.FrightfulBlast = fb;
                     ebFeatures.Essence.Least.SickeningBlast = sb;
                     ebFeatures.Essence.Lesser.BrimstoneBlast = brimstone;
                     ebFeatures.Essence.Lesser.BeshadowedBlast = beshadowed;
+                    ebFeatures.Essence.Lesser.HellrimeBlast = hellrime;
                     
                     return ebFeatures;
                 });

@@ -58,7 +58,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                     var (ability, essenceBuff, blindness) = bps.Expand();
 
                     ability.m_Buff = essenceBuff.ToReference<BlueprintBuffReference>();
-                    ability.Group = Invocation.EssenceInvocationAbilityGroup;
+                    ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
 
                     ContextActionSavingThrow onHit() => GameActions.ContextActionSavingThrow(savingThrow =>
                     {

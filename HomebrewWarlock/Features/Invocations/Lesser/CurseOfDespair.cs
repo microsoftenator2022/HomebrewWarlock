@@ -64,6 +64,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                         var castCopy = AssetUtils.CloneBlueprint(variantCastAbility, GeneratedGuid.Get(castName), castName);
 
                         castCopy.m_Parent = ability.ToReference<BlueprintAbilityReference>();
+                        castCopy.Type = AbilityType.SpellLike;
                         castCopy.AddInvocationComponents(4);
 
                         var effectAbility = castCopy.GetComponent<AbilityEffectStickyTouch>().TouchDeliveryAbility;

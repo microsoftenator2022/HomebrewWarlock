@@ -106,6 +106,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     ability.m_Description = baseFeatures.baseFeature.m_Description;
 
+                    ability.Type = AbilityType.Special;
                     ability.EffectOnEnemy = AbilityEffectOnUnit.Harmful;
                     ability.SpellResistance = true;
                     ability.CanTargetEnemies = true;

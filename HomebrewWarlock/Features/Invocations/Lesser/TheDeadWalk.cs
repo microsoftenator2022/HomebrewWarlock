@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Components;
 using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Mechanics.Actions;
@@ -29,6 +30,9 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
             "You can turn the bones or bodies of dead creatures into undead skeletons or zombies (as the animate " +
             "dead spell). Undead created by this ability crumble into dust after 1 minute per caster level.";
 
+        [LocalizedString]
+        internal const string Duration = "1 minute/level";
+
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
             var ability = context.CloneBlueprint(BlueprintsDb.Owlcat.BlueprintAbility.AnimateDead,
@@ -36,12 +40,15 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 nameof(GeneratedGuid.TheDeadWalkAbility))
                 .Map(ability =>
                 {
+                    ability.Type = AbilityType.SpellLike;
                     ability.AddInvocationComponents(4);
 
                     foreach (var casm in ability.GetComponent<AbilityEffectRunAction>().Actions.Actions
                         .OfType<ContextActionSpawnMonster>()
                         .Where(a => a.DurationValue.Rate is DurationRate.Rounds))
                         casm.DurationValue.Rate = DurationRate.Minutes;
+
+                    ability.LocalizedDuration = LocalizedStrings.Features_Invocations_Lesser_TheDeadWalk_Duration;
 
                     return ability;
                 });
