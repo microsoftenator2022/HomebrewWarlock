@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using HomebrewWarlock.Features.EldritchBlast;
+using HomebrewWarlock.Features.EldritchBlast.Components;
 using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
@@ -36,14 +37,33 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
             "This eldritch essence invocation allows you to change your eldritch blast into a beshadowed blast. Any " +
             "creature struck by a beshadowed blast must succeed on a Fortitude save or be blinded for 1 round.";
 
-        internal static BlueprintInitializationContext.ContextInitializer<EssenceFeature> Create(BlueprintInitializationContext context)
+        internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
             var essenceBuff = context.NewBlueprint<BlueprintBuff>(
                 GeneratedGuid.Get("BeshadowedBlastEssenceBuff"),
                 nameof(GeneratedGuid.BeshadowedBlastEssenceBuff))
-                .Map(buff =>
+                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintBuff.BlindnessBuff))
+                .Map(bps =>
                 {
+                    var (buff, blindness) = bps;
+
                     buff.m_Flags = BlueprintBuff.Flags.StayOnDeath | BlueprintBuff.Flags.HiddenInUi;
+
+                    buff.AddComponent<EldritchBlastEssence>(c =>
+                    {
+                        c.EquivalentSpellLevel = 4;
+
+                        c.Actions.Add(GameActions.ContextActionSavingThrow(savingThrow =>
+                        {
+                            savingThrow.Type = SavingThrowType.Fortitude;
+                            savingThrow.Actions.Add(GameActions.ContextActionConditionalSaved(save => save.Failed.Add(
+                                GameActions.ContextActionApplyBuff(ab =>
+                                {
+                                    ab.m_Buff = blindness.ToReference<BlueprintBuffReference>();
+                                    ab.DurationValue.BonusValue = 1;
+                                }))));
+                        }));
+                    });
 
                     return buff;
                 });
@@ -60,22 +80,13 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                     ability.m_Buff = essenceBuff.ToReference<BlueprintBuffReference>();
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
 
-                    ContextActionSavingThrow onHit() => GameActions.ContextActionSavingThrow(savingThrow =>
-                    {
-                        savingThrow.Type = SavingThrowType.Fortitude;
-                        savingThrow.Actions.Add(GameActions.ContextActionConditionalSaved(save => save.Failed.Add(
-                            GameActions.ContextActionApplyBuff(ab =>
-                            {
-                                ab.m_Buff = blindness.ToReference<BlueprintBuffReference>();
-                                ab.DurationValue.BonusValue = 1;
-                            }))));
-                    });
+                    //return (ability,
+                    //    new EldritchBlastComponents.EssenceEffect(
+                    //    essenceBuff,
+                    //    () => new[] { onHit() },
+                    //    4));
 
-                    return (ability,
-                        new EldritchBlastComponents.EssenceEffect(
-                        essenceBuff,
-                        () => new[] { onHit() },
-                        4));
+                    return ability;
                 });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
@@ -84,7 +95,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 .Combine(ability)
                 .Map(bps =>
                 {
-                    var (feature, ability, essenceEffect) = bps.Flatten();
+                    var (feature, ability) = bps;
 
                     feature.m_DisplayName = ability.m_DisplayName =
                         LocalizedStrings.Features_Invocations_Lesser_BeshadowedBlast_DisplayName;
@@ -96,7 +107,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
 
-                    return new EssenceFeature(feature, essenceEffect);
+                    return feature;
                 });
 
             return feature;

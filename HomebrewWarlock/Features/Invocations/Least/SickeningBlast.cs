@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 using HomebrewWarlock.Features.EldritchBlast;
+using HomebrewWarlock.Features.EldritchBlast.Components;
 using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Spells;
-using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
@@ -38,15 +38,46 @@ namespace HomebrewWarlock.Features.Invocations.Least
             "minute. A sickened creature struck by a second sickening blast is not affected by the sickening aspect " +
             "of the blast but still takes damage normally.";
 
-        internal static BlueprintInitializationContext.ContextInitializer<EssenceFeature> Create(
+        internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(
             BlueprintInitializationContext context)
         {
             var essenceBuff = context.NewBlueprint<BlueprintBuff>(
                 GeneratedGuid.Get("SickeningBlastEssenceBuff"),
                 nameof(GeneratedGuid.SickeningBlastEssenceBuff))
-                .Map(buff =>
+                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintBuff.Sickened))
+                .Map(bps =>
                 {
+                    var (buff, sickened) = bps;
+
                     buff.m_Flags = BlueprintBuff.Flags.StayOnDeath | BlueprintBuff.Flags.HiddenInUi;
+
+                    buff.AddComponent<EldritchBlastEssence>(c =>
+                    {
+                        c.EquivalentSpellLevel = 2;
+
+                        c.Actions.Add(GameActions.Conditional(targetIsShaken =>
+                        {
+                            targetIsShaken.ConditionsChecker.Add(Conditions.ContextConditionHasBuffWithDescriptor(
+                                condition =>
+                                {
+                                    condition.SpellDescriptor = SpellDescriptor.Sickened;
+                                }));
+
+                            targetIsShaken.IfFalse.Add(
+                                GameActions.ContextActionSavingThrow(savingThrow =>
+                                {
+                                    savingThrow.Type = SavingThrowType.Fortitude;
+                                    savingThrow.Actions.Add(
+                                        GameActions.ContextActionConditionalSaved(save => save.Failed.Add(
+                                            GameActions.ContextActionApplyBuff(applyBuff =>
+                                            {
+                                                applyBuff.m_Buff = sickened.ToReference<BlueprintBuffReference>();
+                                                applyBuff.DurationValue.Rate = DurationRate.Minutes;
+                                                applyBuff.DurationValue.BonusValue = 1;
+                                            }))));
+                                }));
+                        }));
+                    });
 
                     return buff;
                 });
@@ -55,10 +86,9 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 GeneratedGuid.Get("SickeningBlastAbility"),
                 nameof(GeneratedGuid.SickeningBlastAbility))
                 .Combine(essenceBuff)
-                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintBuff.Sickened))
                 .Map(bps =>
                 {
-                    var (ability, essenceBuff, debuff) = bps.Expand();
+                    var (ability, essenceBuff) = bps;
 
                     ability.m_DisplayName = LocalizedStrings.Features_Invocations_Least_SickeningBlast_DisplayName;
                     ability.m_Description = LocalizedStrings.Features_Invocations_Least_SickeningBlast_Description;
@@ -68,39 +98,17 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
 
-                    Conditional onHit() => GameActions.Conditional(targetIsShaken =>
-                    {
-                        targetIsShaken.ConditionsChecker.Add(Conditions.ContextConditionHasBuffWithDescriptor(
-                            condition =>
-                            {
-                                condition.SpellDescriptor = SpellDescriptor.Sickened;
-                            }));
-
-                        targetIsShaken.IfFalse.Add(
-                            GameActions.ContextActionSavingThrow(savingThrow =>
-                            {
-                                savingThrow.Type = SavingThrowType.Fortitude;
-                                savingThrow.Actions.Add(
-                                    GameActions.ContextActionConditionalSaved(save => save.Failed.Add(
-                                        GameActions.ContextActionApplyBuff(applyBuff =>
-                                        {
-                                            applyBuff.m_Buff = debuff.ToReference<BlueprintBuffReference>();
-                                            applyBuff.DurationValue.Rate = DurationRate.Minutes;
-                                            applyBuff.DurationValue.BonusValue = 1;
-                                        }))));
-                            }));
-                    });
-
-                    return (ability, new EldritchBlastComponents.EssenceEffect(essenceBuff, () => new[] { onHit() }, 2));
+                    //return (ability, new EldritchBlastComponents.EssenceEffect(essenceBuff, () => new[] { onHit() }, 2));
+                    return ability;
                 });
 
-            var featureAndEssenceEffect = context.NewBlueprint<BlueprintFeature>(
+            var feature = context.NewBlueprint<BlueprintFeature>(
                 GeneratedGuid.Get("SickeningBlastFeature"),
                 nameof(GeneratedGuid.SickeningBlastFeature))
                 .Combine(ability)
                 .Map(bps =>
                 {
-                    var (feature, ability, essenceEffect) = bps.Flatten();
+                    var (feature, ability) = bps;
 
                     feature.m_DisplayName = LocalizedStrings.Features_Invocations_Least_SickeningBlast_DisplayName;
                     feature.m_Description = LocalizedStrings.Features_Invocations_Least_SickeningBlast_Description;
@@ -108,10 +116,10 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
 
-                    return new EssenceFeature(feature, essenceEffect);
+                    return feature;
                 });
 
-            return featureAndEssenceEffect;
+            return feature;
         }
     }
 }

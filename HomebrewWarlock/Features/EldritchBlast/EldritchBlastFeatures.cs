@@ -17,7 +17,7 @@ using MicroWrath.Util.Linq;
 
 namespace HomebrewWarlock.Features.EldritchBlast
 {
-    internal record class EssenceFeature(BlueprintFeature Feature, EldritchBlastComponents.EssenceEffect Essence);
+    //internal record class EssenceFeature(BlueprintFeature Feature, EldritchBlastComponents.EssenceEffect Essence);
 
     internal class EldritchBlastFeatures
     {
@@ -53,16 +53,16 @@ namespace HomebrewWarlock.Features.EldritchBlast
         {
             internal class LeastEssence
             {
-                public EssenceFeature FrightfulBlast = null!;
-                public EssenceFeature SickeningBlast = null!;
+                public BlueprintFeature FrightfulBlast = null!;
+                public BlueprintFeature SickeningBlast = null!;
             }
             public readonly LeastEssence Least = new();
 
             internal class LesserEssence
             {
-                public EssenceFeature BrimstoneBlast = null!;
-                public EssenceFeature BeshadowedBlast = null!;
-                public EssenceFeature HellrimeBlast = null!;
+                public BlueprintFeature BrimstoneBlast = null!;
+                public BlueprintFeature BeshadowedBlast = null!;
+                public BlueprintFeature HellrimeBlast = null!;
             }
             public readonly LesserEssence Lesser = new();
 
@@ -78,15 +78,15 @@ namespace HomebrewWarlock.Features.EldritchBlast
             }
             public readonly DarkEssence Dark = new();
 
-            public IEnumerable<EldritchBlastComponents.EssenceEffect> EssenceEffects => new[]
-            {
-                Least.FrightfulBlast.Essence,
-                Least.SickeningBlast.Essence,
+            //public IEnumerable<EldritchBlastComponents.EssenceEffect> EssenceEffects => new[]
+            //{
+            //    Least.FrightfulBlast.Essence,
+            //    Least.SickeningBlast.Essence,
 
-                Lesser.BrimstoneBlast.Essence,
-                Lesser.BeshadowedBlast.Essence,
-                Lesser.HellrimeBlast.Essence
-            };
+            //    Lesser.BrimstoneBlast.Essence,
+            //    Lesser.BeshadowedBlast.Essence,
+            //    Lesser.HellrimeBlast.Essence
+            //};
         }
 
         public BlueprintFeature EldritchBlastRank = null!;
@@ -142,9 +142,9 @@ namespace HomebrewWarlock.Features.EldritchBlast
             //        return ees;
             //    });
 
-            var essenceEffects = ebFeatures.Map(ebFeatures => ebFeatures.Essence.EssenceEffects);
+            //var essenceEffects = ebFeatures.Map(ebFeatures => ebFeatures.Essence.EssenceEffects);
 
-            var baseFeatures = EldritchBlast.CreateEldritchBlast(context, projectile, essenceEffects);
+            var baseFeatures = EldritchBlast.CreateEldritchBlast(context, projectile);
 
             ebFeatures = ebFeatures
                 .Combine(baseFeatures)
@@ -160,7 +160,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
 
             ebFeatures = ebFeatures
                 .Combine(EldritchSpear.CreateBlast(context, baseFeatures))
-                .Combine(HideousBlow.Create(context, baseFeatures, essenceEffects))
+                .Combine(HideousBlow.Create(context, baseFeatures))
                 .Combine(EldritchChain.CreateBlast(context, baseFeatures))
                 .Map(features =>
                 {

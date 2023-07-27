@@ -57,15 +57,15 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                     prerequisite.IsPrerequisiteFor = new() { selection.ToReference<BlueprintFeatureReference>() };
 #endif
                     selection.AddFeatures(
-                        ebFeatures.Essence.Lesser.BrimstoneBlast.Feature,
-                        ebFeatures.Essence.Lesser.BeshadowedBlast.Feature,
+                        ebFeatures.Essence.Lesser.BrimstoneBlast,
+                        ebFeatures.Essence.Lesser.BeshadowedBlast,
                         curseOfDespair,
                         fellFlight,
                         ebFeatures.Blasts.Lesser.EldritchChain,
                         theDeadWalk,
                         voidsense,
                         walkUnseen,
-                        ebFeatures.Essence.Lesser.HellrimeBlast.Feature);
+                        ebFeatures.Essence.Lesser.HellrimeBlast);
 
                     return selection;
 

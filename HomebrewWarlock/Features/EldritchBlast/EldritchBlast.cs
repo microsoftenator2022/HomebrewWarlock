@@ -75,48 +75,34 @@ namespace HomebrewWarlock.Features.EldritchBlast
         public static readonly IMicroBlueprint<BlueprintFeature> FeatureRef = new MicroBlueprint<BlueprintFeature>(GeneratedGuid.EldritchBlastRank);
         public static readonly IMicroBlueprint<BlueprintFeature> RankFeatureRef = new MicroBlueprint<BlueprintFeature>(GeneratedGuid.EldritchBlastRank);
 
+        private static readonly Components.BlastAbility BasicBlast = new(1);
+
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintAbility> CreateAbility(
             BlueprintInitializationContext context,
-            BlueprintInitializationContext.ContextInitializer<BlueprintProjectile> projectile,
-            BlueprintInitializationContext.ContextInitializer<IEnumerable<EldritchBlastComponents.EssenceEffect>> essenceBuffs)
+            BlueprintInitializationContext.ContextInitializer<BlueprintProjectile> projectile)
         {
             var ability = context.NewBlueprint<BlueprintAbility>(GeneratedGuid.EldritchBlastAbility, nameof(GeneratedGuid.EldritchBlastAbility))
-                .Combine(essenceBuffs)
                 .Combine(projectile)
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintItemWeapon.RayItem))
                 .Map(bps =>
                 {
-                    var (ability, essenceBuffs, projectile, rayItem) = bps.Expand();
+                    var (ability, projectile, rayItem) = bps.Expand();
 
-                    ability.Type = AbilityType.Special;
+                    ability = BasicBlast.ConfigureAbility(ability, RankFeatureRef.ToReference<BlueprintFeature, BlueprintFeatureReference>());
+                    
                     ability.Range = AbilityRange.Close;
+                    
+                    ability.AddComponent<Components.DeliverEldritchBlastProjectile>(c =>
+                    {
+                        c.DefaultProjectile = projectile.ToReference<BlueprintProjectileReference>();
 
-                    ability.CanTargetEnemies = true;
-                    ability.SpellResistance = true;
-                    ability.EffectOnAlly = AbilityEffectOnUnit.None;
-                    ability.EffectOnEnemy = AbilityEffectOnUnit.Harmful;
-                    ability.Animation = UnitAnimationActionCastSpell.CastAnimationStyle.Directional;
-                    ability.ActionType = UnitCommand.CommandType.Standard;
+                        c.m_Length = new();
+                        c.m_LineWidth = new() { m_Value = 5 };
 
-                    EldritchBlastComponents.AddBlastComponents(
-                        ability,
-                        1,
-                        RankFeatureRef.ToReference<BlueprintFeature, BlueprintFeatureReference>(),
-                        essenceBuffs,
-                        c =>
-                        {
-                            c.m_Projectiles = new[]
-                            {
-                                projectile.ToReference<BlueprintProjectileReference>()
-                            };
+                        c.NeedAttackRoll = true;
 
-                            c.m_Length = new();
-                            c.m_LineWidth = new() { m_Value = 5 };
-
-                            c.NeedAttackRoll = true;
-
-                            c.m_Weapon = rayItem.ToReference<BlueprintItemWeaponReference>();
-                        });
+                        c.m_Weapon = rayItem.ToReference<BlueprintItemWeaponReference>();
+                    });
 
                     return ability;
                 });
@@ -126,10 +112,9 @@ namespace HomebrewWarlock.Features.EldritchBlast
 
         internal static BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures>
             CreateEldritchBlast(BlueprintInitializationContext context,
-            BlueprintInitializationContext.ContextInitializer<BlueprintProjectile> projectile,
-            BlueprintInitializationContext.ContextInitializer<IEnumerable<EldritchBlastComponents.EssenceEffect>> essenceEffects)
+            BlueprintInitializationContext.ContextInitializer<BlueprintProjectile> projectile)
         {
-            var ability = CreateAbility(context, projectile, essenceEffects);
+            var ability = CreateAbility(context, projectile);
 
             var rankFeature = context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get("EldritchBlastRank"), nameof(GeneratedGuid.EldritchBlastRank))
                 .Map(feature =>

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using HomebrewWarlock.Features.EldritchBlast;
+using HomebrewWarlock.Features.EldritchBlast.Components;
 using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
@@ -40,20 +41,11 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
             "take a –4 penalty to Dexterity for 10 minutes. The Dexterity penalties from multiple hellrime blasts " +
             "do not stack.";
 
-        internal static BlueprintInitializationContext.ContextInitializer<EssenceFeature> Create(
+        internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(
             BlueprintInitializationContext context)
         {
-            var essenceBuff = context.NewBlueprint<BlueprintBuff>(
-                GeneratedGuid.Get("HellrimeBlastEssenceBuff"),
-                nameof(GeneratedGuid.HellrimeBlastEssenceBuff))
-                .Map(buff =>
-                {
-                    buff.m_Flags = BlueprintBuff.Flags.StayOnDeath | BlueprintBuff.Flags.HiddenInUi;
 
-                    return buff;
-                });
-
-            var buff = context.NewBlueprint<BlueprintBuff>(
+            var dexPenaltyBuff = context.NewBlueprint<BlueprintBuff>(
                 GeneratedGuid.Get("HellrimeBlastBuff"),
                 nameof(GeneratedGuid.HellrimeBlastBuff))
                 .Map(buff =>
@@ -70,15 +62,50 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                     return buff;
                 });
 
+            var essenceBuff = context.NewBlueprint<BlueprintBuff>(
+                GeneratedGuid.Get("HellrimeBlastEssenceBuff"),
+                nameof(GeneratedGuid.HellrimeBlastEssenceBuff))
+                .Combine(dexPenaltyBuff)
+                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.PolarRay00))
+                .Map(bps =>
+                {
+                    var (buff, dexPenaltyBuff, projectile) = bps.Expand();
+
+                    buff.m_Flags = BlueprintBuff.Flags.StayOnDeath | BlueprintBuff.Flags.HiddenInUi;
+
+                    buff.AddComponent<EldritchBlastEssence>(c =>
+                    {
+                        c.EquivalentSpellLevel = 4;
+
+                        c.BlastDamageType = DamageEnergyType.Cold;
+
+                        c.Actions.Add(GameActions.ContextActionSavingThrow(savingThrow =>
+                        {
+                            savingThrow.Type = SavingThrowType.Fortitude;
+                            savingThrow.Actions.Add(GameActions.ContextActionConditionalSaved(save => save.Failed.Add(
+                                GameActions.ContextActionApplyBuff(ab =>
+                                {
+                                    ab.m_Buff = dexPenaltyBuff.ToReference<BlueprintBuffReference>();
+                                    ab.DurationValue.Rate = DurationRate.Minutes;
+                                    ab.DurationValue.BonusValue = 10;
+                                }))));
+                        }));
+                        c.Projectiles.Add(AbilityProjectileType.Simple, new[] { projectile.ToReference<BlueprintProjectileReference>() });
+                    });
+
+                    return buff;
+                });
+
+
             var ability = context.NewBlueprint<BlueprintActivatableAbility>(
                 GeneratedGuid.Get("HellrimeBlastToggleAbility"),
                 nameof(GeneratedGuid.HellrimeBlastToggleAbility))
                 .Combine(essenceBuff)
-                .Combine(buff)
-                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.PolarRay00))
+                .Combine(dexPenaltyBuff)
+                //.Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.PolarRay00))
                 .Map(bps =>
                 {
-                    var (ability, essenceBuff, dexPenaltyBuff, projectile) = bps.Expand();
+                    var (ability, essenceBuff, dexPenaltyBuff) = bps.Expand();
 
                     dexPenaltyBuff.m_DisplayName = ability.m_DisplayName =
                         LocalizedStrings.Features_Invocations_Lesser_HellrimeBlast_DisplayName;
@@ -92,28 +119,18 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
 
-                    GameAction onHit() => GameActions.ContextActionSavingThrow(savingThrow =>
-                    {
-                        savingThrow.Type = SavingThrowType.Fortitude;
-                        savingThrow.Actions.Add(GameActions.ContextActionConditionalSaved(save => save.Failed.Add(
-                            GameActions.ContextActionApplyBuff(ab =>
-                            {
-                                ab.m_Buff = dexPenaltyBuff.ToReference<BlueprintBuffReference>();
-                                ab.DurationValue.Rate = DurationRate.Minutes;
-                                ab.DurationValue.BonusValue = 10;
-                            }))));
-                    });
+                    //return (ability, new EldritchBlastComponents.EssenceEffect(
+                    //    essenceBuff,
+                    //    () => new[] { onHit() },
+                    //    4,
+                    //    DamageEnergyType.Cold,
+                    //    new[]
+                    //    {
+                    //        (AbilityProjectileType.Simple,
+                    //        new[] { projectile.ToReference<BlueprintProjectileReference>() })
+                    //    }));
 
-                    return (ability, new EldritchBlastComponents.EssenceEffect(
-                        essenceBuff,
-                        () => new[] { onHit() },
-                        4,
-                        DamageEnergyType.Cold,
-                        new[]
-                        {
-                            (AbilityProjectileType.Simple,
-                            new[] { projectile.ToReference<BlueprintProjectileReference>() })
-                        }));
+                    return ability;
                 });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
@@ -122,7 +139,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 .Combine(ability)
                 .Map(bps =>
                 {
-                    var (feature, ability, essenceEffect) = bps.Flatten();
+                    var (feature, ability) = bps;
 
                     feature.m_DisplayName = ability.m_DisplayName;
                     feature.m_Description = ability.m_Description;
@@ -130,7 +147,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
 
-                    return new EssenceFeature(feature, essenceEffect);
+                    return feature;
                 });
 
             return feature;

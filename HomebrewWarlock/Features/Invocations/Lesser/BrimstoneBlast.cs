@@ -2,6 +2,7 @@
 using System.Linq;
 
 using HomebrewWarlock.Features.EldritchBlast;
+using HomebrewWarlock.Features.EldritchBlast.Components;
 using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
@@ -121,19 +122,9 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
             "after the initial brimstone blast attack. A creature burning in this way never takes more than 2d6 " +
             "points of fire damage in a round, even if it has been hit by more than one brimstone blast.";
 
-        internal static BlueprintInitializationContext.ContextInitializer<EssenceFeature> Create(
+        internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(
             BlueprintInitializationContext context)
         {
-            var buff = context.NewBlueprint<BlueprintBuff>(
-                GeneratedGuid.Get("BrimstoneBlastEssenceBuff"),
-                nameof(GeneratedGuid.BrimstoneBlastEssenceBuff))
-                .Map(buff =>
-                {
-                    buff.m_Flags = BlueprintBuff.Flags.StayOnDeath | BlueprintBuff.Flags.HiddenInUi;
-
-                    return buff;
-                });
-
             var dotBuff = context.NewBlueprint<BlueprintBuff>(
                 GeneratedGuid.Get("BrimstoneBlastPerRoundDamage"),
                 nameof(GeneratedGuid.BrimstoneBlastPerRoundDamage))
@@ -167,13 +158,13 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                     {
                         ab.m_Buff = dotBuff.ToReference<BlueprintBuffReference>();
                         ab.DurationValue.BonusValue.ValueType = ContextValueType.Rank;
-                        ab.IsNotDispelable = true;
+                        //ab.IsNotDispelable = true;
                     })));
 
                     applyBuff.AddContextRankConfig(c =>
                     {
                         c.m_BaseValueType = ContextRankBaseValueType.ClassLevel;
-                        c.m_Class = new []
+                        c.m_Class = new[]
                         {
                             WarlockClass.Blueprint.ToReference<BlueprintCharacterClass, BlueprintCharacterClassReference>()
                         };
@@ -188,22 +179,55 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                     return applyBuff;
                 });
 
-            var ability = context.NewBlueprint<BlueprintActivatableAbility>(
-                GeneratedGuid.Get("BrimstonBlastAbility"),
-                nameof(GeneratedGuid.BrimstonBlastAbility))
-                .Combine(buff)
-                .Combine(dotBuff)
+            var essenceBuff = context.NewBlueprint<BlueprintBuff>(
+                GeneratedGuid.Get("BrimstoneBlastEssenceBuff"),
+                nameof(GeneratedGuid.BrimstoneBlastEssenceBuff))
                 .Combine(applyDotBuff)
-                //.Combine(CreateProjectile(context))
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.HellfireRay00))
                 .Map(bps =>
                 {
-                    var (ability, essenceBuff, dotBuff, applyBuff, projectile) = bps.Expand();
+                    var (essenceBuff, applyBuff, projectile) = bps.Expand();
 
-                    applyBuff.m_DisplayName = dotBuff.m_DisplayName = ability.m_DisplayName =
+                    essenceBuff.m_Flags = BlueprintBuff.Flags.StayOnDeath | BlueprintBuff.Flags.HiddenInUi;
+
+                    essenceBuff.AddComponent<EldritchBlastEssence>(c =>
+                    {
+                        c.EquivalentSpellLevel = 3;
+
+                        c.BlastDamageType = DamageEnergyType.Fire;
+
+                        c.Actions.Add(GameActions.ContextActionSavingThrow(savingThrow =>
+                        {
+                            savingThrow.Type = SavingThrowType.Reflex;
+                            savingThrow.Actions.Add(GameActions.ContextActionConditionalSaved(save => save.Failed.Add(
+                                GameActions.ContextActionApplyBuff(db =>
+                                {
+                                    db.m_Buff = applyBuff.ToReference<BlueprintBuffReference>();
+                                    db.DurationValue.BonusValue = 1;
+                                    db.IsNotDispelable = true;
+                                }))));
+                        }));
+
+                        c.Projectiles.Add(AbilityProjectileType.Simple, new[] { projectile.ToReference<BlueprintProjectileReference>() });
+                    });
+
+                    return essenceBuff;
+                });
+
+            var ability = context.NewBlueprint<BlueprintActivatableAbility>(
+                GeneratedGuid.Get("BrimstonBlastAbility"),
+                nameof(GeneratedGuid.BrimstonBlastAbility))
+                .Combine(essenceBuff)
+                .Combine(dotBuff)
+                //.Combine(CreateProjectile(context))
+                .Map(bps =>
+                {
+                    var (ability, essenceBuff, dotBuff) = bps.Expand();
+
+                    dotBuff.m_DisplayName = ability.m_DisplayName =
                         LocalizedStrings.Features_Invocations_Lesser_BrimstoneBlast_DisplayName;
 
-                    applyBuff.m_Description = dotBuff.m_Description = ability.m_Description =
+                    dotBuff.m_Description = ability.m_Description =
                         LocalizedStrings.Features_Invocations_Lesser_BrimstoneBlast_Description;
 
                     dotBuff.m_Icon = ability.m_Icon = Sprites.BrimstoneBlast;
@@ -212,28 +236,19 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
 
-                    GameAction onHit() => GameActions.ContextActionSavingThrow(savingThrow =>
-                    {
-                        savingThrow.Type = SavingThrowType.Reflex;
-                        savingThrow.Actions.Add(GameActions.ContextActionConditionalSaved(save => save.Failed.Add(
-                            GameActions.ContextActionApplyBuff(ab =>
-                            {
-                                ab.m_Buff = applyBuff.ToReference<BlueprintBuffReference>();
-                                ab.DurationValue.BonusValue = 1;
-                            }))));
-                    });
+                    //return (ability, new EldritchBlastComponents.EssenceEffect(
+                    //essenceBuff,
+                    //() => new[] { onHit() },
+                    //3,
+                    //DamageEnergyType.Fire,
+                    //new []
+                    //{ 
+                    //    (AbilityProjectileType.Simple,
+                    //    new [] { projectile.ToReference<BlueprintProjectileReference>() })
+                    //}
+                    //));
 
-                    return (ability, new EldritchBlastComponents.EssenceEffect(
-                    essenceBuff,
-                    () => new[] { onHit() },
-                    3,
-                    DamageEnergyType.Fire,
-                    new []
-                    { 
-                        (AbilityProjectileType.Simple,
-                        new [] { projectile.ToReference<BlueprintProjectileReference>() })
-                    }
-                    ));
+                    return ability;
                 });
 
             return context.NewBlueprint<BlueprintFeature>(
@@ -242,7 +257,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 .Combine(ability)
                 .Map(bps =>
                 {
-                    var (feature, ability, essenceEffect) = bps.Flatten();
+                    var (feature, ability) = bps;
 
                     feature.m_DisplayName = ability.m_DisplayName;
                     feature.m_Description = ability.m_Description;
@@ -250,7 +265,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
 
-                    return new EssenceFeature(feature, essenceEffect);
+                    return feature;
                 });
         }
     }

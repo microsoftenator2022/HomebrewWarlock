@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using HomebrewWarlock.Features.EldritchBlast;
+using HomebrewWarlock.Features.EldritchBlast.Components;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
@@ -32,8 +33,6 @@ using MicroWrath.Localization;
 using MicroWrath.Util;
 using MicroWrath.Util.Assets;
 using MicroWrath.Util.Unity;
-
-using UniRx.Triggers;
 
 using UnityEngine;
 
@@ -74,6 +73,20 @@ namespace HomebrewWarlock.Features.Invocations.Least
             });
     }
 
+    internal class EldritchBlastTouch(BlueprintItemWeaponReference touchWeapon, int equivalentSpellLevel = 1) : BlastAbility(equivalentSpellLevel)
+    {
+        public override BlueprintAbility ConfigureAbility(BlueprintAbility ability, BlueprintFeatureReference rankFeature)
+        {
+            ability = base.ConfigureAbility(ability, rankFeature);
+
+            ability.Range = AbilityRange.Touch;
+
+            ability.AddComponent<AbilityDeliverTouch>(c => c.m_TouchWeapon = touchWeapon);
+
+            return ability;
+        }
+    }
+
     internal static class HideousBlow
     {
         [LocalizedString]
@@ -88,37 +101,22 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(
             BlueprintInitializationContext context,
-            BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures,
-            BlueprintInitializationContext.ContextInitializer<IEnumerable<EldritchBlastComponents.EssenceEffect>> essenceEffects)
+            BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures)
         {
             var onHitAbility = context.NewBlueprint<BlueprintAbility>(
                 GeneratedGuid.Get("HideousBlowOnHitAbility"),
                 nameof(GeneratedGuid.HideousBlowOnHitAbility))
                 .Combine(baseFeatures)
-                .Combine(essenceEffects)
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintItemWeapon.TouchItem))
-                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.Disintegrate00))
                 .Map(bps =>
                 {
-                    var (ability, baseFeatures, essenceEffects, touchWeapon, disintegrateProjectile) = bps.Expand();
+                    var (ability, baseFeatures, touchWeapon) = bps.Expand();
 
                     ability.m_DisplayName = baseFeatures.baseFeature.m_DisplayName;
-
                     ability.m_Description = baseFeatures.baseFeature.m_Description;
 
-                    ability.Type = AbilityType.Special;
-                    ability.EffectOnEnemy = AbilityEffectOnUnit.Harmful;
-                    ability.SpellResistance = true;
-                    ability.CanTargetEnemies = true;
-
-                    ability.AddComponent<AbilityDeliverTouch>(c =>
-                        c.m_TouchWeapon = touchWeapon.ToReference<BlueprintItemWeaponReference>());
-
-                    EldritchBlastComponents.AddBlastComponents(
-                        ability,
-                        1,
-                        baseFeatures.rankFeature.ToReference<BlueprintFeatureReference>(),
-                        essenceEffects);
+                    ability = new EldritchBlastTouch(touchWeapon.ToReference<BlueprintItemWeaponReference>())
+                        .ConfigureAbility(ability, baseFeatures.rankFeature.ToReference<BlueprintFeatureReference>());
 
                     return ability;
                 });
@@ -128,10 +126,9 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 nameof(GeneratedGuid.HideousBlowWeaponEnchantment))
                 .Combine(onHitAbility)
                 .Combine(baseFeatures)
-                .Combine(essenceEffects)
                 .Map(bps =>
                 {
-                    var (enchant, onHitAbility, baseFeatures, essenceEffects) = bps.Expand();
+                    var (enchant, onHitAbility, baseFeatures) = bps.Expand();
 
                     enchant.AddComponent<AddInitiatorAttackWithWeaponTrigger>(c =>
                     {

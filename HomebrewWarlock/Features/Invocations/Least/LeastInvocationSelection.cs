@@ -49,8 +49,8 @@ namespace HomebrewWarlock.Features.Invocations.Least
                         beguilingInfluence,
                         darkOnesOwnLuck,
                         otherworldlyWhispers,
-                        eldritchBlastFeatures.Essence.Least.FrightfulBlast.Feature,
-                        eldritchBlastFeatures.Essence.Least.SickeningBlast.Feature,
+                        eldritchBlastFeatures.Essence.Least.FrightfulBlast,
+                        eldritchBlastFeatures.Essence.Least.SickeningBlast,
                         eldritchBlastFeatures.Blasts.Least.EldritchSpear,
                         eldritchBlastFeatures.Blasts.Least.HideousBlow);
 
