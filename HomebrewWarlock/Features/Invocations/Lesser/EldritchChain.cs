@@ -116,9 +116,10 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
             "at 20th level. Each new target must be within 30 feet of the previous one, and you can’t target the " +
             "same creature more than once with the eldritch chain. If you miss any target in the chain, the " +
             "eldritch chain attack ends there." + Environment.NewLine +
-            "Each target struck after the first takes half the damage dealt to the first target. This reduction in " +
-            "damage to secondary targets applies to any effect that increases the damage of your eldritch blast " +
-            "(such as vitriolic blast)." + Environment.NewLine +
+            "Each target struck after the first takes half the damage dealt to the first target. " +
+            //"This reduction in damage to secondary targets applies to any effect that increases the damage of your " +
+            //"eldritch blast (such as vitriolic blast)." +
+            Environment.NewLine +
             "You must make a separate spell penetration check for each target, if applicable.";
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> CreateBlast(
@@ -144,6 +145,8 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                     chain.TargetsCount.ValueType = ContextValueType.Rank;
                     chain.TargetsCount.ValueRank = AbilityRankType.ProjectilesCount;
 
+                    chain.DefaultProjectile = baseFeatures.projectile.ToReference<BlueprintProjectileReference>();
+
                     ability.AddContextRankConfig(c =>
                     {
                         c.m_Type = AbilityRankType.ProjectilesCount;
@@ -160,82 +163,6 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     return ability;
                 });
-
-            //baseFeatures
-            //    .Map(bps =>
-            //    {
-            //        var ability = AssetUtils.CloneBlueprint(
-            //            bps.baseAbility,
-            //            GeneratedGuid.Get("EldritchChainAbility"),
-            //            nameof(GeneratedGuid.EldritchChainAbility));
-
-            //        ability.m_DisplayName = LocalizedStrings.Features_Invocations_Lesser_EldritchChain_DisplayName;
-            //        ability.m_Description = LocalizedStrings.Features_Invocations_Lesser_EldritchChain_Description;
-            //        ability.m_Icon = Sprites.ChainLightning;
-
-            //        ability.GetComponent<EldritchBlastCalculateSpellLevel>().BaseEquivalentSpellLevel = 4;
-
-            //        var projectileVariants = ability.GetComponent<AbilityDeliverProjectileVariant>();
-            //        ability.RemoveComponent(projectileVariants);
-
-            //        var chainVariants = AbilityDeliverChainProjectileVariant.FromAbilityDeliverProjectileVariant(projectileVariants);
-                    
-            //        chainVariants.Radius = new Feet(30);
-
-            //        chainVariants.TargetsCount.ValueType = ContextValueType.Rank;
-            //        chainVariants.TargetsCount.ValueRank = AbilityRankType.ProjectilesCount;
-
-            //        ability.AddComponent(chainVariants);
-
-            //        ability.AddContextRankConfig(c =>
-            //        {
-            //            c.m_Type = AbilityRankType.ProjectilesCount;
-
-            //            c.m_BaseValueType = ContextRankBaseValueType.ClassLevel;
-            //            c.m_Class = new[] { WarlockClass.Blueprint.ToReference<BlueprintCharacterClass, BlueprintCharacterClassReference>() };
-
-            //            c.m_Progression = ContextRankProgression.OnePlusDivStep;
-            //            c.m_StepLevel = 5;
-
-            //            c.m_Min = 2;
-            //            c.m_UseMin = true;
-            //        });
-
-            //        Conditional ChainDamage(ContextActionDealDamage damage)
-            //        {
-            //            return GameActions.Conditional(conditional =>
-            //            {
-            //                conditional.ConditionsChecker.Add(Conditions.ContextConditionIsMainTarget());
-            //                conditional.IfTrue.Add(damage);
-
-            //                var damageCopy = (ContextActionDealDamage)ObjectDeepCopier.Clone(damage)!;
-            //                damageCopy.Half = true;
-            //                conditional.IfFalse.Add(damageCopy);
-            //            });
-            //        }
-
-            //        ActionList ReplaceDamageInList(ActionList actionList)
-            //        {
-            //            for (var i = 0; i < actionList.Actions.Length; i++)
-            //                if (actionList.Actions[i] is ContextActionDealDamage damage)
-            //                    actionList.Actions[i] = ChainDamage(damage);
-
-            //            return actionList;
-            //        }
-
-            //        foreach (var cList in ability.GetComponent<AbilityEffectRunAction>().Actions.Actions.OfType<ConditionalList>())
-            //        {
-            //            cList.IfFalse = ReplaceDamageInList(cList.IfFalse);
-
-            //            foreach (var (_, c) in cList.Conditionals)
-            //            {
-            //                c.IfTrue = ReplaceDamageInList(c.IfTrue);
-            //                c.IfFalse = ReplaceDamageInList(c.IfFalse);
-            //            }
-            //        }
-
-            //        return ability;
-            //    });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
                 GeneratedGuid.Get("EldritchChainFeature"),
@@ -257,62 +184,4 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
             return feature;
         }
     }
-
-    //internal class AbilityDeliverChainProjectileVariant : AbilityDeliverChain
-    //{
-    //    internal static AbilityDeliverChainProjectileVariant FromAbilityDeliverProjectileVariant(AbilityDeliverProjectileVariant adpv)
-    //    {
-    //        var defaultProjectiles = adpv.m_Projectiles;
-    //        BlueprintProjectileReference? defaultFirst = null;
-    //        BlueprintProjectileReference? defaultProjectile = null;
-
-    //        if (defaultProjectiles is not null)
-    //        {
-    //            if (defaultProjectiles.Length > 0)
-    //            {
-    //                defaultProjectile = defaultFirst = defaultProjectiles[0];
-
-    //                if (defaultProjectiles.Length > 1)
-    //                {
-    //                    defaultProjectile = defaultProjectiles[1];
-    //                }
-    //            }
-    //        }
-
-    //        var component = Construct.New.Component<AbilityDeliverChainProjectileVariant>();
-    //        component.m_ProjectileFirst = defaultFirst;
-    //        component.m_Projectile = defaultProjectile;
-    //        component.Variants = adpv.Variants;
-
-    //        return component;
-    //    }
-
-    //    public List<AbilityDeliverProjectileVariant.Variant> Variants = new();
-
-    //    private BlueprintProjectileReference? defaultProjectileFirst;
-    //    private BlueprintProjectileReference? defaultProjectile;
-
-    //    public BlueprintProjectileReference DefaultFirst => defaultProjectileFirst ??= base.m_ProjectileFirst;
-    //    public BlueprintProjectileReference Default => defaultProjectile ??= base.m_Projectile;
-
-    //    public BlueprintProjectileReference[] GetProjectiles() => Variants
-    //        .Where(v => v.Check())
-    //        .Select(v => v.Projectiles)
-    //        .FirstOrDefault() ?? new[] { DefaultFirst, Default };
-
-    //    public override IEnumerator<AbilityDeliveryTarget> Deliver(AbilityExecutionContext context, TargetWrapper target)
-    //    {
-    //        defaultProjectileFirst ??= base.m_ProjectileFirst;
-    //        defaultProjectile ??= base.m_Projectile;
-
-    //        using (context.GetDataScope(target))
-    //        {
-    //            var projectiles = GetProjectiles();
-    //            base.m_ProjectileFirst = projectiles[0];
-    //            base.m_Projectile = projectiles.Length > 1 ? projectiles[1] : projectiles[0];
-    //        }
-
-    //        return base.Deliver(context, target);
-    //    }
-    //}
 }

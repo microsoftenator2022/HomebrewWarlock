@@ -54,6 +54,7 @@ namespace HomebrewWarlock.Features.EldritchBlast.Components
             enchant.Owner.RemoveEnchantment(enchant);
         }
     }
+
     internal class EldritchBlastCalculateSpellLevel : ContextCalculateAbilityParams
     {
         public EldritchBlastCalculateSpellLevel() : this(1) { }
