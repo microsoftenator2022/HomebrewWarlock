@@ -190,7 +190,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     essenceBuff.m_Flags = BlueprintBuff.Flags.StayOnDeath | BlueprintBuff.Flags.HiddenInUi;
 
-                    essenceBuff.AddComponent<EldritchBlastEssence>(c =>
+                    essenceBuff.AddComponent<EldritchBlastElementalEssence>(c =>
                     {
                         c.EquivalentSpellLevel = 3;
 

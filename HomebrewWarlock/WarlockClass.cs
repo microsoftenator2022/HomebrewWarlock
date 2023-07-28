@@ -46,8 +46,13 @@ namespace HomebrewWarlock
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintCharacterClass> Create(BlueprintInitializationContext context) =>
             context.NewBlueprint<BlueprintCharacterClass>(GeneratedGuid.Get(nameof(WarlockClass)), nameof(WarlockClass))
-            .Map((BlueprintCharacterClass @class) =>
+            .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintStatProgression.BABMedium))
+            .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintStatProgression.SavesLow))
+            .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintStatProgression.SavesHigh))
+            .Map(bps =>
             {
+                var (@class, babMedium, savesLow, savesHigh) = bps.Expand();
+
                 @class.LocalizedName = LocalizedStrings.WarlockClass_DisplayName;
                 @class.LocalizedDescription = LocalizedStrings.WarlockClass_Description;
                 @class.LocalizedDescriptionShort = @class.LocalizedDescription;
@@ -60,10 +65,10 @@ namespace HomebrewWarlock
 
                 @class.SkillPoints = 2;
                 @class.HitDie = DiceType.D6;
-                @class.m_BaseAttackBonus = BlueprintsDb.Owlcat.BlueprintStatProgression.BABMedium.ToReference<BlueprintStatProgression, BlueprintStatProgressionReference>();
-                @class.m_FortitudeSave = BlueprintsDb.Owlcat.BlueprintStatProgression.SavesLow.ToReference<BlueprintStatProgression, BlueprintStatProgressionReference>();
-                @class.m_ReflexSave = BlueprintsDb.Owlcat.BlueprintStatProgression.SavesLow.ToReference<BlueprintStatProgression, BlueprintStatProgressionReference>();
-                @class.m_WillSave = BlueprintsDb.Owlcat.BlueprintStatProgression.SavesHigh.ToReference<BlueprintStatProgression, BlueprintStatProgressionReference>();
+                @class.m_BaseAttackBonus = babMedium.ToReference<BlueprintStatProgressionReference>();
+                @class.m_FortitudeSave = savesLow.ToReference<BlueprintStatProgressionReference>();
+                @class.m_ReflexSave = savesLow.ToReference<BlueprintStatProgressionReference>();
+                @class.m_WillSave = savesHigh.ToReference<BlueprintStatProgressionReference>();
                 
                 @class.ClassSkills = new[]
                 {

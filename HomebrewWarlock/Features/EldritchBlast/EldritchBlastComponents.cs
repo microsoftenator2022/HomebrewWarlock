@@ -89,9 +89,7 @@ namespace HomebrewWarlock.Features.EldritchBlast.Components
     }
 
     internal class EldritchBlastEssence : UnitFactComponentDelegate
-        ,
-        //IInitiatorRulebookHandler<RuleSpellResistanceCheck>,
-        IInitiatorRulebookHandler<RuleDealDamage>
+        //, IInitiatorRulebookHandler<RuleSpellResistanceCheck>
     {
         public static IEnumerable<Buff> GetEssenceBuffs(UnitEntityData unit) =>
             unit.Buffs.Enumerable.Where(buff => buff.BlueprintComponents.OfType<EldritchBlastEssence>().Any());
@@ -136,6 +134,11 @@ namespace HomebrewWarlock.Features.EldritchBlast.Components
         //}
         //public void OnEventDidTrigger(RuleSpellResistanceCheck evt) { }
 
+        public ActionList Actions = new();
+    }
+
+    internal class EldritchBlastElementalEssence : EldritchBlastEssence, IInitiatorRulebookHandler<RuleDealDamage>
+    {
         public DamageEnergyType BlastDamageType = DamageEnergyType.Magic;
         public void OnEventAboutToTrigger(RuleDealDamage evt)
         {
@@ -160,8 +163,6 @@ namespace HomebrewWarlock.Features.EldritchBlast.Components
             }
         }
         public void OnEventDidTrigger(RuleDealDamage evt) { }
-
-        public ActionList Actions = new();
     }
 
     internal class EldritchBlastEssenceActions : ContextAction

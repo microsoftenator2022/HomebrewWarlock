@@ -126,26 +126,46 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
            BlueprintInitializationContext context,
            BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures)
         {
+            var rankFeature = baseFeatures.Map(bf => bf.rankFeature);
+
+            var projectile = baseFeatures.Map(bf => bf.projectile);
+
+            var secondaryProjectile = projectile.Map(baseProjectile =>
+            {
+                var projectile = AssetUtils.CloneBlueprint(baseProjectile,
+                    GeneratedGuid.Get("EldritchChainSecondaryProjectile"),
+                    nameof(GeneratedGuid.EldritchChainSecondaryProjectile));
+
+                //projectile.CastFx = null;
+
+                projectile.SourceBone = "Locator_HitFX_00";
+
+                return projectile;
+            });
+
             var ability = context.NewBlueprint<BlueprintAbility>(
                 GeneratedGuid.Get("EldritchChainAbility"),
                 nameof(GeneratedGuid.EldritchChainAbility))
-                .Combine(baseFeatures)
+                .Combine(rankFeature)
+                .Combine(projectile)
+                .Combine(secondaryProjectile)
                 .Map(bps =>
                 {
-                    var (ability, baseFeatures) = bps;
+                    var (ability, rankFeature, projectile, secondProjectile) = bps.Expand();
 
                     ability.m_DisplayName = LocalizedStrings.Features_Invocations_Lesser_EldritchChain_DisplayName;
                     ability.m_Description = LocalizedStrings.Features_Invocations_Lesser_EldritchChain_Description;
                     ability.m_Icon = Sprites.ChainLightning;
 
-                    ability = new EldritchChainBlastAbility().ConfigureAbility(ability, baseFeatures.rankFeature.ToReference<BlueprintFeatureReference>());
+                    ability = new EldritchChainBlastAbility().ConfigureAbility(ability, rankFeature.ToReference<BlueprintFeatureReference>());
 
                     var chain = ability.GetComponent<DeliverEldritchChain>();
 
                     chain.TargetsCount.ValueType = ContextValueType.Rank;
                     chain.TargetsCount.ValueRank = AbilityRankType.ProjectilesCount;
 
-                    chain.DefaultProjectile = baseFeatures.projectile.ToReference<BlueprintProjectileReference>();
+                    chain.DefaultProjectileFirst = projectile.ToReference<BlueprintProjectileReference>();
+                    chain.DefaultProjectile = secondProjectile.ToReference<BlueprintProjectileReference>();
 
                     ability.AddContextRankConfig(c =>
                     {
