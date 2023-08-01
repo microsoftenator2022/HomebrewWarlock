@@ -8,19 +8,11 @@ using System.Threading.Tasks;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Selection;
-using Kingmaker.Enums;
 using Kingmaker.Enums.Damage;
-using Kingmaker.RuleSystem.Rules.Damage;
-using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Mechanics.Components;
 
-using MicroWrath;
 using MicroWrath.BlueprintInitializationContext;
-using MicroWrath.Extensions;
-using MicroWrath.Extensions.Components;
-using MicroWrath.Localization;
-using MicroWrath.Util;
 
 namespace HomebrewWarlock.Features
 {

@@ -9,12 +9,7 @@ using HomebrewWarlock.Features.EldritchBlast;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 
-using MicroWrath;
 using MicroWrath.BlueprintInitializationContext;
-using MicroWrath.Extensions;
-using MicroWrath.Extensions.Components;
-using MicroWrath.Localization;
-using MicroWrath.Util;
 
 namespace HomebrewWarlock.Features.Invocations.Least
 {
@@ -52,7 +47,8 @@ namespace HomebrewWarlock.Features.Invocations.Least
                         eldritchBlastFeatures.Essence.Least.FrightfulBlast,
                         eldritchBlastFeatures.Essence.Least.SickeningBlast,
                         eldritchBlastFeatures.Blasts.Least.EldritchSpear,
-                        eldritchBlastFeatures.Blasts.Least.HideousBlow);
+                        eldritchBlastFeatures.Blasts.Least.HideousBlow,
+                        eldritchBlastFeatures.Blasts.Least.EldritchGlaive);
 
                     return selection;
                 })
@@ -62,11 +58,11 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 {
                     var (selection,
                         summonSwarm,
-                        seeTheUnseem) = sf.Expand();
+                        seeTheUnseen) = sf.Expand();
 
                     selection.AddFeatures(
                         summonSwarm.ToMicroBlueprint(),
-                        seeTheUnseem.ToMicroBlueprint());
+                        seeTheUnseen.ToMicroBlueprint());
 
                     return selection;
                 });

@@ -11,12 +11,8 @@ using Kingmaker.UnitLogic.Abilities.Components;
 using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Mechanics.Actions;
 
-using MicroWrath;
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.BlueprintsDb;
-using MicroWrath.Extensions;
-using MicroWrath.Extensions.Components;
-using MicroWrath.Localization;
 
 namespace HomebrewWarlock.Features.Invocations.Lesser
 {

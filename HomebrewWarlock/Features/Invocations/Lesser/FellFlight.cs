@@ -10,11 +10,8 @@ using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Commands.Base;
 using Kingmaker.UnitLogic.FactLogic;
 
-using MicroWrath;
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.BlueprintsDb;
-using MicroWrath.Localization;
-using MicroWrath.Util;
 
 namespace HomebrewWarlock.Features.Invocations.Lesser
 {

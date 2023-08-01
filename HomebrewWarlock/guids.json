@@ -96,5 +96,13 @@
   "VoraciousDispel": "dc5cb776-7938-43b6-b653-2aad73b07552",
   "VoraciousDispelTarget": "bf5337b1-b75a-4695-9934-3daf339ed678",
   "VoraciousDispelPoint": "48f139ce-78a3-4fa6-989e-dde93e642fa6",
-  "EldritchChainSecondaryProjectile": "92a344ed-c7f8-4083-9532-e9f96718d78a"
+  "EldritchChainSecondaryProjectile": "92a344ed-c7f8-4083-9532-e9f96718d78a",
+  "EldritchGlaiveWeapon": "f06af794-17b6-4ce8-90ca-1507a6316e38",
+  "EldritchGlaiveWeaponType": "144290ee-a455-4a67-a403-5be6acf23ce5",
+  "EldritchGlaiveWeaponEnchantment": "8a1d6f2c-5582-442b-bbcf-2b7796ea073f",
+  "EldritchGlaiveOnHitAbility": "7f1ad9d8-fed3-4033-93f5-78a26007a064",
+  "EldritchGlaiveBuff": "8ee9aeb7-f4cd-4adf-8539-16ab28f72c17",
+  "EldritchGlaiveAbility": "a0f02f57-e71a-45b1-aac0-7c5dda57ba0c",
+  "EldritchGlaiveToggleAbility": "bc420928-0703-4bd2-813e-87a8edf61f53",
+  "EldritchGlaiveAttackAbility": "ab5c0f08-f55a-499e-a85e-5caf6e280e2d"
 }

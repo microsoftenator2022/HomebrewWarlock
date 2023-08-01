@@ -11,12 +11,7 @@ using Kingmaker.EntitySystem.Stats;
 using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 
-using MicroWrath;
 using MicroWrath.BlueprintInitializationContext;
-using MicroWrath.Extensions;
-using MicroWrath.Extensions.Components;
-using MicroWrath.Localization;
-using MicroWrath.Util;
 
 namespace HomebrewWarlock.Features
 {

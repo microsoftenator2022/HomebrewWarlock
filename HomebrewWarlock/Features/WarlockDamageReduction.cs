@@ -10,12 +10,7 @@ using Kingmaker.Enums.Damage;
 using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Mechanics.Components;
 
-using MicroWrath;
 using MicroWrath.BlueprintInitializationContext;
-using MicroWrath.Extensions;
-using MicroWrath.Extensions.Components;
-using MicroWrath.Localization;
-using MicroWrath.Util;
 
 namespace HomebrewWarlock.Features
 {

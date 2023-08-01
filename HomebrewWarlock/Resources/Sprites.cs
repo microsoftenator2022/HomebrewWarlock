@@ -5,9 +5,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-using MicroWrath.Util;
-using MicroWrath.Util.Unity;
-
 using UnityEngine;
 
 namespace HomebrewWarlock.Resources

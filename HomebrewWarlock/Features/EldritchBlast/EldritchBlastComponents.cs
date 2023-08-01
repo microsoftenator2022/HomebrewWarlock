@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items.Ecnchantments;
-using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
@@ -14,7 +13,6 @@ using Kingmaker.Enums;
 using Kingmaker.Enums.Damage;
 using Kingmaker.PubSubSystem;
 using Kingmaker.RuleSystem;
-using Kingmaker.RuleSystem.Rules;
 using Kingmaker.RuleSystem.Rules.Damage;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
@@ -22,7 +20,6 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Components;
 using Kingmaker.UnitLogic.Abilities.Components.Base;
 using Kingmaker.UnitLogic.Buffs;
-using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Commands.Base;
 using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Mechanics.Actions;
@@ -30,13 +27,6 @@ using Kingmaker.UnitLogic.Mechanics.Components;
 using Kingmaker.Utility;
 using Kingmaker.Visual.Animation.Kingmaker.Actions;
 
-using MicroWrath;
-using MicroWrath.BlueprintInitializationContext;
-using MicroWrath.Components;
-using MicroWrath.Constructors;
-using MicroWrath.Extensions;
-using MicroWrath.Extensions.Components;
-using MicroWrath.Util;
 using MicroWrath.Util.Linq;
 
 namespace HomebrewWarlock.Features.EldritchBlast.Components
@@ -263,6 +253,20 @@ namespace HomebrewWarlock.Features.EldritchBlast.Components
             
             runAction.Actions.Add(DamageActions.Actions);
             runAction.Actions.Add(new EldritchBlastEssenceActions());
+
+            return ability;
+        }
+    }
+
+    internal class EldritchBlastTouch(BlueprintItemWeaponReference touchWeapon, int equivalentSpellLevel = 1) : BlastAbility(equivalentSpellLevel)
+    {
+        public override BlueprintAbility ConfigureAbility(BlueprintAbility ability, BlueprintFeatureReference rankFeature)
+        {
+            ability = base.ConfigureAbility(ability, rankFeature);
+
+            ability.Range = AbilityRange.Touch;
+
+            ability.AddComponent<AbilityDeliverTouch>(c => c.m_TouchWeapon = touchWeapon);
 
             return ability;
         }

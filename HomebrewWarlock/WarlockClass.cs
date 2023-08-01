@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using HomebrewWarlock.Features;
 using HomebrewWarlock.Features.EldritchBlast;
 
 using Kingmaker;
@@ -16,13 +15,8 @@ using Kingmaker.ResourceLinks;
 using Kingmaker.RuleSystem;
 using Kingmaker.UnitLogic.Alignments;
 
-using MicroWrath;
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.BlueprintsDb;
-using MicroWrath.Extensions;
-using MicroWrath.Extensions.Components;
-using MicroWrath.Localization;
-using MicroWrath.Util;
 using MicroWrath.Util.Linq;
 
 namespace HomebrewWarlock

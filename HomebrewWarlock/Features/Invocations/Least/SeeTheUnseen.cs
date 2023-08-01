@@ -8,11 +8,8 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 
-using MicroWrath;
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.BlueprintsDb;
-using MicroWrath.Extensions.Components;
-using MicroWrath.Localization;
 
 namespace HomebrewWarlock.Features.Invocations.Least
 {

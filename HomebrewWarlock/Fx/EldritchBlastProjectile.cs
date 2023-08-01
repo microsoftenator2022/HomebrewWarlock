@@ -4,25 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using static HomebrewWarlock.Fx.Fx;
+
 using Kingmaker.Blueprints;
 using Kingmaker.ResourceLinks;
 using Kingmaker.View;
 using Kingmaker.Visual.MaterialEffects.RimLighting;
 using Kingmaker.Visual.MaterialEffects.Dissolve;
 
-using MicroWrath;
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.BlueprintsDb;
-using MicroWrath.Util.Assets;
-using MicroWrath.Util;
-using MicroWrath.Util.Unity;
 
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace HomebrewWarlock.Features.EldritchBlast
+namespace HomebrewWarlock.Fx
 {
-    public static partial class EldritchBlast
+    public static class Fx
     {
         internal static void ChangeAllColors(GameObject obj, Func<Color, Color> f)
         {
@@ -71,13 +69,13 @@ namespace HomebrewWarlock.Features.EldritchBlast
                         Graphics.ConvertTexture(caTexture, copy);
 
                         var request = AsyncGPUReadback.Request(copy, 0, TextureFormat.RGBA32);
-                        
+
                         request.WaitForCompletion();
 
                         var data = request.GetData<Color32>(0);
 
                         var newTexture = new Texture2D(caTexture.width, caTexture.height, TextureFormat.RGBA32, false);
-                        
+
                         newTexture.LoadRawTextureData(data);
                         newTexture.Apply();
 
@@ -170,6 +168,11 @@ namespace HomebrewWarlock.Features.EldritchBlast
 
             obj.SetActive(wasActive);
         }
+    }
+
+    public static class EldritchBlastProjectile
+    {
+        
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintProjectile> CreateProjectile(BlueprintInitializationContext context)
         {

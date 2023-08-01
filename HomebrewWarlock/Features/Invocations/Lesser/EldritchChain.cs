@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using HomebrewWarlock.Features.EldritchBlast;
 using HomebrewWarlock.Features.EldritchBlast.Components;
 using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
-using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.ElementsSystem;
 using Kingmaker.Enums;
 using Kingmaker.UnitLogic.Abilities;
@@ -18,19 +16,10 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Components;
 using Kingmaker.UnitLogic.Abilities.Components.Base;
 using Kingmaker.UnitLogic.Mechanics;
-using Kingmaker.UnitLogic.Mechanics.Actions;
 using Kingmaker.UnitLogic.Mechanics.Components;
 using Kingmaker.Utility;
 
-using MicroWrath;
 using MicroWrath.BlueprintInitializationContext;
-using MicroWrath.Constructors;
-using MicroWrath.Extensions;
-using MicroWrath.Extensions.Components;
-using MicroWrath.Localization;
-using MicroWrath.Util;
-
-using TabletopTweaks.Core.Utilities;
 
 namespace HomebrewWarlock.Features.Invocations.Lesser
 {
@@ -136,9 +125,9 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                     GeneratedGuid.Get("EldritchChainSecondaryProjectile"),
                     nameof(GeneratedGuid.EldritchChainSecondaryProjectile));
 
-                //projectile.CastFx = null;
-
                 projectile.SourceBone = "Locator_HitFX_00";
+
+                projectile.CastFx.AssetId = null;
 
                 return projectile;
             });

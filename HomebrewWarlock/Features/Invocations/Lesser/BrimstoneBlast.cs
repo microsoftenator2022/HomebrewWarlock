@@ -5,11 +5,11 @@ using HomebrewWarlock.Features.EldritchBlast;
 using HomebrewWarlock.Features.EldritchBlast.Components;
 using HomebrewWarlock.Resources;
 
+using static HomebrewWarlock.Fx.Fx;
+
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
-using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Stats;
-using Kingmaker.Enums;
 using Kingmaker.Enums.Damage;
 using Kingmaker.ResourceLinks;
 using Kingmaker.RuleSystem;
@@ -18,19 +18,12 @@ using Kingmaker.UnitLogic.Abilities.Components;
 using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Mechanics;
-using Kingmaker.UnitLogic.Mechanics.Actions;
 using Kingmaker.UnitLogic.Mechanics.Components;
 using Kingmaker.View;
 
-using MicroWrath;
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.BlueprintsDb;
-using MicroWrath.Extensions;
-using MicroWrath.Extensions.Components;
-using MicroWrath.Localization;
-using MicroWrath.Util;
-using MicroWrath.Util.Assets;
-using MicroWrath.Util.Unity;
+
 
 using UnityEngine;
 
@@ -53,7 +46,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                         MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(pv.gameObject)}");
 
-                        EldritchBlast.EldritchBlast.ChangeAllColors(pv.gameObject, RotateColor);
+                        ChangeAllColors(pv.gameObject, RotateColor);
                     });
 
                     bp.CastFx = bp.CastFx.CreateDynamicProxy(cfx =>
@@ -62,7 +55,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                         MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(cfx)}");
 
-                        EldritchBlast.EldritchBlast.ChangeAllColors(cfx, RotateColor);
+                        ChangeAllColors(cfx, RotateColor);
                     });
 
                     bp.ProjectileHit.HitFx = bp.ProjectileHit.HitFx.CreateDynamicProxy(hfx =>
@@ -71,7 +64,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                         MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(hfx)}");
 
-                        EldritchBlast.EldritchBlast.ChangeAllColors(hfx, RotateColor);
+                        ChangeAllColors(hfx, RotateColor);
                     });
 
                     bp.ProjectileHit.HitSnapFx = bp.ProjectileHit.HitSnapFx.CreateDynamicProxy(hsfx =>
@@ -80,7 +73,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                         MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(hsfx)}");
 
-                        EldritchBlast.EldritchBlast.ChangeAllColors(hsfx, RotateColor);
+                        ChangeAllColors(hsfx, RotateColor);
                     });
 
                     bp.ProjectileHit.MissFx = bp.ProjectileHit.MissFx.CreateDynamicProxy(mfx =>
@@ -89,7 +82,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                         MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(mfx)}");
 
-                        EldritchBlast.EldritchBlast.ChangeAllColors(mfx, RotateColor);
+                        ChangeAllColors(mfx, RotateColor);
                     });
 
                     bp.ProjectileHit.MissDecalFx = bp.ProjectileHit.MissDecalFx.CreateDynamicProxy(mdfx =>
@@ -98,7 +91,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                         MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(mdfx)}");
 
-                        EldritchBlast.EldritchBlast.ChangeAllColors(mdfx, RotateColor);
+                        ChangeAllColors(mdfx, RotateColor);
                     });
 
                     return bp;

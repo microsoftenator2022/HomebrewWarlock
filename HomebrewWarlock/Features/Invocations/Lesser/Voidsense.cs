@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 using Kingmaker.Blueprints.Classes;
 
-using MicroWrath;
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.BlueprintsDb;
-using MicroWrath.Localization;
 
 namespace HomebrewWarlock.Features.Invocations.Lesser
 {

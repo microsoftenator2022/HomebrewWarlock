@@ -4,37 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using HomebrewWarlock.Features.EldritchBlast;
 using HomebrewWarlock.Features.EldritchBlast.Components;
+using HomebrewWarlock.Fx;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Items.Ecnchantments;
-using Kingmaker.ResourceLinks;
 using Kingmaker.UI.GenericSlot;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Components;
-using Kingmaker.UnitLogic.Abilities.Components.Base;
 using Kingmaker.UnitLogic.Abilities.Components.CasterCheckers;
 using Kingmaker.UnitLogic.Commands.Base;
 using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Mechanics.Components;
-using Kingmaker.Utility;
-using Kingmaker.Visual;
 using Kingmaker.Visual.Animation.Kingmaker.Actions;
 
-using MicroWrath;
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.BlueprintsDb;
-using MicroWrath.Components;
-using MicroWrath.Extensions;
-using MicroWrath.Extensions.Components;
-using MicroWrath.Localization;
-using MicroWrath.Util;
-using MicroWrath.Util.Assets;
-using MicroWrath.Util.Unity;
-
-using UnityEngine;
 
 namespace HomebrewWarlock.Features.Invocations.Least
 {
@@ -43,49 +29,6 @@ namespace HomebrewWarlock.Features.Invocations.Least
         BlueprintFeature rankFeature,
         BlueprintAbility baseAbility,
         BlueprintProjectile projectile);
-
-    internal static class WeaponFxPrefabs
-    {
-        internal static PrefabLink Standard =>
-            new PrefabLink() { AssetId = "10e570e1da0d99f4ab69893791b17af4" }.CreateDynamicProxy(fx =>
-            {
-                var lightning = fx.transform.Find("Lightning")?.gameObject;
-                UnityEngine.Object.DestroyImmediate(lightning);
-
-                var sparks = fx.transform.Find("Sparks")?.gameObject;
-                UnityEngine.Object.DestroyImmediate(sparks);
-
-                var eod = fx.transform.Find("ElectricityOverDistance")?.gameObject;
-                UnityEngine.Object.DestroyImmediate(eod);
-
-                var ek = fx.transform.Find("ElectroKatyshki")?.gameObject;
-                UnityEngine.Object.DestroyImmediate(ek);
-
-                var electricity = fx.transform.Find("Electricity")?.gameObject;
-                UnityEngine.Object.DestroyImmediate(electricity);
-
-                EldritchBlast.EldritchBlast.ChangeAllColors(fx, c =>
-                {
-                    UnityEngine.Color.RGBToHSV(UnityUtil.RotateColorHue(c, 20), out var h, out var s, out var v);
-
-                    return UnityEngine.Color.HSVToRGB(h, Mathf.Clamp01((float)(s * 1.15)), (float)(v * 0.85));
-                });
-            });
-    }
-
-    internal class EldritchBlastTouch(BlueprintItemWeaponReference touchWeapon, int equivalentSpellLevel = 1) : BlastAbility(equivalentSpellLevel)
-    {
-        public override BlueprintAbility ConfigureAbility(BlueprintAbility ability, BlueprintFeatureReference rankFeature)
-        {
-            ability = base.ConfigureAbility(ability, rankFeature);
-
-            ability.Range = AbilityRange.Touch;
-
-            ability.AddComponent<AbilityDeliverTouch>(c => c.m_TouchWeapon = touchWeapon);
-
-            return ability;
-        }
-    }
 
     internal static class HideousBlow
     {
@@ -129,6 +72,8 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 .Map(bps =>
                 {
                     var (enchant, onHitAbility, baseFeatures) = bps.Expand();
+
+                    enchant.m_EnchantName = baseFeatures.baseFeature.m_DisplayName;
 
                     enchant.AddComponent<AddInitiatorAttackWithWeaponTrigger>(c =>
                     {
