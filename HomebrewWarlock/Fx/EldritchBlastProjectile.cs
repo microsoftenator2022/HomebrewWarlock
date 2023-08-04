@@ -172,8 +172,6 @@ namespace HomebrewWarlock.Fx
 
     public static class EldritchBlastProjectile
     {
-        
-
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintProjectile> CreateProjectile(BlueprintInitializationContext context)
         {
             var projectile = context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.Disintegrate00)

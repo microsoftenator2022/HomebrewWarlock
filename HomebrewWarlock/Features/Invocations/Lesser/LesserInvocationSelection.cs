@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using HomebrewWarlock.Features.EldritchBlast;
 
+using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Selection;
 

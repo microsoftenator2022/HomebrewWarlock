@@ -50,15 +50,15 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     {
                         c.EquivalentSpellLevel = 2;
 
-                        c.Actions.Add(GameActions.Conditional(targetIsShaken =>
+                        c.Actions.Add(GameActions.Conditional(targetIsSickened =>
                         {
-                            targetIsShaken.ConditionsChecker.Add(Conditions.ContextConditionHasBuffWithDescriptor(
+                            targetIsSickened.ConditionsChecker.Add(Conditions.ContextConditionHasBuffWithDescriptor(
                                 condition =>
                                 {
                                     condition.SpellDescriptor = SpellDescriptor.Sickened;
                                 }));
 
-                            targetIsShaken.IfFalse.Add(
+                            targetIsSickened.IfFalse.Add(
                                 GameActions.ContextActionSavingThrow(savingThrow =>
                                 {
                                     savingThrow.Type = SavingThrowType.Fortitude;

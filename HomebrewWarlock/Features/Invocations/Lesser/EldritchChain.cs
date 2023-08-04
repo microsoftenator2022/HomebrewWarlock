@@ -81,7 +81,10 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                 ability.Range = AbilityRange.Close;
                 
-                ability.AddComponent<DeliverEldritchChain>(c => c.Radius = new Feet(30));
+                ability.AddComponent<DeliverEldritchChain>(c =>
+                {
+                    c.Radius = new Feet(30);
+                });
 
                 var runAction = ability.GetComponent<AbilityEffectRunAction>();
 

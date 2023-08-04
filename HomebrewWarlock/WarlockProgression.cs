@@ -47,8 +47,6 @@ namespace HomebrewWarlock
                 .Map(fs => fs.Left with { RayCalculateFeature = fs.Right })
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintFeature.DetectMagic))
                 .Map(fs => fs.Left with { DetectMagic = fs.Right })
-                //.Combine(InvocationSelection.CreateSelection(context, blastFeatures))
-                //.Map(fs => fs.Left with { InvocationSelection = fs.Right })
                 .Combine(EnergyResistance.Create(context))
                 .Map(fs => fs.Left with { EnergyResistance = fs.Right })
                 .Combine(WarlockDamageReduction.Create(context))

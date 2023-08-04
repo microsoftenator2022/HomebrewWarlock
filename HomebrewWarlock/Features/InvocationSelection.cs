@@ -103,6 +103,9 @@ namespace HomebrewWarlock.Features
                     return feature;
                 });
 
+            var greaterInvocationSelection =
+                Invocations.Greater.GreaterInvocationSelection.CreateSelection(context, ebFeatures, greaterInvocationsPrerequisite);
+
             var darkInvocationsPrerequisite = context.NewBlueprint<BlueprintFeature>(
                 GeneratedGuid.Get("DarkInvocationsPrerequisiteFeature"),
                 nameof(GeneratedGuid.DarkInvocationsPrerequisiteFeature))
@@ -120,9 +123,10 @@ namespace HomebrewWarlock.Features
                 .Combine(placeholderFeature)
                 .Combine(ebFeatures)
                 .Combine(lesserInvocationSelection)
+                .Combine(greaterInvocationSelection)
                 .Map(features =>
                 {
-                    var (selection, least, placeholder, ebFeatures, lesser) = features.Expand();
+                    var (selection, least, placeholder, ebFeatures, lesser, greater) = features.Expand();
 
                     selection.m_DisplayName = LocalizedStrings.Features_InvocationSelection_DisplayName;
                     selection.m_Description = LocalizedStrings.Features_InvocationSelection_Description;
@@ -131,6 +135,7 @@ namespace HomebrewWarlock.Features
                     selection.AddFeatures(
                         least,
                         lesser,
+                        greater,
                         placeholder
                         );
 

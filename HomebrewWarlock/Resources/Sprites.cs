@@ -39,6 +39,8 @@ namespace HomebrewWarlock.Resources
         internal static Sprite SkillFocus => AssetUtils.Direct.GetSprite("42cb25b90b7c7d34e956c7822a9349cb", 21300000);
         internal static Sprite ChainLightning => AssetUtils.Direct.GetSprite("d22d729c1abd51d479a5571c69e7597e", 21300000);
         internal static Sprite Piercing => AssetUtils.Direct.GetSprite("fca17227026aa5346993963496450fbb", 21300000);
+        internal static Sprite Confusion => AssetUtils.Direct.GetSprite("767a6ba6e391aff4388d2350778e899c", 21300000);
+        internal static Sprite Nauseated => AssetUtils.Direct.GetSprite("64eaa7a3a1b457845812acfd7309739a", 21300000);
 
         internal static Sprite EssenceSprite(Sprite baseSprite) => Sprite.Create(UnityUtil.AlphaBlend(
             UnityUtil.CopyReadable(baseSprite.texture), EldritchBlastOverlay.texture), baseSprite.rect, baseSprite.pivot);
@@ -48,5 +50,7 @@ namespace HomebrewWarlock.Resources
         internal static Sprite BrimstoneBlast => EssenceSprite(HellfireRay);
         internal static Sprite BeshadowedBlast => EssenceSprite(Blind);
         internal static Sprite HellrimeBlast => EssenceSprite(IceBlast);
+        internal static Sprite BewitchingBlast => EssenceSprite(Confusion);
+        internal static Sprite NoxiousBlast => EssenceSprite(Nauseated);
     }
 }

@@ -24,81 +24,78 @@ using Kingmaker.View;
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.BlueprintsDb;
 
-
-using UnityEngine;
-
 namespace HomebrewWarlock.Features.Invocations.Lesser
 {
     internal static class BrimstoneBlast
     {
-        internal static BlueprintInitializationContext.ContextInitializer<BlueprintProjectile> CreateProjectile(BlueprintInitializationContext context)
-        {
-            var projectile = context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.Disintegrate00)
-                .Map((BlueprintProjectile bp) =>
-                {
-                    static Color RotateColor(Color color) => UnityUtil.RotateColorHue(color, -110);
+        //internal static BlueprintInitializationContext.ContextInitializer<BlueprintProjectile> CreateProjectile(BlueprintInitializationContext context)
+        //{
+        //    var projectile = context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.Disintegrate00)
+        //        .Map((BlueprintProjectile bp) =>
+        //        {
+        //            static Color RotateColor(Color color) => UnityUtil.RotateColorHue(color, -110);
 
-                    bp = AssetUtils.CloneBlueprint(bp, GeneratedGuid.Get("BrimstoneBlastProjectile"), nameof(GeneratedGuid.BrimstoneBlastProjectile));
+        //            bp = AssetUtils.CloneBlueprint(bp, GeneratedGuid.Get("BrimstoneBlastProjectile"), nameof(GeneratedGuid.BrimstoneBlastProjectile));
 
-                    bp.View = bp.View.CreateDynamicMonobehaviourProxy<ProjectileView, ProjectileLink>(pv =>
-                    {
-                        pv.gameObject.name = "BrimstoneBlast_projectile";
+        //            bp.View = bp.View.CreateDynamicMonobehaviourProxy<ProjectileView, ProjectileLink>(pv =>
+        //            {
+        //                pv.gameObject.name = "BrimstoneBlast_projectile";
 
-                        MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(pv.gameObject)}");
+        //                MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(pv.gameObject)}");
 
-                        ChangeAllColors(pv.gameObject, RotateColor);
-                    });
+        //                ChangeAllColors(pv.gameObject, RotateColor);
+        //            });
 
-                    bp.CastFx = bp.CastFx.CreateDynamicProxy(cfx =>
-                    {
-                        cfx.name = "BrimstoneBlast_CastFX";
+        //            bp.CastFx = bp.CastFx.CreateDynamicProxy(cfx =>
+        //            {
+        //                cfx.name = "BrimstoneBlast_CastFX";
 
-                        MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(cfx)}");
+        //                MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(cfx)}");
 
-                        ChangeAllColors(cfx, RotateColor);
-                    });
+        //                ChangeAllColors(cfx, RotateColor);
+        //            });
 
-                    bp.ProjectileHit.HitFx = bp.ProjectileHit.HitFx.CreateDynamicProxy(hfx =>
-                    {
-                        hfx.name = "BrimstoneBlast_HitFX";
+        //            bp.ProjectileHit.HitFx = bp.ProjectileHit.HitFx.CreateDynamicProxy(hfx =>
+        //            {
+        //                hfx.name = "BrimstoneBlast_HitFX";
 
-                        MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(hfx)}");
+        //                MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(hfx)}");
 
-                        ChangeAllColors(hfx, RotateColor);
-                    });
+        //                ChangeAllColors(hfx, RotateColor);
+        //            });
 
-                    bp.ProjectileHit.HitSnapFx = bp.ProjectileHit.HitSnapFx.CreateDynamicProxy(hsfx =>
-                    {
-                        hsfx.name = "BrimstoneBlast_HitSnapFX";
+        //            bp.ProjectileHit.HitSnapFx = bp.ProjectileHit.HitSnapFx.CreateDynamicProxy(hsfx =>
+        //            {
+        //                hsfx.name = "BrimstoneBlast_HitSnapFX";
 
-                        MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(hsfx)}");
+        //                MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(hsfx)}");
 
-                        ChangeAllColors(hsfx, RotateColor);
-                    });
+        //                ChangeAllColors(hsfx, RotateColor);
+        //            });
 
-                    bp.ProjectileHit.MissFx = bp.ProjectileHit.MissFx.CreateDynamicProxy(mfx =>
-                    {
-                        mfx.name = "BrimstoneBlast_MissFX";
+        //            bp.ProjectileHit.MissFx = bp.ProjectileHit.MissFx.CreateDynamicProxy(mfx =>
+        //            {
+        //                mfx.name = "BrimstoneBlast_MissFX";
 
-                        MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(mfx)}");
+        //                MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(mfx)}");
 
-                        ChangeAllColors(mfx, RotateColor);
-                    });
+        //                ChangeAllColors(mfx, RotateColor);
+        //            });
 
-                    bp.ProjectileHit.MissDecalFx = bp.ProjectileHit.MissDecalFx.CreateDynamicProxy(mdfx =>
-                    {
-                        mdfx.name = "BrimstoneBlast_MissDecalFX";
+        //            bp.ProjectileHit.MissDecalFx = bp.ProjectileHit.MissDecalFx.CreateDynamicProxy(mdfx =>
+        //            {
+        //                mdfx.name = "BrimstoneBlast_MissDecalFX";
 
-                        MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(mdfx)}");
+        //                MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(mdfx)}");
 
-                        ChangeAllColors(mdfx, RotateColor);
-                    });
+        //                ChangeAllColors(mdfx, RotateColor);
+        //            });
 
-                    return bp;
-                });
+        //            return bp;
+        //        });
 
-            return projectile;
-        }
+        //    return projectile;
+        //}
 
         [LocalizedString]
         internal const string DisplayName = "Brimstone Blast";

@@ -162,7 +162,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
             [HarmonyPatch(typeof(AbilityData), nameof(AbilityData.GetApproachDistance))]
             static class AbilityData_GetApproachDistance_Patch
             {
-                static ItemEntityWeapon? TryGetEldritchGlaiveWeapon(AbilityData abilityData)
+                static ItemEntityWeapon? TryGetWeapon(AbilityData abilityData)
                 {
                     var uegr = abilityData.Blueprint.ComponentsArray.OfType<UseCustomWeaponRange>().FirstOrDefault();
                     
@@ -210,7 +210,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     var newIs = new CodeInstruction[]
                     {
                         new CodeInstruction(OpCodes.Ldarg_0),
-                        CodeInstruction.Call((AbilityData ad) => TryGetEldritchGlaiveWeapon(ad)),
+                        CodeInstruction.Call((AbilityData ad) => TryGetWeapon(ad)),
                         new CodeInstruction(OpCodes.Dup),
                         new CodeInstruction(OpCodes.Brtrue_S, targetLabel),
                         new CodeInstruction(OpCodes.Pop)
@@ -325,12 +325,12 @@ namespace HomebrewWarlock.Features.Invocations.Least
             Environment.NewLine + "Furthermore, " +
             //"until the start of your next turn, " +
             "you also threaten nearby squares as if wielding a reach weapon, and you can make attacks of opportunity " +
-            "with your eldritch glaive." + Environment.NewLine +
-            "If your base attack bonus is +6 or higher, you can make as many attacks with your eldritch glaive as " +
-            "your base attack bonus allows.";
-        //+
-        //Environment.NewLine + "For example, a 12th-level warlock could attack twice, once with a base attack " +
-        //"bonus of +6, and again with a base attack bonus of +1.";
+            "with your eldritch glaive.";
+            //+ Environment.NewLine +
+            //"If your base attack bonus is +6 or higher, you can make as many attacks with your eldritch glaive as " +
+            //"your base attack bonus allows." +
+            //Environment.NewLine + "For example, a 12th-level warlock could attack twice, once with a base attack " +
+            //"bonus of +6, and again with a base attack bonus of +1.";
 
         [LocalizedString]
         internal const string Duration = "1 round";
@@ -484,7 +484,6 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     buff.m_Description = LocalizedStrings.Features_Invocations_Least_EldritchGlaive_Description;
 
                     buff.AddComponent<AddEldritchGlaive>(c => c.Weapon = weapon.ToReference<BlueprintItemWeaponReference>());
-                    //buff.AddActionsOnBuffApply(c => c.Actions.Add(GameActions.ContextActionProvokeAttackOfOpportunity(a => a.ApplyToCaster = true)));
 
                     buff.m_Flags = BlueprintBuff.Flags.HiddenInUi | BlueprintBuff.Flags.IsFromSpell;
 
@@ -542,8 +541,6 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     ability.AddComponent<ArcaneSpellFailureComponent>();
                     ability.AddComponent<EldritchBlastCalculateSpellLevel>();
-
-                    //ability.AddComponent<AbilityDeliveredByWeapon>();
 
                     ability.AddComponent<AbilityEffectRunAction>(c =>
                     {

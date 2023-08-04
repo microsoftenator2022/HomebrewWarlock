@@ -74,7 +74,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
                         c.DefaultProjectile = projectile.ToReference<BlueprintProjectileReference>();
 
                         c.m_Length = new();
-                        c.m_LineWidth = new() { m_Value = 5 };
+                        c.m_LineWidth = new(5);
 
                         c.NeedAttackRoll = true;
 
