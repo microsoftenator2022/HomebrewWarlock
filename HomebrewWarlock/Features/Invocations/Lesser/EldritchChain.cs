@@ -9,6 +9,7 @@ using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.JsonSystem;
 using Kingmaker.ElementsSystem;
 using Kingmaker.Enums;
 using Kingmaker.UnitLogic.Abilities;
@@ -31,6 +32,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
     internal static class EldritchChain
     {
+        [TypeId("d04940b7-4f0d-4282-b7b6-7bcc59fbc9ef")]
         internal class DeliverEldritchChain : AbilityDeliverChain
         {
             public BlueprintProjectileReference? DefaultProjectile;

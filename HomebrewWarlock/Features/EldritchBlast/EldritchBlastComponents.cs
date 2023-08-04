@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items.Ecnchantments;
+using Kingmaker.Blueprints.JsonSystem;
 using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
@@ -45,6 +46,7 @@ namespace HomebrewWarlock.Features.EldritchBlast.Components
         }
     }
 
+    [TypeId("77d75317-01c7-4fad-b1b1-eb08832b649e")]
     internal class EldritchBlastCalculateSpellLevel : ContextCalculateAbilityParams
     {
         public EldritchBlastCalculateSpellLevel() : this(1) { }
@@ -78,8 +80,8 @@ namespace HomebrewWarlock.Features.EldritchBlast.Components
         }
     }
 
+    [TypeId("40686a57-7952-4459-8dd9-3e6c0c830ebb")]
     internal class EldritchBlastEssence : UnitFactComponentDelegate
-        //, IInitiatorRulebookHandler<RuleSpellResistanceCheck>
     {
         public static IEnumerable<Buff> GetEssenceBuffs(UnitEntityData unit) =>
             unit.Buffs.Enumerable.Where(buff => buff.BlueprintComponents.OfType<EldritchBlastEssence>().Any());
@@ -114,19 +116,15 @@ namespace HomebrewWarlock.Features.EldritchBlast.Components
         public virtual IDictionary<AbilityProjectileType, BlueprintProjectileReference[]> Projectiles { get; } =
             new (AbilityProjectileType, BlueprintProjectileReference[])[0].ToDictionary();
 
-        //bool IgnoreSpellResistance;
-        //public void OnEventAboutToTrigger(RuleSpellResistanceCheck evt)
-        //{
-        //    if (!evt.Ability.ComponentsArray.OfType<EldritchBlastCalculateSpellLevel>().Any())
-        //        return;
+        public virtual ActionList Actions { get; set; }
 
-        //    evt.IgnoreSpellResistance = true;
-        //}
-        //public void OnEventDidTrigger(RuleSpellResistanceCheck evt) { }
-
-        public ActionList Actions = new();
+        public EldritchBlastEssence()
+        {
+            Actions = new();
+        }
     }
 
+    [TypeId("5b3a3656-5820-4175-969e-eee497dab50f")]
     internal class EldritchBlastElementalEssence : EldritchBlastEssence, IInitiatorRulebookHandler<RuleDealDamage>
     {
         public DamageEnergyType BlastDamageType = DamageEnergyType.Magic;
@@ -179,6 +177,7 @@ namespace HomebrewWarlock.Features.EldritchBlast.Components
         }
     }
 
+    [TypeId("dd6af2a9-111e-4d45-a254-62cbf7e4e478")]
     internal class DeliverEldritchBlastProjectile : AbilityDeliverProjectile
     {
         public BlueprintProjectileReference? DefaultProjectile;
