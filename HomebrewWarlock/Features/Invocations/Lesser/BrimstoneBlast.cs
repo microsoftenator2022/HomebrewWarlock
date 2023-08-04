@@ -133,50 +133,54 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     buff.m_Flags = BlueprintBuff.Flags.Harmful;
 
+                    buff.Stacking = StackingType.Prolong;
+
                     return buff;
                 });
 
-            var applyDotBuff = context.NewBlueprint<BlueprintBuff>(
-                GeneratedGuid.Get("BrimstoneBlastApplyPerRoundDamage"),
-                nameof(GeneratedGuid.BrimstoneBlastApplyPerRoundDamage))
-                .Combine(dotBuff)
-                .Map(bps =>
-                {
-                    var (dotBuff, applyBuff) = bps;
+            //var applyDotBuff = context.NewBlueprint<BlueprintBuff>(
+            //    GeneratedGuid.Get("BrimstoneBlastApplyPerRoundDamage"),
+            //    nameof(GeneratedGuid.BrimstoneBlastApplyPerRoundDamage))
+            //    .Combine(dotBuff)
+            //    .Map(bps =>
+            //    {
+            //        var (dotBuff, applyBuff) = bps;
 
-                    applyBuff.AddActionsOnBuffApply(c => c.Actions.Add(GameActions.ContextActionApplyBuff(ab =>
-                    {
-                        ab.m_Buff = dotBuff.ToReference<BlueprintBuffReference>();
-                        ab.DurationValue.BonusValue.ValueType = ContextValueType.Rank;
-                        //ab.IsNotDispelable = true;
-                    })));
+            //        applyBuff.AddComponent<AddFactContextActions>(c => c.Activated.Add(GameActions.ContextActionApplyBuff(ab =>
+            //        {
+            //            ab.m_Buff = dotBuff.ToReference<BlueprintBuffReference>();
+            //            ab.DurationValue.BonusValue.ValueType = ContextValueType.Rank;
+            //            ab.AsChild = false;
+            //            //ab.IsNotDispelable = true;
+            //        })));
 
-                    applyBuff.AddContextRankConfig(c =>
-                    {
-                        c.m_BaseValueType = ContextRankBaseValueType.ClassLevel;
-                        c.m_Class = new[]
-                        {
-                            WarlockClass.Blueprint.ToReference<BlueprintCharacterClass, BlueprintCharacterClassReference>()
-                        };
-                        c.m_Progression = ContextRankProgression.DelayedStartPlusDivStep;
-                        c.m_StepLevel = 5;
-                    });
+            //        applyBuff.AddContextRankConfig(c =>
+            //        {
+            //            c.m_BaseValueType = ContextRankBaseValueType.ClassLevel;
+            //            c.m_Class = new[]
+            //            {
+            //                WarlockClass.Blueprint.ToReference<BlueprintCharacterClass, BlueprintCharacterClassReference>()
+            //            };
+            //            c.m_Progression = ContextRankProgression.DelayedStartPlusDivStep;
+            //            c.m_StepLevel = 5;
+            //        });
 
-                    applyBuff.Stacking = StackingType.Stack;
+            //        //applyBuff.Stacking = StackingType.Stack;
 
-                    applyBuff.m_Flags = BlueprintBuff.Flags.Harmful | BlueprintBuff.Flags.HiddenInUi;
+            //        applyBuff.m_Flags = BlueprintBuff.Flags.Harmful | BlueprintBuff.Flags.HiddenInUi;
 
-                    return applyBuff;
-                });
+            //        return applyBuff;
+            //    });
 
             var essenceBuff = context.NewBlueprint<BlueprintBuff>(
                 GeneratedGuid.Get("BrimstoneBlastEssenceBuff"),
                 nameof(GeneratedGuid.BrimstoneBlastEssenceBuff))
-                .Combine(applyDotBuff)
+                .Combine(dotBuff)
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.HellfireRay00))
+                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.FireCone30Feet00))
                 .Map(bps =>
                 {
-                    var (essenceBuff, applyBuff, projectile) = bps.Expand();
+                    var (essenceBuff, dotBuff, simpleProjectile, coneProjectile) = bps.Expand();
 
                     essenceBuff.m_Flags = BlueprintBuff.Flags.StayOnDeath | BlueprintBuff.Flags.HiddenInUi;
 
@@ -190,15 +194,26 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                         {
                             savingThrow.Type = SavingThrowType.Reflex;
                             savingThrow.Actions.Add(GameActions.ContextActionConditionalSaved(save => save.Failed.Add(
-                                GameActions.ContextActionApplyBuff(db =>
+                                GameActions.ContextActionApplyBuff(ab =>
                                 {
-                                    db.m_Buff = applyBuff.ToReference<BlueprintBuffReference>();
-                                    db.DurationValue.BonusValue = 1;
-                                    db.IsNotDispelable = true;
+                                    ab.m_Buff = dotBuff.ToReference<BlueprintBuffReference>();
+                                    ab.DurationValue.BonusValue.ValueType = ContextValueType.Rank;
                                 }))));
                         }));
 
-                        c.Projectiles.Add(AbilityProjectileType.Simple, new[] { projectile.ToReference<BlueprintProjectileReference>() });
+                        c.Projectiles.Add(AbilityProjectileType.Simple, new[] { simpleProjectile.ToReference<BlueprintProjectileReference>() });
+                        c.Projectiles.Add(AbilityProjectileType.Cone, new[] { coneProjectile.ToReference<BlueprintProjectileReference>() });
+                    });
+
+                    essenceBuff.AddContextRankConfig(c =>
+                    {
+                        c.m_BaseValueType = ContextRankBaseValueType.ClassLevel;
+                        c.m_Class = new[]
+                        {
+                            WarlockClass.Blueprint.ToReference<BlueprintCharacterClass, BlueprintCharacterClassReference>()
+                        };
+                        c.m_Progression = ContextRankProgression.DelayedStartPlusDivStep;
+                        c.m_StepLevel = 5;
                     });
 
                     return essenceBuff;
@@ -225,18 +240,6 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                     ability.m_Buff = essenceBuff.ToReference<BlueprintBuffReference>();
 
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
-
-                    //return (ability, new EldritchBlastComponents.EssenceEffect(
-                    //essenceBuff,
-                    //() => new[] { onHit() },
-                    //3,
-                    //DamageEnergyType.Fire,
-                    //new []
-                    //{ 
-                    //    (AbilityProjectileType.Simple,
-                    //    new [] { projectile.ToReference<BlueprintProjectileReference>() })
-                    //}
-                    //));
 
                     return ability;
                 });

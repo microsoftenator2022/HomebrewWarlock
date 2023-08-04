@@ -119,5 +119,10 @@
   "NoxiousBlastFeature": "3749df7d-e376-4be2-89a5-86d339e2b07c",
   "EldritchConeFeature": "ed0cee0b-652a-46d1-a648-4539d8267369",
   "EldritchConeAbility": "dac636f9-88fe-445e-82dc-986730a2c8be",
-  "EldritchConeProjectile": "20618c23-0b3b-4585-85e6-425168fbf352"
+  "EldritchConeProjectile": "20618c23-0b3b-4585-85e6-425168fbf352",
+  "VitriolicBlastFeature": "88e14839-ee3b-4a90-b029-55f03b692af8",
+  "VitriolicBlastEssenceBuff": "2daa88a6-b657-4ffc-bdb1-ec606d141ced",
+  "VitriolicBlastApplyPerRoundDamage": "1f47950e-82f0-4208-878f-3ceec22ad8d0",
+  "VitriolicBlastPerRoundDamage": "55f4403d-f42d-4329-9da1-d38efa3518f1",
+  "VitriolicBlastToggleAbility": "1c799e9f-7bd9-44ce-b403-0ffa423a0f5c"
 }

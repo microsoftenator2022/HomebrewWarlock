@@ -67,6 +67,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
             {
                 public BlueprintFeature BewitchingBlast = null!;
                 public BlueprintFeature NoxiousBlast = null!;
+                public BlueprintFeature VitriolicBlast = null!;
             }
             public readonly GreaterEssence Greater = new();
 
@@ -113,11 +114,13 @@ namespace HomebrewWarlock.Features.EldritchBlast
                     return ebFeatures;
                 })
                 .Combine(NoxiousBlast.Create(context))
+                .Combine(VitriolicBlast.Create(context))
                 .Map(features =>
                 {
-                    var (ebFeatures, noxious) = features;
+                    var (ebFeatures, noxious, vitriolic) = features.Expand();
 
                     ebFeatures.Essence.Greater.NoxiousBlast = noxious;
+                    ebFeatures.Essence.Greater.VitriolicBlast = vitriolic;
 
                     return ebFeatures;
 

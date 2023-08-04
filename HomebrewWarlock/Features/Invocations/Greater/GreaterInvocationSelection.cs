@@ -41,6 +41,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     selection.AddFeatures(
                         features.Essence.Greater.BewitchingBlast,
                         features.Essence.Greater.NoxiousBlast,
+                        features.Essence.Greater.VitriolicBlast,
                         features.Blasts.Greater.EldritchCone);
 
                     return selection;

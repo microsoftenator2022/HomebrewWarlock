@@ -61,9 +61,10 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 nameof(GeneratedGuid.HellrimeBlastEssenceBuff))
                 .Combine(dexPenaltyBuff)
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.PolarRay00))
+                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.ColdCone30Feet00))
                 .Map(bps =>
                 {
-                    var (buff, dexPenaltyBuff, projectile) = bps.Expand();
+                    var (buff, dexPenaltyBuff, simpleProjectile, coneProjectile) = bps.Expand();
 
                     buff.m_Flags = BlueprintBuff.Flags.StayOnDeath | BlueprintBuff.Flags.HiddenInUi;
 
@@ -84,7 +85,9 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                                     ab.DurationValue.BonusValue = 10;
                                 }))));
                         }));
-                        c.Projectiles.Add(AbilityProjectileType.Simple, new[] { projectile.ToReference<BlueprintProjectileReference>() });
+
+                        c.Projectiles.Add(AbilityProjectileType.Simple, new[] { simpleProjectile.ToReference<BlueprintProjectileReference>() });
+                        c.Projectiles.Add(AbilityProjectileType.Cone, new[] { coneProjectile.ToReference<BlueprintProjectileReference>() });
                     });
 
                     return buff;

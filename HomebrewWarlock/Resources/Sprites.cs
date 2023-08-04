@@ -41,6 +41,7 @@ namespace HomebrewWarlock.Resources
         internal static Sprite Piercing => AssetUtils.Direct.GetSprite("fca17227026aa5346993963496450fbb", 21300000);
         internal static Sprite Confusion => AssetUtils.Direct.GetSprite("767a6ba6e391aff4388d2350778e899c", 21300000);
         internal static Sprite Nauseated => AssetUtils.Direct.GetSprite("64eaa7a3a1b457845812acfd7309739a", 21300000);
+        internal static Sprite AcidArrow02 => AssetUtils.Direct.GetSprite("823ce7f3a53d1474eaad50c3d1d2bc17", 21300000);
 
         internal static Sprite EssenceSprite(Sprite baseSprite) => Sprite.Create(UnityUtil.AlphaBlend(
             UnityUtil.CopyReadable(baseSprite.texture), EldritchBlastOverlay.texture), baseSprite.rect, baseSprite.pivot);
@@ -52,5 +53,6 @@ namespace HomebrewWarlock.Resources
         internal static Sprite HellrimeBlast => EssenceSprite(IceBlast);
         internal static Sprite BewitchingBlast => EssenceSprite(Confusion);
         internal static Sprite NoxiousBlast => EssenceSprite(Nauseated);
+        internal static Sprite VitriolicBlast => EssenceSprite(AcidArrow02);
     }
 }
