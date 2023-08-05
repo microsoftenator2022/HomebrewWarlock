@@ -17,11 +17,85 @@ using MicroWrath.BlueprintsDb;
 
 using UnityEngine;
 using UnityEngine.Rendering;
+using Kingmaker.Visual.Particles;
 
 namespace HomebrewWarlock.Fx
 {
     public static class Fx
     {
+        internal static Texture2D ChangeTextureColors(Texture2D texture, Func<Color, Color> f)
+        {
+            var textureFormat = TextureFormat.RGBA32;
+
+            var readOnly = !texture.isReadable;
+
+            if (readOnly)
+            {
+                var copy = new Texture2D(texture.width, texture.height, TextureFormat.RGBA32, false);
+
+                Graphics.ConvertTexture(texture, copy);
+
+                var request = AsyncGPUReadback.Request(copy, 0, TextureFormat.RGBA32);
+
+                request.WaitForCompletion();
+
+                var data = request.GetData<Color32>(0);
+
+                var newTexture = new Texture2D(texture.width, texture.height, TextureFormat.RGBA32, false);
+
+                newTexture.LoadRawTextureData(data);
+                newTexture.Apply();
+
+                texture = newTexture;
+            }
+            else
+            {
+                var newTexture = new Texture2D(
+                    texture.width,
+                    texture.height,
+                    textureFormat: textureFormat,
+                    mipCount: texture.mipmapCount,
+                    false);
+
+                Graphics.CopyTexture(texture, newTexture);
+
+                texture = newTexture;
+            }
+
+            var logLevel = MicroLogger.LogLevel;
+
+            if (logLevel == MicroLogger.Severity.Debug)
+                MicroLogger.LogLevel = MicroLogger.Severity.Info;
+
+            var newPixels = texture.GetPixels().Select(f).ToArray();
+
+            MicroLogger.LogLevel = logLevel;
+
+            if (textureFormat.SupportsSetPixel())
+            {
+                texture.SetPixels(newPixels);
+                texture.Apply();
+            }
+            else
+            {
+                var tempRGBA = new Texture2D(
+                    texture.width,
+                    texture.height,
+                    textureFormat: TextureFormat.RGBA32,
+                    mipCount: texture.mipmapCount,
+                    false);
+
+                tempRGBA.SetPixels(newPixels);
+                tempRGBA.Compress(false);
+                tempRGBA.Apply(true, readOnly);
+
+                Graphics.CopyTexture(tempRGBA, texture);
+                UnityEngine.Object.Destroy(tempRGBA);
+            }
+
+            return texture;
+        }
+
         internal static void ChangeAllColors(GameObject obj, Func<Color, Color> f)
         {
             var wasActive = obj.activeSelf;
@@ -55,78 +129,93 @@ namespace HomebrewWarlock.Fx
                 });
 
                 const string rampTextureName = "_ColorAlphaRamp";
-
                 if (psr.material.GetTexture(rampTextureName) is Texture2D caTexture)
                 {
-                    var textureFormat = TextureFormat.RGBA32;
+                    //var textureFormat = TextureFormat.RGBA32;
 
-                    var readOnly = !caTexture.isReadable;
+                    //var readOnly = !texture.isReadable;
 
-                    if (readOnly)
-                    {
-                        var copy = new Texture2D(caTexture.width, caTexture.height, TextureFormat.RGBA32, false);
+                    //if (readOnly)
+                    //{
+                    //    var copy = new Texture2D(texture.width, texture.height, TextureFormat.RGBA32, false);
 
-                        Graphics.ConvertTexture(caTexture, copy);
+                    //    Graphics.ConvertTexture(texture, copy);
 
-                        var request = AsyncGPUReadback.Request(copy, 0, TextureFormat.RGBA32);
+                    //    var request = AsyncGPUReadback.Request(copy, 0, TextureFormat.RGBA32);
 
-                        request.WaitForCompletion();
+                    //    request.WaitForCompletion();
 
-                        var data = request.GetData<Color32>(0);
+                    //    var data = request.GetData<Color32>(0);
 
-                        var newTexture = new Texture2D(caTexture.width, caTexture.height, TextureFormat.RGBA32, false);
+                    //    var newTexture = new Texture2D(texture.width, texture.height, TextureFormat.RGBA32, false);
 
-                        newTexture.LoadRawTextureData(data);
-                        newTexture.Apply();
+                    //    newTexture.LoadRawTextureData(data);
+                    //    newTexture.Apply();
 
-                        caTexture = newTexture;
-                    }
-                    else
-                    {
-                        var newTexture = new Texture2D(
-                            caTexture.width,
-                            caTexture.height,
-                            textureFormat: textureFormat,
-                            mipCount: caTexture.mipmapCount,
-                            false);
+                    //    texture = newTexture;
+                    //}
+                    //else
+                    //{
+                    //    var newTexture = new Texture2D(
+                    //        texture.width,
+                    //        texture.height,
+                    //        textureFormat: textureFormat,
+                    //        mipCount: texture.mipmapCount,
+                    //        false);
 
-                        Graphics.CopyTexture(caTexture, newTexture);
+                    //    Graphics.CopyTexture(texture, newTexture);
 
-                        caTexture = newTexture;
-                    }
+                    //    texture = newTexture;
+                    //}
 
-                    var logLevel = MicroLogger.LogLevel;
+                    //var logLevel = MicroLogger.LogLevel;
 
-                    if (logLevel == MicroLogger.Severity.Debug)
-                        MicroLogger.LogLevel = MicroLogger.Severity.Info;
+                    //if (logLevel == MicroLogger.Severity.Debug)
+                    //    MicroLogger.LogLevel = MicroLogger.Severity.Info;
 
-                    var newPixels = caTexture.GetPixels().Select(f).ToArray();
+                    //var newPixels = texture.GetPixels().Select(f).ToArray();
 
-                    MicroLogger.LogLevel = logLevel;
+                    //MicroLogger.LogLevel = logLevel;
 
-                    if (textureFormat.SupportsSetPixel())
-                    {
-                        caTexture.SetPixels(newPixels);
-                        caTexture.Apply();
-                    }
-                    else
-                    {
-                        var tempRGBA = new Texture2D(
-                            caTexture.width,
-                            caTexture.height,
-                            textureFormat: TextureFormat.RGBA32,
-                            mipCount: caTexture.mipmapCount,
-                            false);
+                    //if (textureFormat.SupportsSetPixel())
+                    //{
+                    //    texture.SetPixels(newPixels);
+                    //    texture.Apply();
+                    //}
+                    //else
+                    //{
+                    //    var tempRGBA = new Texture2D(
+                    //        texture.width,
+                    //        texture.height,
+                    //        textureFormat: TextureFormat.RGBA32,
+                    //        mipCount: texture.mipmapCount,
+                    //        false);
 
-                        tempRGBA.SetPixels(newPixels);
-                        tempRGBA.Compress(false);
-                        tempRGBA.Apply(true, readOnly);
+                    //    tempRGBA.SetPixels(newPixels);
+                    //    tempRGBA.Compress(false);
+                    //    tempRGBA.Apply(true, readOnly);
 
-                        Graphics.CopyTexture(tempRGBA, caTexture);
-                        UnityEngine.Object.Destroy(tempRGBA);
-                    }
+                    //    Graphics.CopyTexture(tempRGBA, texture);
+                    //    UnityEngine.Object.Destroy(tempRGBA);
+                    //}
 
-                    psr.material.SetTexture(rampTextureName, caTexture);
+                    psr.material.SetTexture(rampTextureName, ChangeTextureColors(caTexture, f));
+                }
+
+                var pmc = ps.gameObject.GetComponent<ParticlesMaterialController>();
+                if (pmc is not null)
+                {
+                    if (pmc.TexColorAlphaRamp is not null)
+                        pmc.TexColorAlphaRamp = ChangeTextureColors(pmc.TexColorAlphaRamp, f);
+
+                    if (pmc.TexTrailColorRamp is not null)
+                        pmc.TexTrailColorRamp = ChangeTextureColors(pmc.TexTrailColorRamp, f);
+
+                    if (pmc.ColorAlphaRamp is not null)
+                        pmc.ColorAlphaRamp = UnityUtil.ChangeGradientColors(pmc.ColorAlphaRamp, f);
+
+                    if (pmc.TrailColorAlphaRamp is not null)
+                        pmc.TrailColorAlphaRamp = UnityUtil.ChangeGradientColors(pmc.TrailColorAlphaRamp, f);
                 }
 
                 var cot = ps.colorOverLifetime;

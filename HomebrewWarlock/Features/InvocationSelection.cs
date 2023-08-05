@@ -116,6 +116,9 @@ namespace HomebrewWarlock.Features
                     return feature;
                 });
 
+            var darkInvocationSelection =
+                Invocations.Dark.DarkInvocationSelection.Create(context, ebFeatures, darkInvocationsPrerequisite);
+
             var selection = context.NewBlueprint<BlueprintFeatureSelection>(
                 GeneratedGuid.Get("WarlockInvocationSelection"),
                 "WarlockInvocationSelection")
@@ -124,9 +127,10 @@ namespace HomebrewWarlock.Features
                 .Combine(ebFeatures)
                 .Combine(lesserInvocationSelection)
                 .Combine(greaterInvocationSelection)
+                .Combine(darkInvocationSelection)
                 .Map(features =>
                 {
-                    var (selection, least, placeholder, ebFeatures, lesser, greater) = features.Expand();
+                    var (selection, least, placeholder, ebFeatures, lesser, greater, dark) = features.Expand();
 
                     selection.m_DisplayName = LocalizedStrings.Features_InvocationSelection_DisplayName;
                     selection.m_Description = LocalizedStrings.Features_InvocationSelection_Description;
@@ -136,7 +140,10 @@ namespace HomebrewWarlock.Features
                         least,
                         lesser,
                         greater,
-                        placeholder
+                        dark
+#if DEBUG
+                        ,placeholder
+#endif
                         );
 
                     return selection;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using HomebrewWarlock.Features.Invocations.Dark;
 using HomebrewWarlock.Features.Invocations.Greater;
 using HomebrewWarlock.Features.Invocations.Least;
 using HomebrewWarlock.Features.Invocations.Lesser;
@@ -41,7 +42,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
 
             internal class DarkBlasts
             {
-
+                public BlueprintFeature EldritchDoom = null!;
             }
             public readonly DarkBlasts Dark = new();
         }
@@ -146,15 +147,17 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 .Combine(EldritchChain.CreateBlast(context, baseFeatures))
                 .Combine(EldritchGlaive.Create(context, baseFeatures))
                 .Combine(EldritchCone.Create(context, baseFeatures))
+                .Combine(EldritchDoom.Create(context, baseFeatures))
                 .Map(features =>
                 {
-                    var (ebFeatures, es, hb, chain, eg, cone) = features.Expand();
+                    var (ebFeatures, es, hb, chain, eg, cone, eDoom) = features.Expand();
 
                     ebFeatures.Blasts.Least.EldritchSpear = es;
                     ebFeatures.Blasts.Least.HideousBlow = hb;
                     ebFeatures.Blasts.Least.EldritchGlaive = eg;
                     ebFeatures.Blasts.Lesser.EldritchChain = chain;
                     ebFeatures.Blasts.Greater.EldritchCone = cone;
+                    ebFeatures.Blasts.Dark.EldritchDoom = eDoom;
 
                     return ebFeatures;
                 });

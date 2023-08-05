@@ -31,6 +31,17 @@ namespace HomebrewWarlock.Features.Invocations.Greater
         [LocalizedString]
         internal const string DisplayName = "Vitriolic Blast";
 
+        [LocalizedString]
+        internal static readonly string Description =
+            "This eldritch essence invocation allows you to change your eldritch blast into a vitriolic blast. A " +
+            "vitriolic blast deals acid damage, and it is formed from conjured acid, making it different from " +
+            "other eldritch essences because it ignores spell resistance. Creatures struck by a vitriolic blast " +
+            "automatically take an extra 2d6 points of acid damage on following rounds. This acid damage persists " +
+            "for 1 round per five class levels you have." +
+            Environment.NewLine +
+            "For example, a 15th-level warlock deals 2d6 points of acid damage per round for 3 rounds after the " +
+            "initial vitriolic blast attack.";
+
         [TypeId("d2585409-6365-465f-8de8-d6bfc795a5fe")]
         internal class Essence : EldritchBlastElementalEssence, IInitiatorRulebookHandler<RuleSpellResistanceCheck>
         {
@@ -159,6 +170,8 @@ namespace HomebrewWarlock.Features.Invocations.Greater
 
                     dotBuff.m_DisplayName = ability.m_DisplayName =
                         LocalizedStrings.Features_Invocations_Greater_VitriolicBlast_DisplayName;
+                    dotBuff.m_Description = ability.m_Description =
+                        LocalizedStrings.Features_Invocations_Greater_VitriolicBlast_Description;
 
                     dotBuff.m_Icon = ability.m_Icon = Sprites.VitriolicBlast;
 

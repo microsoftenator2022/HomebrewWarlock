@@ -15,9 +15,11 @@ namespace HomebrewWarlock.Resources
             AssetUtils.GetSpriteAssemblyResource(Assembly.GetExecutingAssembly(), $"{nameof(HomebrewWarlock)}.Resources.{name}")!;
 
         internal static Sprite EldritchBlast => GetAssemblyResourceSprite("eb_icon.png");
-        internal static Sprite EldritchSpear => GetAssemblyResourceSprite("es_icon.png");
+        internal static Sprite EldritchSpear => GetAssemblyResourceSprite("es2_icon.png");
         internal static Sprite EldritchBlastOverlay => GetAssemblyResourceSprite("eb_overlay.png");
         internal static Sprite EldritchBlastOverlaySmall => GetAssemblyResourceSprite("eb_overlay_small.png");
+
+        // TODO: Replace these with something based on the Spell Immunity icon - it's much closer to what I originally wanted
         internal static class DarkOnesOwnLuck
         {
             internal static Sprite Base => GetAssemblyResourceSprite("dool_icon.png");

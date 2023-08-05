@@ -51,7 +51,6 @@
   "BrimstoneBlastEssenceBuff": "f072082f-ec36-42d7-af8e-420e9584207a",
   "BrimstoneBlastFeature": "6a1aba86-1092-4c35-9e65-621fb8a82c97",
   "BrimstoneBlastPerRoundDamage": "1fb3206c-af9d-40e5-9865-3b0fa2e429fc",
-  "BrimstoneBlastApplyPerRoundDamage": "10c3df14-c4df-40bf-9c2f-10c5b7b0011a",
   "HideousBlowAbility": "225b5e0d-1811-48ad-96a8-9dabbde3087c",
   "HideousBlowWeaponEnchantment": "989bb850-4a4b-4e77-9c38-4c72547bfee0",
   "HideousBlowOnHitAbility": "5ca6b666-6019-47fc-938a-9c03cc3e7272",
@@ -122,7 +121,9 @@
   "EldritchConeProjectile": "20618c23-0b3b-4585-85e6-425168fbf352",
   "VitriolicBlastFeature": "88e14839-ee3b-4a90-b029-55f03b692af8",
   "VitriolicBlastEssenceBuff": "2daa88a6-b657-4ffc-bdb1-ec606d141ced",
-  "VitriolicBlastApplyPerRoundDamage": "1f47950e-82f0-4208-878f-3ceec22ad8d0",
   "VitriolicBlastPerRoundDamage": "55f4403d-f42d-4329-9da1-d38efa3518f1",
-  "VitriolicBlastToggleAbility": "1c799e9f-7bd9-44ce-b403-0ffa423a0f5c"
+  "VitriolicBlastToggleAbility": "1c799e9f-7bd9-44ce-b403-0ffa423a0f5c",
+  "EldritchDoomAbility": "642325f7-2bd8-4594-a831-e4a0e2370b98",
+  "EldritchDoomFeature": "20ca23b3-952d-4380-86a0-c8b19c6f19bf",
+  "DarkInvocationSelection": "f5cab016-a842-4436-9473-61d5703ceaca"
 }

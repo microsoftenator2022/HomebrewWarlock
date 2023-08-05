@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using HomebrewWarlock.Features.EldritchBlast;
 
+using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Selection;
 
@@ -27,9 +28,10 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                 GeneratedGuid.Get("GreaterInvocationSelection"),
                 nameof(GeneratedGuid.GreaterInvocationSelection))
                 .Combine(ebFeatures)
+                .Combine(prerequisite)
                 .Map(bps =>
                 {
-                    var (selection, features) = bps;
+                    var (selection, features, prerequisite) = bps.Expand();
 
                     selection.m_DisplayName = LocalizedStrings.Features_Invocations_Greater_GreaterInvocationSelection_DispayName;
 

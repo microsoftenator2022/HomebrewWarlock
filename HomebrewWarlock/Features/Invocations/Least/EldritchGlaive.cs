@@ -164,9 +164,9 @@ namespace HomebrewWarlock.Features.Invocations.Least
             {
                 static ItemEntityWeapon? TryGetWeapon(AbilityData abilityData)
                 {
-                    var uegr = abilityData.Blueprint.ComponentsArray.OfType<UseCustomWeaponRange>().FirstOrDefault();
+                    var c = abilityData.Blueprint.ComponentsArray.OfType<UseCustomWeaponRange>().FirstOrDefault();
                     
-                    return uegr?.Weapon?.Get()?.CreateEntity<ItemEntityWeapon>();
+                    return c?.Weapon?.Get()?.CreateEntity<ItemEntityWeapon>();
                 }
 
                 [HarmonyTranspiler]
@@ -186,8 +186,6 @@ namespace HomebrewWarlock.Features.Invocations.Least
                         return instructions;
                     }
 
-                    var insertLocation = match.Last().index + 1;
-
                     var match2 = instructions
                         .FindInstructionsIndexed(new Func<CodeInstruction, bool>[]
                         {
@@ -205,6 +203,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                         return instructions;
                     }
 
+                    var insertLocation = match2.First().index;
                     var targetLabel = match2.Last().instruction.operand;
                     
                     var newIs = new CodeInstruction[]

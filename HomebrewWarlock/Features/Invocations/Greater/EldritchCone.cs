@@ -75,7 +75,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
             "for half damage.";
 
         [LocalizedString]
-        internal const string SavingThrow = "Reflex halves";
+        internal const string SavingThrow = "Reflex half";
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(
             BlueprintInitializationContext context,
