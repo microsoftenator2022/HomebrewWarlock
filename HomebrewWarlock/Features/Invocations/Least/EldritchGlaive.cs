@@ -269,6 +269,12 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     caster.View.AnimationManager.Execute(animation);
 
+                    while (!animation.IsStarted || !animation.IsActed)
+                    {
+                        //caster.View.AnimationManager.Tick();
+                        yield return null;
+                    }
+
                     MicroLogger.Debug(() => $"Animation weapon style: {animation?.AttackWeaponStyle}");
                     MicroLogger.Debug(() => $"Animation handle execution mode: {animation?.ExecutionMode}");
 
@@ -296,12 +302,6 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     attack = context.TriggerRule(attack);
 
                     MicroLogger.Debug(() => $"{attack.AttackRoll.Result}");
-
-                    while (!animation.IsStarted || !animation.IsActed)
-                    {
-                        caster.View.AnimationManager.Tick();
-                        yield return null;
-                    }
 
                     yield return new(target) { AttackRoll = attack.AttackRoll };
                 }
@@ -399,8 +399,15 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     ability.m_DisplayName = baseFeatures.baseFeature.m_DisplayName;
 
-                    return new EldritchBlastTouch(touch.ToReference<BlueprintItemWeaponReference>())
+                    ability = new EldritchBlastTouch(touch.ToReference<BlueprintItemWeaponReference>())
                         .ConfigureAbility(ability, baseFeatures.rankFeature.ToReference<BlueprintFeatureReference>());
+
+                    ability.GetComponent<AbilityEffectRunAction>().Actions.Add(new EldritchBlastOnHitFx()
+                    {
+                        DefaultProjectile = baseFeatures.projectile.ToReference<BlueprintProjectileReference>()
+                    });
+
+                    return ability;
                 });
 
             var enchant = context.NewBlueprint<BlueprintWeaponEnchantment>(

@@ -83,7 +83,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
 
                             fx.name = "EldritchDoom_Fx";
 
-                            Fx.Fx.ChangeAllColors(fx, RotateColor);
+                            Fx.FxColor.ChangeAllColors(fx, RotateColor);
 
                             var rootTransform = fx.transform.Find("Root_Ground");
 
@@ -106,18 +106,9 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                                     var yM = sol.yMultiplier;
                                     var zM = sol.zMultiplier;
 
-                                    //if (!sol.separateAxes)
-                                    //{
-                                    //    sol.xMultiplier = xM * scale;
-                                    //    //sol.yMultiplier = yM * scale;
-                                    //    sol.zMultiplier = zM * scale;
-                                    //}
-                                    //else
-                                    //{
                                     sol.xMultiplier = xM * scale;
                                     //sol.yMultiplier = yM * scale;
                                     sol.zMultiplier = zM * scale;
-                                    //}
 
                                     MicroLogger.Debug(() =>
                                         $"{gameObject.name} " +
@@ -173,16 +164,6 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                                         $"start size Z: {startConstantZ} -> {particleSystem.main.startSizeZ.constant} ");
                                 }
                             }
-
-                            //foreach (var gameObject in new[]
-                            //{
-                            //    rootTransform.Find("Shockwave_RingStart"),
-                            //}
-                            //.SkipIfNull()
-                            //.Select(transform => transform.gameObject))
-                            //{
-                            //    ScaleParticlesSizeOverTime(gameObject, 0.8f);
-                            //}
 
                             foreach (var gameObject in new[]
                             {
@@ -252,6 +233,11 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                     ability.LocalizedSavingThrow = LocalizedStrings.Features_Invocations_Dark_EldritchDoom_LocalizedSavingThrow;
 
                     ability = new EldritchDoomBlast().ConfigureAbility(ability, baseFeatures.rankFeature.ToReference<BlueprintFeatureReference>());
+
+                    ability.GetComponent<AbilityEffectRunAction>().Actions.Add(new EldritchBlastOnHitFx()
+                    {
+                        DefaultProjectile = baseFeatures.projectile.ToReference<BlueprintProjectileReference>()
+                    });
 
                     ability.AddComponent<AbilityTargetsAround>(c =>
                     {

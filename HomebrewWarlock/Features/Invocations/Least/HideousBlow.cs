@@ -61,6 +61,11 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     ability = new EldritchBlastTouch(touchWeapon.ToReference<BlueprintItemWeaponReference>())
                         .ConfigureAbility(ability, baseFeatures.rankFeature.ToReference<BlueprintFeatureReference>());
 
+                    ability.GetComponent<AbilityEffectRunAction>().Actions.Add(new EldritchBlastOnHitFx()
+                    {
+                        DefaultProjectile = baseFeatures.projectile.ToReference<BlueprintProjectileReference>()
+                    });
+
                     return ability;
                 });
 

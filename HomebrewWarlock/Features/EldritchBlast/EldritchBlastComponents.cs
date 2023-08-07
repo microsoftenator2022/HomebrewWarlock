@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using HomebrewWarlock.Fx;
+
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Blueprints.JsonSystem;
+using Kingmaker.Controllers.Projectiles;
 using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
@@ -118,6 +121,25 @@ namespace HomebrewWarlock.Features.EldritchBlast.Components
 
         public virtual ActionList Actions { get; set; }
 
+        public virtual ActionList FxActions
+        {
+            get
+            {
+                var actions = new ActionList() { Actions = new GameAction[0] };
+
+                if (Projectiles[AbilityProjectileType.Simple].FirstOrDefault() is { } blueprint)
+                {
+                    if (EldritchBlastOnHitFx.GetProjectileHitFx(blueprint) is { } onHit)
+                        actions.Add(onHit);
+
+                    if (EldritchBlastOnHitFx.GetProjectileHitSnapFx(blueprint) is { } onHitSnap)
+                        actions.Add(onHitSnap);
+                }
+
+                return actions;
+            }
+        }
+
         public EldritchBlastEssence()
         {
             Actions = new();
@@ -155,7 +177,7 @@ namespace HomebrewWarlock.Features.EldritchBlast.Components
 
     internal class EldritchBlastEssenceActions : ContextAction
     {
-        public override string GetCaption() => "Eldritch Blast";
+        public override string GetCaption() => "Eldritch Blast Essence Actions";
 
         public override void RunAction()
         {
@@ -173,6 +195,63 @@ namespace HomebrewWarlock.Features.EldritchBlast.Components
             foreach (var essence in essenceComponents)
             {
                 essence.Actions.Run();
+            }
+        }
+    }
+
+    internal class EldritchBlastOnHitFx : ContextAction
+    {
+        public BlueprintProjectileReference? DefaultProjectile;
+
+        internal static ContextActionSpawnFxOnLocator? GetProjectileHitFx(BlueprintProjectile projectile)
+        {
+            if (projectile.ProjectileHit.HitFx is not { } hitFx) return null;
+
+            return new ContextActionSpawnFxOnLocator()
+            {
+                PrefabLink = new() { AssetId = hitFx.AssetId },
+                TargetBone = projectile.TargetBone,
+                TargetBoneOffsetMultiplier = projectile.TargetBoneOffsetMultiplier
+            };
+        }
+
+        internal static ContextActionSpawnFxOnLocator? GetProjectileHitSnapFx(BlueprintProjectile projectile)
+        {
+            if (projectile.ProjectileHit.HitSnapFx is not { } hitSnapFx) return null;
+
+            return new ContextActionSpawnFxOnLocator()
+            {
+                PrefabLink = new() { AssetId = hitSnapFx.AssetId }
+            };
+        }
+
+        public override string GetCaption() => "Eldritch Blast FX";
+        public override void RunAction()
+        {
+            if (Context is null) return;
+
+            var essenceComponents = new EldritchBlastEssence[0];
+
+            if (Context.MaybeCaster is not null)
+            {
+                essenceComponents = EldritchBlastEssence.GetEssenceBuffs(Context.MaybeCaster)
+                    .SelectMany(buff => buff.BlueprintComponents.OfType<EldritchBlastEssence>())
+                    .ToArray();
+            }
+
+            if (essenceComponents.Length == 0)
+            {
+                if (DefaultProjectile is null || DefaultProjectile.Get() is not { } projectile) return;
+
+                GetProjectileHitFx(projectile)?.RunAction();
+                GetProjectileHitSnapFx(projectile)?.RunAction();
+
+                return;
+            }
+
+            foreach (var essence in essenceComponents)
+            {
+                essence.FxActions.Run();
             }
         }
     }

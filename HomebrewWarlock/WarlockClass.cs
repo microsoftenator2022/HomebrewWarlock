@@ -109,13 +109,16 @@ namespace HomebrewWarlock
 
             var @class = Create(context);
 
-            var progression = WarlockProgression.Create(context);
-
             @class = @class
-                .Combine(progression)
-                .Map(cap =>
+                .Combine(WarlockProgression.Create(context))
+                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintItemWeapon.ColdIronDagger))
+                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintItemArmor.StuddedStandard))
+                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintItemEquipmentUsable.PotionOfCureLightWounds))
+                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintItemEquipmentUsable.PotionOfOfVanish))
+                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintItemEquipmentUsable.PotionOfShieldOfFaith))
+                .Map(bps =>
                 {
-                    var (@class, progression) = cap;
+                    var (@class, progression, coldIronDagger, studdedLeather, curePotion, vanishPotion, shieldPotion) = bps.Expand();
 
                     progression.m_Classes = new BlueprintProgression.ClassWithLevel[]
                     {
@@ -132,6 +135,17 @@ namespace HomebrewWarlock
                     {
                         EldritchBlast.FeatureRef.ToReference<BlueprintFeature, BlueprintFeatureReference>(),
                         WarlockProgression.BasicInvocations.ToReference<BlueprintFeature, BlueprintFeatureReference>()
+                    };
+
+                    @class.m_StartingItems = new BlueprintItemReference[]
+                    {
+                        coldIronDagger.ToReference<BlueprintItemReference>(),
+                        studdedLeather.ToReference<BlueprintItemReference>(),
+                        curePotion.ToReference<BlueprintItemReference>(),
+                        curePotion.ToReference<BlueprintItemReference>(),
+                        curePotion.ToReference<BlueprintItemReference>(),
+                        vanishPotion.ToReference<BlueprintItemReference>(),
+                        shieldPotion.ToReference<BlueprintItemReference>()
                     };
 
                     Game.Instance.BlueprintRoot.Progression.m_CharacterClasses =

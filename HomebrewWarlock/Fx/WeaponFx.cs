@@ -84,7 +84,7 @@ namespace HomebrewWarlock.Fx
                     //}
                 }
 
-                Fx.ChangeAllColors(fx, c =>
+                FxColor.ChangeAllColors(fx, c =>
                 {
                     var d = UnityUtil.RotateColorHue(c, 22);
 

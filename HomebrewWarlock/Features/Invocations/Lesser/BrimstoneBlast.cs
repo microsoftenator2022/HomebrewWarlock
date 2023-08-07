@@ -5,7 +5,7 @@ using HomebrewWarlock.Features.EldritchBlast;
 using HomebrewWarlock.Features.EldritchBlast.Components;
 using HomebrewWarlock.Resources;
 
-using static HomebrewWarlock.Fx.Fx;
+using static HomebrewWarlock.Fx.FxColor;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
