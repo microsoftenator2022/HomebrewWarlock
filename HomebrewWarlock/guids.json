@@ -125,5 +125,14 @@
   "VitriolicBlastToggleAbility": "1c799e9f-7bd9-44ce-b403-0ffa423a0f5c",
   "EldritchDoomAbility": "642325f7-2bd8-4594-a831-e4a0e2370b98",
   "EldritchDoomFeature": "20ca23b3-952d-4380-86a0-c8b19c6f19bf",
-  "DarkInvocationSelection": "f5cab016-a842-4436-9473-61d5703ceaca"
+  "DarkInvocationSelection": "f5cab016-a842-4436-9473-61d5703ceaca",
+  "WordOfChangingAbility": "5c5f41d4-e12e-4996-8730-6ef9db70f683",
+  "WordOfChangingFeature": "bf8c32c5-55c6-4fec-b0a1-06740de1ed48",
+  "ChillingTentaclesFeature": "259e89fd-47f0-4153-bc1d-b8bb21ad2c2c",
+  "ChillingTentaclesAreaEffect": "fc3cce80-60ca-4cfa-99aa-d758a2011958",
+  "ChillingTentaclesGrappleBuff": "abf6d55e-6d54-46ec-8da3-f55e7c0550c2",
+  "ChillingTentaclesAbility": "622ad199-ad7f-4cc2-8ba2-3f4444ec7e0d",
+  "DevourMagicAbility": "f2a8aa2c-a8ed-40d3-8968-69e2658aee28",
+  "DevourMagicFeature": "47fd96f1-18f9-4199-a0e6-d2f4b03a0680",
+  "DevourMagicTempHPBuff": "fae02ca9-85ec-4273-94bb-acacad6ebed6"
 }

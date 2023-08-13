@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using HomebrewWarlock.Features.Invocations;
 using HomebrewWarlock.Fx;
 
 using Kingmaker.Blueprints;
@@ -314,7 +315,7 @@ namespace HomebrewWarlock.Features.EldritchBlast.Components
             ability.Animation = UnitAnimationActionCastSpell.CastAnimationStyle.Directional;
             ability.ActionType = UnitCommand.CommandType.Standard;
 
-            ability.AddComponent<ArcaneSpellFailureComponent>();
+            ability.AddComponent<EldritchBlastComponent>();
             ability.AddComponent(new EldritchBlastCalculateSpellLevel(EquivalentSpellLevel));
 
             ability.AddContextRankConfig(c =>

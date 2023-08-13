@@ -10,15 +10,15 @@ using Kingmaker.Visual.MaterialEffects.Dissolve;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Kingmaker.Visual.Particles;
+using Kingmaker.Visual;
 
 namespace HomebrewWarlock.Fx
 {
     public static class FxColor
     {
-        internal static Texture2D ChangeTextureColors(Texture2D texture, Func<Color, Color> f)
+        internal static Texture2D ChangeTextureColors(Texture2D texture, Func<Color, Color> f,
+            TextureFormat textureFormat = TextureFormat.RGBA32)
         {
-            var textureFormat = TextureFormat.RGBA32;
-
             var readOnly = !texture.isReadable;
 
             if (readOnly)
@@ -88,7 +88,7 @@ namespace HomebrewWarlock.Fx
             return texture;
         }
 
-        internal static void ChangeAllColors(GameObject obj, Func<Color, Color> f)
+        internal static void ChangeAllColors(GameObject obj, Func<Color, Color> f, bool includeBaseMap = false)
         {
             var wasActive = obj.activeSelf;
             obj.SetActive(false);
@@ -121,9 +121,17 @@ namespace HomebrewWarlock.Fx
                 });
 
                 const string rampTextureName = "_ColorAlphaRamp";
-                if (psr.material.GetTexture(rampTextureName) is Texture2D caTexture)
+                if (psr.material.GetTexturePropertyNames().Contains(rampTextureName) && 
+                    psr.material.GetTexture(rampTextureName) is Texture2D caTexture)
                 {
                     psr.material.SetTexture(rampTextureName, ChangeTextureColors(caTexture, f));
+                }
+
+                if (includeBaseMap)
+                {
+                    var bm = psr.material.GetTexture(ShaderProps._BaseMap) as Texture2D;
+                    if (bm is not null)
+                        psr.material.SetTexture(ShaderProps._BaseMap, ChangeTextureColors(bm, f));
                 }
 
                 var pmc = ps.gameObject.GetComponent<ParticlesMaterialController>();

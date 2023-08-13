@@ -141,7 +141,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     ability.ActionType = UnitCommand.CommandType.Standard;
 
-                    ability.AddComponent<ArcaneSpellFailureComponent>();
+                    ability.AddComponent<EldritchBlastComponent>();
 
                     ability.AddComponent<AbilityEffectRunAction>(c => c.AddActions(
                         GameActions.ContextActionEnchantWornItem(a =>

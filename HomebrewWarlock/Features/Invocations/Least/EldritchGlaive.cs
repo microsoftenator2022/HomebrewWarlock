@@ -518,7 +518,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     return ability;
                 });
-             
+            
             var ability = context.NewBlueprint<BlueprintAbility>(
                 GeneratedGuid.Get("EldritchGlaiveAbility"),
                 nameof(GeneratedGuid.EldritchGlaiveAbility))
@@ -545,7 +545,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     ability.Animation = UnitAnimationActionCastSpell.CastAnimationStyle.Immediate;
 
-                    ability.AddComponent<ArcaneSpellFailureComponent>();
+                    ability.AddComponent<EldritchBlastComponent>();
                     ability.AddComponent<EldritchBlastCalculateSpellLevel>();
 
                     ability.AddComponent<AbilityEffectRunAction>(c =>

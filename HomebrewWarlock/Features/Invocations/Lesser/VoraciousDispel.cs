@@ -8,6 +8,9 @@ using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.ElementsSystem;
+using Kingmaker.RuleSystem;
+using Kingmaker.RuleSystem.Rules.Damage;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Components;
 using Kingmaker.UnitLogic.Mechanics.Actions;
@@ -20,6 +23,74 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 {
     internal static class VoraciousDispel
     {
+        internal class VoraciousDispelDamage : ContextAction
+        {
+            public override string GetCaption() => "Voracious dispel";
+            public override void RunAction()
+            {
+                if (base.Context.GetDispelMagic().FirstOrDefault() is not { } rdm) return;
+
+                MicroLogger.Debug(sb =>
+                {
+                    sb.AppendLine("RuleDispelMagic Effect");
+                    sb.AppendLine($"Buff: {rdm.Buff}");
+                    sb.AppendLine($"Buff Context: {rdm.Buff?.Context?.Name}");
+                    sb.AppendLine($"AoE: {rdm.AreaEffect}");
+                    sb.AppendLine($"AoE Context: {rdm.AreaEffect?.Context?.Name}");
+                });
+
+                if (rdm.Context is not { } dispelContext)
+                {
+                    MicroLogger.Warning("Null context for RuleDispelMagic");
+
+                    return;
+                }
+
+                MicroLogger.Debug(() => $"Dispel Context: {dispelContext.Name}");
+                MicroLogger.Debug(() => $"Dispel Context Caster: {dispelContext.MaybeCaster}");
+                MicroLogger.Debug(() => $"Dispel Context Owner: {dispelContext.MaybeOwner}");
+                MicroLogger.Debug(() => $"SourceAbilityContext: {dispelContext.SourceAbilityContext?.Name}");
+                MicroLogger.Debug(() => $"SourceAbilityContext.Ability: {dispelContext.SourceAbilityContext?.Ability?.Name}");
+                MicroLogger.Debug(() => $"SourceAbilityContext.Ability.SpellLevel: {dispelContext.SourceAbilityContext?.Ability?.SpellLevel}");
+
+                if (dispelContext.SourceAbilityContext?.Ability is not { } abilityData)
+                {
+                    MicroLogger.Debug(() => "SourceAbilityContext.Ability is null");
+                    return;
+                }
+
+                if (dispelContext.MaybeCaster is not { } target)
+                {
+                    MicroLogger.Debug(() => "Caster is null");
+                    return;
+                }
+
+                var spellLevel = abilityData.SpellLevel;
+
+                MicroLogger.Debug(() => "Create damage");
+
+                var damage = new UntypedDamage(DiceFormula.Zero, spellLevel)
+                {
+                    SourceFact = ContextDataHelper.GetFact()
+                };
+
+                MicroLogger.Debug(() => "Create damage rule");
+
+                MicroLogger.Debug(() => $"Context: {base.Context.Name}");
+                MicroLogger.Debug(() => $"Caster: {base.Context.MaybeCaster}");
+                MicroLogger.Debug(() => $"Source Ability: {base.Context.SourceAbility}");
+
+                var rdd = new RuleDealDamage(base.Context.MaybeCaster, target, damage)
+                {
+                    Reason = new(base.Context)
+                };
+
+                MicroLogger.Debug(() => $"Dealing damage to {target}");
+
+                base.Context.TriggerRule(rdd);
+            }
+        }
+
         [LocalizedString]
         internal const string DisplayName = "Voracious Dispelling";
 
@@ -54,7 +125,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                         foreach (var dm in copy.GetComponent<AbilityEffectRunAction>().Actions.Actions.OfType<ContextActionDispelMagic>())
                         {
-                            dm.OnSuccess.Add(new InvocationComponents.VoraciousDispelDamage());
+                            dm.OnSuccess.Add(new VoraciousDispelDamage());
                         }
                     }
 

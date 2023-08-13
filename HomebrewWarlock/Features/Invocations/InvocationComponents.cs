@@ -16,11 +16,16 @@ using Kingmaker.UnitLogic.Mechanics.Components;
 
 namespace HomebrewWarlock.Features.Invocations
 {
+    internal class InvocationComponent : ArcaneSpellFailureComponent { }
+
+    internal class EldritchBlastComponent : InvocationComponent { }
+
     internal static class InvocationComponents
     {
         internal static readonly ExtraActivatableAbilityGroup EssenceInvocationAbilityGroup = new(0x8a31cafe);
 
-        internal static void AddInvocationComponents(this BlueprintAbility invocation, int equivalentSpellLevel = 1)
+        internal static void AddInvocationComponents<TComponent>(this BlueprintAbility invocation, int equivalentSpellLevel = 1)
+            where TComponent : InvocationComponent, new()
         {
             invocation.AddComponent<ContextCalculateAbilityParams>(c =>
             {
@@ -29,8 +34,11 @@ namespace HomebrewWarlock.Features.Invocations
                 c.SpellLevel = equivalentSpellLevel;
             });
 
-            invocation.AddComponent<ArcaneSpellFailureComponent>();
+            invocation.AddComponent<TComponent>();
         }
+
+        internal static void AddInvocationComponents(this BlueprintAbility invocation, int equivalentSpellLevel = 1) =>
+            AddInvocationComponents<InvocationComponent>(invocation, equivalentSpellLevel);
 
         internal static RuleDispelMagic[] GetDispelMagic(this MechanicsContext context)
         {           
@@ -40,7 +48,7 @@ namespace HomebrewWarlock.Features.Invocations
             {
                 MicroLogger.Debug(() => $"No RuleDispelMagic in {context.SourceAbilityContext?.Name?.ToString() ?? "null"} context");
 
-                return new RuleDispelMagic[0];
+                return Array.Empty<RuleDispelMagic>();
             }
 
             MicroLogger.Debug(sb =>
@@ -69,74 +77,6 @@ namespace HomebrewWarlock.Features.Invocations
             });
 
             return rdms.Where(rdm => rdm.Reason?.Ability == context.SourceAbilityContext.Ability).ToArray();
-        }
-
-        internal class VoraciousDispelDamage : ContextAction
-        {
-            public override string GetCaption() => "Voracious dispel";
-            public override void RunAction()
-            {
-                if (this.Context.GetDispelMagic().FirstOrDefault() is not { } rdm) return;
-
-                MicroLogger.Debug(sb =>
-                {
-                    sb.AppendLine("RuleDispelMagic Effect");
-                    sb.AppendLine($"Buff: {rdm.Buff}");
-                    sb.AppendLine($"Buff Context: {rdm.Buff?.Context?.Name}");
-                    sb.AppendLine($"AoE: {rdm.AreaEffect}");
-                    sb.AppendLine($"AoE Context: {rdm.AreaEffect?.Context?.Name}");
-                });
-
-                if (rdm.Context is not { } dispelContext)
-                {
-                    MicroLogger.Warning("Null context for RuleDispelMagic effect");
-
-                    return;
-                }
-
-                MicroLogger.Debug(() => $"Dispel Context: {dispelContext.Name}");
-                MicroLogger.Debug(() => $"Dispel Context Caster: {dispelContext.MaybeCaster}");
-                MicroLogger.Debug(() => $"Dispel Context Owner: {dispelContext.MaybeOwner}");
-                MicroLogger.Debug(() => $"SourceAbilityContext: {dispelContext.SourceAbilityContext?.Name}");
-                MicroLogger.Debug(() => $"SourceAbilityContext.Ability: {dispelContext.SourceAbilityContext?.Ability?.Name}");
-                MicroLogger.Debug(() => $"SourceAbilityContext.Ability.SpellLevel: {dispelContext.SourceAbilityContext?.Ability?.SpellLevel}");
-
-                if (dispelContext.SourceAbilityContext?.Ability is not { } abilityData)
-                {
-                    MicroLogger.Debug(() => "SourceAbilityContext.Ability is null");
-                    return;
-                }
-                    
-                if (dispelContext.MaybeCaster is not { } target)
-                {
-                    MicroLogger.Debug(() => "Caster is null");
-                    return;
-                }
-
-                var spellLevel = abilityData.SpellLevel;
-
-                MicroLogger.Debug(() => "Create damage");
-
-                var damage = new UntypedDamage(DiceFormula.Zero, spellLevel)
-                {
-                    SourceFact = ContextDataHelper.GetFact()
-                };
-
-                MicroLogger.Debug(() => "Create damage rule");
-
-                MicroLogger.Debug(() => $"Context: {base.Context.Name}");
-                MicroLogger.Debug(() => $"Caster: {base.Context.MaybeCaster}");
-                MicroLogger.Debug(() => $"Source Ability: {base.Context.SourceAbility}");
-
-                var rdd = new RuleDealDamage(base.Context.MaybeCaster, target, damage)
-                {
-                    Reason = new(base.Context)
-                };
-
-                MicroLogger.Debug(() => $"Dealing damage to {target}");
-
-                base.Context.TriggerRule(rdd);
-            }
         }
     }
 }

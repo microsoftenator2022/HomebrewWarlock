@@ -125,8 +125,6 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                                     gameObject.GetComponentsInChildren<ParticleSystem>().SkipIfNull() :
                                     gameObject.GetComponent<ParticleSystem>().EmptyIfNull())
                                 {
-
-                                    
                                     var main = particleSystem.main;
                                     
                                     var startSize = main.startSize;

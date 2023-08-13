@@ -28,9 +28,10 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                 nameof(GeneratedGuid.DarkInvocationSelection))
                 .Combine(ebFeatures)
                 .Combine(prerequisite)
+                .Combine(WordOfChanging.Create(context))
                 .Map(bps =>
                 {
-                    var (selection, ebFeatures, prerequisite) = bps.Expand();
+                    var (selection, ebFeatures, prerequisite, wordOfChanging) = bps.Expand();
 
                     selection.m_DisplayName = LocalizedStrings.Features_Invocations_Dark_DarkInvocationSelection_DisplayName;
 
@@ -39,7 +40,9 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                     prerequisite.IsPrerequisiteFor = new() { selection.ToReference<BlueprintFeatureReference>() };
 #endif
 
-                    selection.AddFeatures(ebFeatures.Blasts.Dark.EldritchDoom);
+                    selection.AddFeatures(
+                        ebFeatures.Blasts.Dark.EldritchDoom,
+                        wordOfChanging);
 
                     return selection;
                 });
