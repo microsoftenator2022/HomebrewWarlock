@@ -134,5 +134,9 @@
   "ChillingTentaclesAbility": "622ad199-ad7f-4cc2-8ba2-3f4444ec7e0d",
   "DevourMagicAbility": "f2a8aa2c-a8ed-40d3-8968-69e2658aee28",
   "DevourMagicFeature": "47fd96f1-18f9-4199-a0e6-d2f4b03a0680",
-  "DevourMagicTempHPBuff": "fae02ca9-85ec-4273-94bb-acacad6ebed6"
+  "DevourMagicTempHPBuff": "fae02ca9-85ec-4273-94bb-acacad6ebed6",
+  "RepellingBlastToggleAbility": "ca652ab8-fb82-4ba9-9c09-523ef207f2ce",
+  "RepellingBlastFeature": "3e5ae93f-41bb-447e-88cc-d616705a3192",
+  "RepellingBlastEssenceBuff": "4b5775c8-bab7-4d8f-8660-8aa250f4c4f2",
+  "RepellingBlastOnHitAbility": "f76f1dd3-f3e4-44f1-9096-d167653b8afc"
 }
