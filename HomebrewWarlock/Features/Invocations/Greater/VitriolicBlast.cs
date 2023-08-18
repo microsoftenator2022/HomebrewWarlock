@@ -80,43 +80,6 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     return buff;
                 });
 
-            //var applyDotBuff = context.NewBlueprint<BlueprintBuff>(
-            //    GeneratedGuid.Get("VitriolicBlastApplyPerRoundDamage"),
-            //    nameof(GeneratedGuid.VitriolicBlastApplyPerRoundDamage))
-            //    .Combine(dotBuff)
-            //    .Map(bps =>
-            //    {
-            //        var (dotBuff, applyBuff) = bps;
-
-            //        applyBuff.AddComponent<AddFactContextActions>(c =>
-            //        {
-            //            c.Activated.Add(GameActions.ContextActionApplyBuff(ab =>
-            //            {
-            //                ab.m_Buff = dotBuff.ToReference<BlueprintBuffReference>();
-            //                ab.DurationValue.BonusValue.ValueType = ContextValueType.Rank;
-            //                ab.AsChild = false;
-            //                //ab.IsNotDispelable = true;
-            //            }));
-            //        });
-
-            //        applyBuff.AddContextRankConfig(c =>
-            //        {
-            //            c.m_BaseValueType = ContextRankBaseValueType.ClassLevel;
-            //            c.m_Class = new[]
-            //            {
-            //                WarlockClass.Blueprint.ToReference<BlueprintCharacterClass, BlueprintCharacterClassReference>()
-            //            };
-            //            c.m_Progression = ContextRankProgression.DelayedStartPlusDivStep;
-            //            c.m_StepLevel = 5;
-            //        });
-
-            //        //applyBuff.Stacking = StackingType.Stack;
-
-            //        applyBuff.m_Flags = BlueprintBuff.Flags.Harmful | BlueprintBuff.Flags.HiddenInUi;
-
-            //        return applyBuff;
-            //    });
-
             var essenceBuff = context.NewBlueprint<BlueprintBuff>(
                 GeneratedGuid.Get("VitriolicBlastEssenceBuff"),
                 nameof(GeneratedGuid.VitriolicBlastEssenceBuff))

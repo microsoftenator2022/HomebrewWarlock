@@ -31,10 +31,9 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                 .Combine(prerequisite)
                 .Combine(ChillingTentacles.Create(context))
                 .Combine(DevourMagic.Create(context))
-                .Combine(RepellingBlast.Create(context))
                 .Map(bps =>
                 {
-                    var (selection, features, prerequisite, chillingTentacles, devourMagic, repellingBlast) = bps.Expand();
+                    var (selection, features, prerequisite, chillingTentacles, devourMagic) = bps.Expand();
 
                     selection.m_DisplayName = LocalizedStrings.Features_Invocations_Greater_GreaterInvocationSelection_DispayName;
 
@@ -47,10 +46,10 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                         features.Essence.Greater.BewitchingBlast,
                         features.Essence.Greater.NoxiousBlast,
                         features.Essence.Greater.VitriolicBlast,
+                        features.Essence.Greater.RepellingBlast,
                         features.Blasts.Greater.EldritchCone,
                         chillingTentacles,
-                        devourMagic,
-                        repellingBlast);
+                        devourMagic);
 
                     return selection;
                 });

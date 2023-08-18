@@ -151,12 +151,12 @@ namespace HomebrewWarlock.Features.EldritchBlast.Components
     internal class EldritchBlastElementalEssence : EldritchBlastEssence, IInitiatorRulebookHandler<RuleDealDamage>
     {
         public DamageEnergyType BlastDamageType = DamageEnergyType.Magic;
-        public void OnEventAboutToTrigger(RuleDealDamage evt)
+        public virtual void OnEventAboutToTrigger(RuleDealDamage evt)
         {
             if (BlastDamageType is DamageEnergyType.Magic) return;
 
             if (evt.SourceAbility is null) return;
-            if (!evt.SourceAbility.ComponentsArray.OfType<EldritchBlastCalculateSpellLevel>().Any()) return;
+            if (!evt.SourceAbility.ComponentsArray.OfType<EldritchBlastComponent>().Any()) return;
 
             var damage = evt.DamageBundle.ToArray();
             evt.Remove(_ => true);
@@ -173,7 +173,7 @@ namespace HomebrewWarlock.Features.EldritchBlast.Components
                 else evt.Add(bd);
             }
         }
-        public void OnEventDidTrigger(RuleDealDamage evt) { }
+        public virtual void OnEventDidTrigger(RuleDealDamage evt) { }
     }
 
     internal class EldritchBlastEssenceActions : ContextAction

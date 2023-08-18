@@ -41,6 +41,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
 #endif
 
                     selection.AddFeatures(
+                        ebFeatures.Essence.Dark.UtterdarkBlast,
                         ebFeatures.Blasts.Dark.EldritchDoom,
                         wordOfChanging);
 

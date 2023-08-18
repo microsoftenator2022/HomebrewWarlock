@@ -50,12 +50,13 @@ namespace HomebrewWarlock.Features.Invocations.Greater
             }
 
             if (GameHelper.IsAttackingGreenNPC(caster, base.Target.Unit)) return;
-
+            
             var targetPoint = base.Target.Point;
             var direction = targetPoint - caster.Position;
             var distance = this.Distance.Calculate(base.Context);
             var distanceFeet = distance * 5;
 
+            // "World" units appear to be meters
             var vector = direction.normalized * (distanceFeet.Feet().Meters);
 
             var expectedDestination = base.Target.Unit.Position + vector;
@@ -64,6 +65,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
             var distance2D = GeometryUtils.Distance2D(base.Target.Unit.Position, expectedDestination);
             var obstacleDistance2D = GeometryUtils.Distance2D(base.Target.Unit.Position, obstaclePosition);
 
+            // Note: Feet.Value is a float -> integer cast
             var distance2DFeet = distance2D.MetersToFeet().Value;
             var obstacleDistance2DFeet = obstacleDistance2D.MetersToFeet().Value;
 
@@ -87,7 +89,8 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     EventBus.RaiseEvent<IKnockOffHandler>(h => h.HandleKnockOff(caster, this.Target.Unit), true);
             }
 
-            var moveChunk = base.Target.Unit.Ensure<UnitPartForceMove>().Push(direction, distance, false);
+            // UnitPartForceMove.Push distance unit = 5 feet
+            var _ = base.Target.Unit.Ensure<UnitPartForceMove>().Push(direction, distance, false);
 
             base.Context[this.DamageDiceShared] = (obstacleDistance2DFeet + 1) / 10;
 
@@ -130,7 +133,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
-            var onHit = context.NewBlueprint<BlueprintAbility>(GeneratedGuid.Get("RepellingBlastOnHitAbility"))
+            var onHit = context.NewBlueprint<BlueprintAbility>(GeneratedGuid.Get("RepellingBlastYeet"))
                 .Map(ability =>
                 {
                     ability.m_DisplayName = LocalizedStrings.Features_Invocations_Greater_RepellingBlast_DisplayName;

@@ -69,12 +69,13 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 public BlueprintFeature BewitchingBlast = null!;
                 public BlueprintFeature NoxiousBlast = null!;
                 public BlueprintFeature VitriolicBlast = null!;
+                public BlueprintFeature RepellingBlast = null!;
             }
             public readonly GreaterEssence Greater = new();
 
             internal class DarkEssence
             {
-
+                public BlueprintFeature UtterdarkBlast = null!;
             }
             public readonly DarkEssence Dark = new();
         }
@@ -116,12 +117,16 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 })
                 .Combine(NoxiousBlast.Create(context))
                 .Combine(VitriolicBlast.Create(context))
+                .Combine(RepellingBlast.Create(context))
+                .Combine(UtterdarkBlast.Create(context))
                 .Map(features =>
                 {
-                    var (ebFeatures, noxious, vitriolic) = features.Expand();
+                    var (ebFeatures, noxious, vitriolic, repelling, utterdark) = features.Expand();
 
                     ebFeatures.Essence.Greater.NoxiousBlast = noxious;
                     ebFeatures.Essence.Greater.VitriolicBlast = vitriolic;
+                    ebFeatures.Essence.Greater.RepellingBlast = repelling;
+                    ebFeatures.Essence.Dark.UtterdarkBlast = utterdark;
 
                     return ebFeatures;
 
