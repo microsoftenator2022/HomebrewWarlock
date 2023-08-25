@@ -29,9 +29,10 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                 .Combine(ebFeatures)
                 .Combine(prerequisite)
                 .Combine(WordOfChanging.Create(context))
+                .Combine(DarkDiscorporation.Create(context))
                 .Map(bps =>
                 {
-                    var (selection, ebFeatures, prerequisite, wordOfChanging) = bps.Expand();
+                    var (selection, ebFeatures, prerequisite, wordOfChanging, darkDiscorporation) = bps.Expand();
 
                     selection.m_DisplayName = LocalizedStrings.Features_Invocations_Dark_DarkInvocationSelection_DisplayName;
 
@@ -43,7 +44,8 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                     selection.AddFeatures(
                         ebFeatures.Essence.Dark.UtterdarkBlast,
                         ebFeatures.Blasts.Dark.EldritchDoom,
-                        wordOfChanging);
+                        wordOfChanging,
+                        darkDiscorporation);
 
                     return selection;
                 });

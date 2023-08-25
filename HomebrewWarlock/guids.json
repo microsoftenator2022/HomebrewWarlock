@@ -138,5 +138,14 @@
   "RepellingBlastToggleAbility": "ca652ab8-fb82-4ba9-9c09-523ef207f2ce",
   "RepellingBlastFeature": "3e5ae93f-41bb-447e-88cc-d616705a3192",
   "RepellingBlastEssenceBuff": "4b5775c8-bab7-4d8f-8660-8aa250f4c4f2",
-  "RepellingBlastYeet": "f76f1dd3-f3e4-44f1-9096-d167653b8afc"
+  "RepellingBlastYeet": "f76f1dd3-f3e4-44f1-9096-d167653b8afc",
+  "UtterdarkBlastToggleAbility": "745edb2d-3cc8-4b36-8e92-093dbd612682",
+  "UtterdarkBlastFeature": "3d20d9b1-a4c5-448b-883d-af1af463d004",
+  "UtterdarkBlastEssenceBuff": "175b431d-6cd6-40da-99f3-58245357cd93",
+  "DarkDiscorporationFeature": "20e21f86-f4ec-49db-86be-017528f48c7b",
+  "DarkDiscorporationPolymorphBuff": "abc58b6f-2919-493b-948b-476ae1c5c44d",
+  "DarkDiscorporationAreaEffectBuff": "10004e75-3494-460d-b4d2-0e356f767767",
+  "DarkDiscorporationArea": "86d06fce-af49-4f8f-95bc-1099ae026cc4",
+  "DarkDiscorporationPolymorphToggle": "ba8781de-185b-4223-9300-f174ef42e861",
+  "DarkDiscorporationSwarmDamageBuff": "10c55d7d-f6b5-4008-b289-c3c01992db79"
 }

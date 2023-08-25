@@ -255,7 +255,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                         caster.View.AnimationManager.Tick();
                         yield return null;
                     }
-
+                    
                     UnitAnimationType at = UnitAnimationType.SpecialAttack;
                     if (attackInfo.Hand == caster.Body.PrimaryHand)
                         at = UnitAnimationType.MainHandAttack;
