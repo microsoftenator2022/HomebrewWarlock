@@ -25,7 +25,18 @@ namespace HomebrewWarlock.Features
         {
             public void OnEventAboutToTrigger(RuleCalculateAbilityParams evt)
             {
-                if (!evt.AbilityData.Blueprint.Components.OfType<EldritchBlastCalculateSpellLevel>().Any())
+                //MicroLogger.Debug(sb =>
+                //{
+                //    sb.AppendLine($"evt: {evt}");
+                //    sb.AppendLine($"evt.Blueprint: {evt.Blueprint}");
+                //    sb.AppendLine($"evt.AbilityData: {evt.AbilityData}");
+                //    sb.AppendLine($"evt.AbilityData?.Blueprint: {evt.AbilityData?.Blueprint}");
+                //    sb.Append($"evt.AbilityData?.Blueprint?.Components: {evt.AbilityData?.Blueprint?.Components}");
+                //});
+
+                var blueprint = evt.AbilityData?.Blueprint ?? evt.Blueprint;
+
+                if (blueprint is null || !blueprint.Components.OfType<EldritchBlastCalculateSpellLevel>().Any())
                     return;
 
                 evt.AddBonusDC(2);
