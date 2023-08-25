@@ -31,7 +31,8 @@ namespace HomebrewWarlock
             BlueprintFeature? DeceiveItem = null,
             BlueprintFeature? LesserInvocationsPrerequisite = null,
             BlueprintFeature? GreaterInvocationsPrerequisite = null,
-            BlueprintFeature? DarkInvocationsPrerequisite = null);
+            BlueprintFeature? DarkInvocationsPrerequisite = null,
+            BlueprintFeature? ImbueItem = null);
 
         internal static readonly IMicroBlueprint<BlueprintFeature> BasicInvocations = new MicroBlueprint<BlueprintFeature>(GeneratedGuid.InvocationsBasicFeature);
 
@@ -55,6 +56,8 @@ namespace HomebrewWarlock
                 .Map(fs => fs.Left with { FiendishResilience = fs.Right })
                 .Combine(DeceiveItem.Create(context))
                 .Map(fs => fs.Left with { DeceiveItem = fs.Right })
+                .Combine(ImbueItem.Create(context))
+                .Map(fs => fs.Left with { ImbueItem = fs.Right })
                 .Combine(InvocationSelection.CreateSelection(context, blastFeatures))
                 .Map(fs =>
                 {
@@ -90,6 +93,7 @@ namespace HomebrewWarlock
                     var damageReduction = features.DamageReduction!;
                     var fiendishResilience = features.FiendishResilience!;
                     var deceiveItem = features.DeceiveItem!;
+                    var imbueItem = features.ImbueItem!;
                     
                     var invocationSelection = features.InvocationSelection!;
 
@@ -121,7 +125,7 @@ namespace HomebrewWarlock
                     progression.AddFeatures(9, eldritchBlastRank);
                     progression.AddFeatures(10, invocationSelection, energyResist.baseFeature, energyResist.selection, energyResist.selection);
                     progression.AddFeatures(11, eldritchBlastRank, invocationSelection, damageReduction);
-                    // progression.AddFeatures(12, imbueItem);
+                    progression.AddFeatures(12, imbueItem);
                     progression.AddFeatures(13, invocationSelection, fiendishResilience, greaterInvocations);
                     progression.AddFeatures(14, eldritchBlastRank);
                     progression.AddFeatures(15, invocationSelection, damageReduction);
