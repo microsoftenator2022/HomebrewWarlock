@@ -37,7 +37,6 @@ namespace HomebrewWarlock.Features.Invocations.Dark
 
 #if !DEBUG
                     selection.AddPrerequisiteFeature(prerequisite.ToMicroBlueprint());
-                    prerequisite.IsPrerequisiteFor = new() { selection.ToReference<BlueprintFeatureReference>() };
 #endif
 
                     selection.AddFeatures(
@@ -47,7 +46,16 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                         darkDiscorporation);
 
                     return selection;
-                });
+                })
+                .Combine(prerequisite)
+                .Map(bps =>
+                {
+                    var (selection, prerequisite) = bps;
+
+                    prerequisite.IsPrerequisiteFor = selection.m_AllFeatures.ToList();
+
+                    return selection;
+                }); ;
 
             return selection;
         }

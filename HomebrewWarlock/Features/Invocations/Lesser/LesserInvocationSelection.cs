@@ -48,7 +48,6 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                         LocalizedStrings.Features_Invocations_Lesser_LesserInvocationSelection_DisplayName;
 #if !DEBUG
                     selection.AddPrerequisiteFeature(prerequisite.ToMicroBlueprint());
-                    prerequisite.IsPrerequisiteFor = new() { selection.ToReference<BlueprintFeatureReference>() };
 #endif
                     selection.AddFeatures(
                         ebFeatures.Essence.Lesser.BrimstoneBlast,
@@ -72,9 +71,18 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                     selection.AddFeatures(voraciousDispel);
 
                     return selection;
+                })
+                .Combine(prerequisite)
+                .Map(bps =>
+                {
+                    var (selection, prerequisite) = bps;
+
+                    prerequisite.IsPrerequisiteFor = selection.m_AllFeatures.ToList();
+
+                    return selection;
                 });
 
-            return selection;
+                return selection;
         }
     }
 }
