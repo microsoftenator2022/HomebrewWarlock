@@ -31,8 +31,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
             var buff = context.NewBlueprint<BlueprintBuff>(
-                GeneratedGuid.Get("CurseOfDespairBuff"),
-                nameof(GeneratedGuid.CurseOfDespairBuff))
+                GeneratedGuid.Get("CurseOfDespairBuff"))
                 .Map(buff =>
                 {
                     buff.AddAddAttackBonus(c => c.Bonus = -1);
@@ -42,8 +41,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 });
 
             var baseAbility = context.CloneBlueprint(BlueprintsDb.Owlcat.BlueprintAbility.BestowCurse,
-                GeneratedGuid.Get("CurseOfDespairBaseAbility"),
-                nameof(GeneratedGuid.CurseOfDespairBaseAbility))
+                GeneratedGuid.Get("CurseOfDespairBaseAbility"))
                 .Combine(buff)
                 .Map(bps =>
                 {
@@ -85,8 +83,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("CurseOfDespairFeature"),
-                nameof(GeneratedGuid.CurseOfDespairFeature))
+                GeneratedGuid.Get("CurseOfDespairFeature"))
                 .Combine(baseAbility)
                 .Map(bps =>
                 {

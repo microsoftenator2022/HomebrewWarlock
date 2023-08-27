@@ -37,8 +37,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
             BlueprintInitializationContext context)
         {
             var essenceBuff = context.NewBlueprint<BlueprintBuff>(
-                GeneratedGuid.Get("FrightfulBlastEssenceBuff"),
-                nameof(GeneratedGuid.FrightfulBlastEssenceBuff))
+                GeneratedGuid.Get("FrightfulBlastEssenceBuff"))
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintBuff.Shaken))
                 .Map(bps =>
                 {
@@ -77,8 +76,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 });
 
             var ability = context.NewBlueprint<BlueprintActivatableAbility>(
-                GeneratedGuid.Get("FrigthfulBlastAbility"),
-                nameof(GeneratedGuid.FrigthfulBlastAbility))
+                GeneratedGuid.Get("FrigthfulBlastAbility"))
                 .Combine(essenceBuff)
                 .Map(bps =>
                 {
@@ -96,8 +94,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("FrightfulBlastFeature"),
-                nameof(GeneratedGuid.FrightfulBlastFeature))
+                GeneratedGuid.Get("FrightfulBlastFeature"))
                 .Combine(ability)
                 .Map(bps =>
                 {

@@ -32,8 +32,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
             var buff = context.NewBlueprint<BlueprintBuff>(
-                GeneratedGuid.Get("NoxiousBlastEssenceBuff"),
-                nameof(GeneratedGuid.NoxiousBlastEssenceBuff))
+                GeneratedGuid.Get("NoxiousBlastEssenceBuff"))
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintBuff.Nauseated))
                 .Map(bps =>
                 {
@@ -63,8 +62,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                 });
 
             var ability = context.NewBlueprint<BlueprintActivatableAbility>(
-                GeneratedGuid.Get("NoxiousBlastToggleAbility"),
-                nameof(GeneratedGuid.NoxiousBlastToggleAbility))
+                GeneratedGuid.Get("NoxiousBlastToggleAbility"))
                 .Combine(buff)
                 .Map(bps =>
                 {
@@ -82,8 +80,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                 });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("NoxiousBlastFeature"),
-                nameof(GeneratedGuid.NoxiousBlastFeature))
+                GeneratedGuid.Get("NoxiousBlastFeature"))
                 .Combine(ability)
                 .Map(bps =>
                 {

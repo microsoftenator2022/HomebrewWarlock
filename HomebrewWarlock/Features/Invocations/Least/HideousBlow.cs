@@ -47,8 +47,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
             BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures)
         {
             var onHitAbility = context.NewBlueprint<BlueprintAbility>(
-                GeneratedGuid.Get("HideousBlowOnHitAbility"),
-                nameof(GeneratedGuid.HideousBlowOnHitAbility))
+                GeneratedGuid.Get("HideousBlowOnHitAbility"))
                 .Combine(baseFeatures)
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintItemWeapon.TouchItem))
                 .Map(bps =>
@@ -70,8 +69,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 });
 
             var enchant = context.NewBlueprint<BlueprintWeaponEnchantment>(
-                GeneratedGuid.Get("HideousBlowWeaponEnchantment"),
-                nameof(GeneratedGuid.HideousBlowWeaponEnchantment))
+                GeneratedGuid.Get("HideousBlowWeaponEnchantment"))
                 .Combine(onHitAbility)
                 .Combine(baseFeatures)
                 .Map(bps =>
@@ -102,8 +100,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 });
 
             var attackAbility = context.NewBlueprint<BlueprintAbility>(
-                GeneratedGuid.Get("HideousBlowAttackAbility"),
-                nameof(GeneratedGuid.HideousBlowAttackAbility))
+                GeneratedGuid.Get("HideousBlowAttackAbility"))
                 .Map(ability =>
                 {
                     ability.AddComponent<AbilityDeliverAttackWithWeapon>();
@@ -116,8 +113,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 });
 
             var ability = context.NewBlueprint<BlueprintAbility>(
-                GeneratedGuid.Get("HideousBlowAbility"),
-                nameof(GeneratedGuid.HideousBlowAbility))
+                GeneratedGuid.Get("HideousBlowAbility"))
                 .Combine(enchant)
                 .Combine(attackAbility)
                 .Map(bps =>
@@ -165,8 +161,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 });
 
             return context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("HideousBlowFeature"),
-                nameof(GeneratedGuid.HideousBlowFeature))
+                GeneratedGuid.Get("HideousBlowFeature"))
                 .Combine(ability)
                 .Map(bps =>
                 {

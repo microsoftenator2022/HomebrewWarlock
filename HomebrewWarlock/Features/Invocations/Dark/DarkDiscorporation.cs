@@ -7,18 +7,22 @@ using System.Threading.Tasks;
 using HarmonyLib;
 
 using HomebrewWarlock.Fx;
+using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.JsonSystem.Converters;
 using Kingmaker.Designers.EventConditionActionSystem.Evaluators;
+using Kingmaker.Designers.Mechanics.Facts;
+using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Enums;
 using Kingmaker.Enums.Damage;
 using Kingmaker.PubSubSystem;
 using Kingmaker.ResourceLinks;
 using Kingmaker.RuleSystem;
+using Kingmaker.RuleSystem.Rules;
 using Kingmaker.RuleSystem.Rules.Damage;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
@@ -162,7 +166,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
         [LocalizedString]
         internal static readonly string Description =
             "One with the powers of darkness, you learn to abandon your body. When you use this ability, you become " +
-            "Huge a swarm of Diminutive, batlike shadows." +
+            "a Huge swarm of Diminutive, batlike shadows." +
             Environment.NewLine +
             "In this swarmlike form, you gain the following characteristics and traits:" +
             Environment.NewLine +
@@ -192,7 +196,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
         [LocalizedString]
         internal const string ShortDescription =
             "One with the powers of darkness, you learn to abandon your body. When you use this ability, you become " +
-            "Huge a swarm of Diminutive, batlike shadows.";
+            "a Huge swarm of Diminutive, batlike shadows.";
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
@@ -478,8 +482,11 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                     ability.m_DisplayName = LocalizedStrings.Features_Invocations_Dark_DarkDiscorporation_DisplayName;
                     ability.m_Description = LocalizedStrings.Features_Invocations_Dark_DarkDiscorporation_Description;
                     ability.m_DescriptionShort = LocalizedStrings.Features_Invocations_Dark_DarkDiscorporation_ShortDescription;
+                    ability.m_Icon = Sprites.DarkDiscorporation;
 
                     ability.m_Buff = buff.ToReference<BlueprintBuffReference>();
+
+                    ability.ActivationType = AbilityActivationType.WithUnitCommand;
                     ability.m_ActivateWithUnitCommand = UnitCommand.CommandType.Standard;
 
                     //ability.AddComponent<ActivatableAbilityUnitCommand>(c => c.Type = UnitCommand.CommandType.Standard);

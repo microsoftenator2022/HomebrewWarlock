@@ -24,8 +24,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
             var ability = context.CloneBlueprint(BlueprintsDb.Owlcat.BlueprintAbility.SeeInvisibility,
-                GeneratedGuid.Get("SeeTheUnseenAbility"),
-                nameof(GeneratedGuid.SeeTheUnseenAbility))
+                GeneratedGuid.Get("SeeTheUnseenAbility"))
                 .Map(ability =>
                 {
                     ability.AddInvocationComponents(2);
@@ -35,8 +34,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("SeeTheUnseenFeature"),
-                nameof(GeneratedGuid.SeeTheUnseenFeature))
+                GeneratedGuid.Get("SeeTheUnseenFeature"))
                 .Combine(ability)
                 .Map(bps =>
                 {

@@ -28,8 +28,7 @@ namespace HomebrewWarlock.Features
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
             var buff = context.NewBlueprint<BlueprintBuff>(
-                GeneratedGuid.Get("DeceiveItemBuff"),
-                nameof(GeneratedGuid.DeceiveItemBuff))
+                GeneratedGuid.Get("DeceiveItemBuff"))
                 .Map((BlueprintBuff buff) =>
                 {
                     buff.AddModifyD20(c =>
@@ -51,12 +50,10 @@ namespace HomebrewWarlock.Features
                 });
 
             var ability = context.NewBlueprint<BlueprintActivatableAbility>(
-                GeneratedGuid.Get("DeceiveItemAbility"),
-                nameof(GeneratedGuid.DeceiveItemAbility));
+                GeneratedGuid.Get("DeceiveItemAbility"));
 
             var feature = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("DeceiveItemFeature"),
-                nameof(GeneratedGuid.DeceiveItemFeature))
+                GeneratedGuid.Get("DeceiveItemFeature"))
                 .Map((BlueprintFeature feature) =>
                 {
                     feature.m_DisplayName = LocalizedStrings.Features_DeceiveItem_DisplayName;

@@ -364,8 +364,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 });
 
             var weaponType = context.CloneBlueprint(BlueprintsDb.Owlcat.BlueprintWeaponType.Glaive,
-                GeneratedGuid.Get("EldritchGlaiveWeaponType"),
-                nameof(GeneratedGuid.EldritchGlaiveWeaponType))
+                GeneratedGuid.Get("EldritchGlaiveWeaponType"))
                 .Map(wt =>
                 {
                     wt.m_DefaultNameText = wt.m_TypeNameText =
@@ -389,8 +388,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 });
 
             var onHit = context.NewBlueprint<BlueprintAbility>(
-                GeneratedGuid.Get("EldritchGlaiveOnHitAbility"),
-                nameof(GeneratedGuid.EldritchGlaiveOnHitAbility))
+                GeneratedGuid.Get("EldritchGlaiveOnHitAbility"))
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintItemWeapon.TouchItem))
                 .Combine(baseFeatures)
                 .Map(bps =>
@@ -411,8 +409,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 });
 
             var enchant = context.NewBlueprint<BlueprintWeaponEnchantment>(
-                GeneratedGuid.Get("EldritchGlaiveWeaponEnchantment"),
-                nameof(GeneratedGuid.EldritchGlaiveWeaponEnchantment))
+                GeneratedGuid.Get("EldritchGlaiveWeaponEnchantment"))
                 .Combine(onHit)
                 .Map(bps =>
                 {
@@ -432,8 +429,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 });
 
             var weapon = context.CloneBlueprint(BlueprintsDb.Owlcat.BlueprintItemWeapon.DemonicHungerItem,
-                GeneratedGuid.Get("EldritchGlaiveWeapon"),
-                nameof(GeneratedGuid.EldritchGlaiveWeapon))
+                GeneratedGuid.Get("EldritchGlaiveWeapon"))
                 .Combine(weaponType)
                 .Combine(weaponModel)
                 .Combine(enchant)
@@ -479,8 +475,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
             var weapon = CreateWeapon(context, baseFeatures);
 
             var buff = context.NewBlueprint<BlueprintBuff>(
-                GeneratedGuid.Get("EldritchGlaiveBuff"),
-                nameof(GeneratedGuid.EldritchGlaiveBuff))
+                GeneratedGuid.Get("EldritchGlaiveBuff"))
                 .Combine(weapon)
                 .Map(bps =>
                 {
@@ -497,8 +492,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 });
 
             var attack = context.NewBlueprint<BlueprintAbility>(
-                GeneratedGuid.Get("EldritchGlaiveAttackAbility"),
-                nameof(GeneratedGuid.EldritchGlaiveAttackAbility))
+                GeneratedGuid.Get("EldritchGlaiveAttackAbility"))
                 .Combine(buff)
                 .Map(bps =>
                 {
@@ -520,8 +514,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 });
             
             var ability = context.NewBlueprint<BlueprintAbility>(
-                GeneratedGuid.Get("EldritchGlaiveAbility"),
-                nameof(GeneratedGuid.EldritchGlaiveAbility))
+                GeneratedGuid.Get("EldritchGlaiveAbility"))
                 .Combine(buff)
                 .Combine(baseFeatures)
                 .Combine(weapon)
@@ -573,8 +566,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 });
 
             var toggle = context.NewBlueprint<BlueprintActivatableAbility>(
-                GeneratedGuid.Get("EldritchGlaiveToggleAbility"),
-                nameof(GeneratedGuid.EldritchGlaiveToggleAbility))
+                GeneratedGuid.Get("EldritchGlaiveToggleAbility"))
                 .Combine(buff)
                 .Map(bps =>
                 {
@@ -593,7 +585,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     return toggle;
                 });
 
-            var feature = context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get("EldritchGlaiveFeature"), nameof(GeneratedGuid.EldritchGlaiveFeature))
+            var feature = context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get("EldritchGlaiveFeature"))
                 .Combine(ability)
                 .Combine(toggle)
                 .Map(bps =>

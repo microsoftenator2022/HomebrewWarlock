@@ -73,7 +73,7 @@ namespace HomebrewWarlock
             var progression = context.NewBlueprint<BlueprintProgression>(GeneratedGuid.Get(nameof(WarlockProgression)), nameof(WarlockProgression))
                 .Combine(features)
                 .Combine(context.NewBlueprint<BlueprintFeature>(
-                    GeneratedGuid.Get("InvocationsBasicFeature"), nameof(GeneratedGuid.InvocationsBasicFeature)))
+                    GeneratedGuid.Get("InvocationsBasicFeature")))
                 .Map(progressionAndFeatures =>
                 {
                     var (progression, features, invocationBase) = progressionAndFeatures.Expand();

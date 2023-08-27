@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using HomebrewWarlock.Features.EldritchBlast.Components;
+using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
@@ -16,7 +17,6 @@ using Kingmaker.UnitLogic.Abilities.Components;
 using Kingmaker.UnitLogic.Abilities.Components.Base;
 using Kingmaker.Utility;
 using Kingmaker.Visual.Animation.Kingmaker.Actions;
-using Kingmaker.Visual.Particles;
 
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.Util.Linq;
@@ -37,7 +37,11 @@ namespace HomebrewWarlock.Features.Invocations.Dark
         internal const string DisplayName = "Eldritch Doom";
 
         [LocalizedString]
-        internal const string Description = "TODO";
+        internal const string Description =
+            "This blast shape invocation allows you to invoke your eldritch blast as the dreaded eldritch doom. " +
+            "This causes bolts of mystical power to lash out and savage nearby targets. An eldritch doom deals " +
+            "eldritch blast damage to any number of targets designated by you and within 20 feet. This is not a ray " +
+            "attack, so it requires no ranged touch attack. Each target can attempt a Reflex save for half damage.";
 
         [LocalizedString]
         internal const string LocalizedSavingThrow = "Reflex half";
@@ -219,8 +223,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
             BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures)
         {
             var ability = context.NewBlueprint<BlueprintAbility>(
-                GeneratedGuid.Get("EldritchDoomAbility"),
-                nameof(GeneratedGuid.EldritchDoomAbility))
+                GeneratedGuid.Get("EldritchDoomAbility"))
                 .Combine(baseFeatures)
                 .Map(bps =>
                 {
@@ -229,6 +232,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                     ability.m_DisplayName = LocalizedStrings.Features_Invocations_Dark_EldritchDoom_DisplayName;
                     ability.m_Description = LocalizedStrings.Features_Invocations_Dark_EldritchDoom_Description;
                     ability.LocalizedSavingThrow = LocalizedStrings.Features_Invocations_Dark_EldritchDoom_LocalizedSavingThrow;
+                    ability.m_Icon = Sprites.EldritchDoom;
 
                     ability = new EldritchDoomBlast().ConfigureAbility(ability, baseFeatures.rankFeature.ToReference<BlueprintFeatureReference>());
 
@@ -247,8 +251,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                 });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("EldritchDoomFeature"),
-                nameof(GeneratedGuid.EldritchDoomFeature))
+                GeneratedGuid.Get("EldritchDoomFeature"))
                 .Combine(ability)
                 .Map(bps =>
                 {
@@ -256,6 +259,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
 
                     feature.m_DisplayName = ability.m_DisplayName;
                     feature.m_Description = ability.m_Description;
+                    feature.m_Icon = ability.m_Icon;
 
                     feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
 

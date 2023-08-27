@@ -24,8 +24,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
             BlueprintInitializationContext.ContextInitializer<BlueprintFeature> prerequisite)
         {
             var selection = context.NewBlueprint<BlueprintFeatureSelection>(
-                GeneratedGuid.Get("DarkInvocationSelection"),
-                nameof(GeneratedGuid.DarkInvocationSelection))
+                GeneratedGuid.Get("DarkInvocationSelection"))
                 .Combine(ebFeatures)
                 .Combine(prerequisite)
                 .Combine(WordOfChanging.Create(context))

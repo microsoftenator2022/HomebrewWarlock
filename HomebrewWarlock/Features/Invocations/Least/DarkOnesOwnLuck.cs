@@ -92,12 +92,10 @@ namespace HomebrewWarlock.Features.Invocations.Least
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
             var reflexBuff = context.NewBlueprint<BlueprintBuff>(
-                GeneratedGuid.Get("DarkOnesOwnLuckReflexBuff"),
-                nameof(GeneratedGuid.DarkOnesOwnLuckReflexBuff));
+                GeneratedGuid.Get("DarkOnesOwnLuckReflexBuff"));
 
             var reflexAbility = context.NewBlueprint<BlueprintActivatableAbility>(
-                GeneratedGuid.Get("DarkOnesOwnLuckReflexAbility"),
-                nameof(GeneratedGuid.DarkOnesOwnLuckReflexAbility))
+                GeneratedGuid.Get("DarkOnesOwnLuckReflexAbility"))
                 .Map(ability =>
                 {
                     ability.m_DisplayName = LocalizedStrings.Features_Invocations_Least_DarkOnesOwnLuck_DisplayNameReflex;
@@ -115,12 +113,10 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
 
             var fortitudeBuff = context.NewBlueprint<BlueprintBuff>(
-                GeneratedGuid.Get("DarkOnesOwnLuckFortitudeBuff"),
-                nameof(GeneratedGuid.DarkOnesOwnLuckFortitudeBuff));
+                GeneratedGuid.Get("DarkOnesOwnLuckFortitudeBuff"));
 
             var fortitudeAbility = context.NewBlueprint<BlueprintActivatableAbility>(
-                GeneratedGuid.Get("DarkOnesOwnLuckFortitudeAbility"),
-                nameof(GeneratedGuid.DarkOnesOwnLuckFortitudeAbility))
+                GeneratedGuid.Get("DarkOnesOwnLuckFortitudeAbility"))
                 .Map(ability =>
                 {
                     ability.m_DisplayName = LocalizedStrings.Features_Invocations_Least_DarkOnesOwnLuck_DisplayNameFortitude;
@@ -137,12 +133,10 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 });
 
             var willBuff = context.NewBlueprint<BlueprintBuff>(
-                GeneratedGuid.Get("DarkOnesOwnLuckWillBuff"),
-                nameof(GeneratedGuid.DarkOnesOwnLuckWillBuff));
+                GeneratedGuid.Get("DarkOnesOwnLuckWillBuff"));
 
             var willAbility = context.NewBlueprint<BlueprintActivatableAbility>(
-                GeneratedGuid.Get("DarkOnesOwnLuckWillAbility"),
-                nameof(GeneratedGuid.DarkOnesOwnLuckWillAbility))
+                GeneratedGuid.Get("DarkOnesOwnLuckWillAbility"))
                 .Map(ability =>
                 {
                     ability.m_DisplayName = LocalizedStrings.Features_Invocations_Least_DarkOnesOwnLuck_DisplayNameWill;
@@ -159,12 +153,10 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 });
 
             var baseAbility = context.NewBlueprint<BlueprintActivatableAbility>(
-                GeneratedGuid.Get("DarkOnesOwnLuckBaseAbility"),
-                nameof(GeneratedGuid.DarkOnesOwnLuckBaseAbility));
+                GeneratedGuid.Get("DarkOnesOwnLuckBaseAbility"));
 
             var feature = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("DarkOnesOwnLuckFeature"),
-                nameof(GeneratedGuid.DarkOnesOwnLuckFeature))
+                GeneratedGuid.Get("DarkOnesOwnLuckFeature"))
                 .Combine(baseAbility)
                 .Combine(fortitudeAbility)
                 .Combine(reflexAbility)

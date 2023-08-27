@@ -58,7 +58,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
             BlueprintInitializationContext context,
             BlueprintInitializationContext.ContextInitializer<BlueprintProjectile> projectile)
         {
-            var ability = context.NewBlueprint<BlueprintAbility>(GeneratedGuid.EldritchBlastAbility, nameof(GeneratedGuid.EldritchBlastAbility))
+            var ability = context.NewBlueprint<BlueprintAbility>(GeneratedGuid.EldritchBlastAbility)
                 .Combine(projectile)
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintItemWeapon.RayItem))
                 .Map(bps =>
@@ -93,7 +93,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
         {
             var ability = CreateAbility(context, projectile);
 
-            var rankFeature = context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get("EldritchBlastRank"), nameof(GeneratedGuid.EldritchBlastRank))
+            var rankFeature = context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get("EldritchBlastRank"))
                 .Map(feature =>
                 {
                     feature.m_DisplayName = LocalizedStrings.Features_EldritchBlast_EldritchBlast_DisplayName;
@@ -108,8 +108,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 });
 
             var blast = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("EldritchBlastFeature"),
-                nameof(GeneratedGuid.EldritchBlastFeature))
+                GeneratedGuid.Get("EldritchBlastFeature"))
                 .Map((BlueprintFeature feature) =>
                 {
                     feature.m_DisplayName = LocalizedStrings.Features_EldritchBlast_EldritchBlast_DisplayName;

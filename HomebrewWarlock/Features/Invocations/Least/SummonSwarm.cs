@@ -36,8 +36,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
         {
             var unit = context.CloneBlueprint(
                 BlueprintsDb.Owlcat.BlueprintUnit.CR1_SpiderSwarm,
-                GeneratedGuid.Get("CR1_SummonedSpiderSwarm"),
-                nameof(GeneratedGuid.CR1_SummonedSpiderSwarm))
+                GeneratedGuid.Get("CR1_SummonedSpiderSwarm"))
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintBuff.Unlootable))
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintFaction.Summoned))
                 .Map(bps =>
@@ -58,8 +57,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
             var spell = context.CloneBlueprint(
                 BlueprintsDb.Owlcat.BlueprintAbility.SummonMonsterISingle,
-                GeneratedGuid.Get("SummonSwarmSpell"),
-                nameof(GeneratedGuid.SummonSwarmSpell))
+                GeneratedGuid.Get("SummonSwarmSpell"))
                 .Combine(unit)
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintSpellList.ClericSpellList))
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintSpellList.ShamanSpelllist))
@@ -104,7 +102,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
             var ability = CreateSpell(context)
                 .Map(spell =>
                 {
-                    var ability = AssetUtils.CloneBlueprint(spell, GeneratedGuid.Get("SummonSwarmAbility"), nameof(GeneratedGuid.SummonSwarmAbility));
+                    var ability = AssetUtils.CloneBlueprint(spell, GeneratedGuid.Get("SummonSwarmAbility"));
 
                     ability.Type = AbilityType.SpellLike;
                     
@@ -116,8 +114,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 });
 
             return context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("SummonSwarmFeature"),
-                nameof(GeneratedGuid.SummonSwarmFeature))
+                GeneratedGuid.Get("SummonSwarmFeature"))
                 .Combine(ability)
                 .Map(bps =>
                 {

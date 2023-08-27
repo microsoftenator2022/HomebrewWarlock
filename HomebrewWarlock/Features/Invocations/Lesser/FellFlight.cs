@@ -24,12 +24,10 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
         {
             var feature = context.CloneBlueprint(
                 BlueprintsDb.Owlcat.BlueprintFeature.FeatureWingsDemon,
-                GeneratedGuid.Get("FellFlightFeature"),
-                nameof(GeneratedGuid.FellFlightFeature))
+                GeneratedGuid.Get("FellFlightFeature"))
                 .Combine(
                     context.CloneBlueprint(BlueprintsDb.Owlcat.BlueprintActivatableAbility.AbilityWingsDemon,
-                    GeneratedGuid.Get("FellFlightAbility"),
-                    nameof(GeneratedGuid.FellFlightAbility)))
+                    GeneratedGuid.Get("FellFlightAbility")))
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintBuff.WingsAngelBlack))
                 .Map(bps =>
                 {

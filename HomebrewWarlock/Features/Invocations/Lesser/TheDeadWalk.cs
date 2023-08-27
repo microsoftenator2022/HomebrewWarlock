@@ -32,8 +32,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
             var ability = context.CloneBlueprint(BlueprintsDb.Owlcat.BlueprintAbility.AnimateDead,
-                GeneratedGuid.Get("TheDeadWalkAbility"),
-                nameof(GeneratedGuid.TheDeadWalkAbility))
+                GeneratedGuid.Get("TheDeadWalkAbility"))
                 .Map(ability =>
                 {
                     ability.Type = AbilityType.SpellLike;
@@ -50,8 +49,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("TheDeadWalkFeature"),
-                nameof(GeneratedGuid.TheDeadWalkFeature))
+                GeneratedGuid.Get("TheDeadWalkFeature"))
                 .Combine(ability)
                 .Map(bps =>
                 {

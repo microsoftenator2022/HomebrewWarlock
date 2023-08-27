@@ -42,8 +42,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 {
                     var ability = AssetUtils.CloneBlueprint(
                         bps.baseAbility,
-                        GeneratedGuid.EldritchSpearAbility,
-                        nameof(GeneratedGuid.EldritchSpearAbility));
+                        GeneratedGuid.EldritchSpearAbility);
 
                     ability.m_DisplayName = LocalizedStrings.Features_Invocations_Least_EldritchSpear_DisplayName;
                     ability.m_Description = LocalizedStrings.Features_Invocations_Least_EldritchSpear_Description;
@@ -58,8 +57,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.EldritchSpearFeature,
-                nameof(GeneratedGuid.EldritchSpearFeature))
+                GeneratedGuid.EldritchSpearFeature)
                 .Combine(ability)
                 .Map(bps =>
                 {

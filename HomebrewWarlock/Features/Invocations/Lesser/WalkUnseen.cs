@@ -26,8 +26,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
             var ability = context.NewBlueprint<BlueprintActivatableAbility>(
-                GeneratedGuid.Get("WalkUnseenToggleAbility"),
-                nameof(GeneratedGuid.WalkUnseenToggleAbility))
+                GeneratedGuid.Get("WalkUnseenToggleAbility"))
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintAbility.Invisibility))
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintBuff.InvisibilityBuff))
                 .Map(bps =>
@@ -58,8 +57,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("WalkUnseenFeature"),
-                nameof(GeneratedGuid.WalkUnseenFeature))
+                GeneratedGuid.Get("WalkUnseenFeature"))
                 .Combine(ability)
                 .Map(bps =>
                 {

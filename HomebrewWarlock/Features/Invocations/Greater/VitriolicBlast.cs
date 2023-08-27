@@ -58,8 +58,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
             var dotBuff = context.NewBlueprint<BlueprintBuff>(
-                GeneratedGuid.Get("VitriolicBlastPerRoundDamage"),
-                nameof(GeneratedGuid.VitriolicBlastPerRoundDamage))
+                GeneratedGuid.Get("VitriolicBlastPerRoundDamage"))
                 .Map(buff =>
                 {
                     buff.AddComponent<AddFactContextActions>(c =>
@@ -81,8 +80,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                 });
 
             var essenceBuff = context.NewBlueprint<BlueprintBuff>(
-                GeneratedGuid.Get("VitriolicBlastEssenceBuff"),
-                nameof(GeneratedGuid.VitriolicBlastEssenceBuff))
+                GeneratedGuid.Get("VitriolicBlastEssenceBuff"))
                 .Combine(dotBuff)
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.GiantSlugAcid00))
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.AcidCone30Feet00))
@@ -123,8 +121,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                 });
 
             var ability = context.NewBlueprint<BlueprintActivatableAbility>(
-                GeneratedGuid.Get("VitriolicBlastToggleAbility"),
-                nameof(GeneratedGuid.VitriolicBlastToggleAbility))
+                GeneratedGuid.Get("VitriolicBlastToggleAbility"))
                 .Combine(essenceBuff)
                 .Combine(dotBuff)
                 .Map(bps =>
@@ -146,8 +143,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                 });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("VitriolicBlastFeature"),
-                nameof(GeneratedGuid.VitriolicBlastFeature))
+                GeneratedGuid.Get("VitriolicBlastFeature"))
                 .Combine(ability)
                 .Map(bps =>
                 {

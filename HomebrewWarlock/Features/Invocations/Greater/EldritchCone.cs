@@ -24,6 +24,7 @@ using MicroWrath.Util.Assets;
 using MicroWrath.Util.Unity;
 
 using UnityEngine;
+using HomebrewWarlock.Resources;
 
 namespace HomebrewWarlock.Features.Invocations.Greater
 {
@@ -82,8 +83,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
             BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures)
         {
             var projectile = context.CloneBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.ChannelNegativeEnergyCone30Feet00,
-                GeneratedGuid.Get("EldritchConeProjectile"),
-                nameof(GeneratedGuid.EldritchConeProjectile))
+                GeneratedGuid.Get("EldritchConeProjectile"))
                 .Combine(baseFeatures)
                 .Map(bps =>
                 {
@@ -202,8 +202,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
             //    });
 
             var ability = context.NewBlueprint<BlueprintAbility>(
-                GeneratedGuid.Get("EldritchConeAbility"),
-                nameof(GeneratedGuid.EldritchConeAbility))
+                GeneratedGuid.Get("EldritchConeAbility"))
                 .Combine(projectile)
                 .Combine(baseFeatures)
                 .Map(bps =>
@@ -213,6 +212,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     ability.m_DisplayName = LocalizedStrings.Features_Invocations_Greater_EldritchCone_DisplayName;
                     ability.m_Description = LocalizedStrings.Features_Invocations_Greater_EldritchCone_Description;
                     ability.LocalizedSavingThrow = LocalizedStrings.Features_Invocations_Greater_EldritchCone_SavingThrow;
+                    ability.m_Icon = Sprites.EldritchCone;
 
                     ability = new EldritchConeBlast()
                         .ConfigureAbility(ability, baseFeatures.rankFeature.ToReference<BlueprintFeatureReference>());
@@ -241,8 +241,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                 });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("EldritchConeFeature"),
-                nameof(GeneratedGuid.EldritchConeFeature))
+                GeneratedGuid.Get("EldritchConeFeature"))
                 .Combine(ability)
                 .Map(bps =>
                 {
@@ -250,6 +249,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
 
                     feature.m_DisplayName = ability.m_DisplayName;
                     feature.m_Description = ability.m_Description;
+                    feature.m_Icon = ability.m_Icon;
 
                     feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
 

@@ -28,6 +28,10 @@ namespace HomebrewWarlock.Resources
             internal static Sprite Will => GetAssemblyResourceSprite("dol_icon_Will.png");
         }
 
+        internal static Sprite EldritchCone => GetAssemblyResourceSprite("cone.png");
+        internal static Sprite DarkDiscorporation => GetAssemblyResourceSprite("darkbats.png");
+        internal static Sprite EldritchDoom => GetAssemblyResourceSprite("aoe.png");
+
         internal static Sprite SummonSwarm => AssetUtils.Direct.GetSprite("4abed12203b403a47b0b32425580e5bb", 21300000);
         internal static Sprite BeguilingInfluence => AssetUtils.Direct.GetSprite("494cc3f31fcb2a24cb7e69ec5df0055c", 21300000);
         internal static Sprite OtherworldlyWhispers => AssetUtils.Direct.GetSprite("aec14e47a17206049aea57b6e325b900", 21300000);

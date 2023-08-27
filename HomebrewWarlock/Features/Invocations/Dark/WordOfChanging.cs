@@ -31,8 +31,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
             var ability = context.CloneBlueprint(BlueprintsDb.Owlcat.BlueprintAbility.BalefulPolymorph,
-                GeneratedGuid.Get("WordOfChangingAbility"),
-                nameof(GeneratedGuid.WordOfChangingAbility))
+                GeneratedGuid.Get("WordOfChangingAbility"))
                 .Map(ability =>
                 {
                     ability.Type = AbilityType.SpellLike;
@@ -44,8 +43,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                 });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("WordOfChangingFeature"),
-                nameof(GeneratedGuid.WordOfChangingFeature))
+                GeneratedGuid.Get("WordOfChangingFeature"))
                 .Combine(ability)
                 .Map(bps =>
                 {

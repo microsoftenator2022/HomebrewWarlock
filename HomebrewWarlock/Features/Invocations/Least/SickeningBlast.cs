@@ -37,8 +37,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
             BlueprintInitializationContext context)
         {
             var essenceBuff = context.NewBlueprint<BlueprintBuff>(
-                GeneratedGuid.Get("SickeningBlastEssenceBuff"),
-                nameof(GeneratedGuid.SickeningBlastEssenceBuff))
+                GeneratedGuid.Get("SickeningBlastEssenceBuff"))
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintBuff.Sickened))
                 .Map(bps =>
                 {
@@ -78,8 +77,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 });
 
             var ability = context.NewBlueprint<BlueprintActivatableAbility>(
-                GeneratedGuid.Get("SickeningBlastAbility"),
-                nameof(GeneratedGuid.SickeningBlastAbility))
+                GeneratedGuid.Get("SickeningBlastAbility"))
                 .Combine(essenceBuff)
                 .Map(bps =>
                 {
@@ -98,8 +96,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("SickeningBlastFeature"),
-                nameof(GeneratedGuid.SickeningBlastFeature))
+                GeneratedGuid.Get("SickeningBlastFeature"))
                 .Combine(ability)
                 .Map(bps =>
                 {

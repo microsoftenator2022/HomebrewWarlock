@@ -47,8 +47,7 @@ namespace HomebrewWarlock.Features
             Create(BlueprintInitializationContext context)
         {
             var selection = context.NewBlueprint<BlueprintFeatureSelection>(
-                GeneratedGuid.Get("WarlockEnergyResistanceSelection"),
-                nameof(GeneratedGuid.WarlockEnergyResistanceSelection))
+                GeneratedGuid.Get("WarlockEnergyResistanceSelection"))
                 .Map((BlueprintFeatureSelection selection) =>
                 {
                     selection.m_DisplayName = LocalizedStrings.Features_EnergyResistance_DisplayName;
@@ -57,8 +56,7 @@ namespace HomebrewWarlock.Features
                     return selection;
                 })
                 .Combine(context.NewBlueprint<BlueprintFeature>(
-                    GeneratedGuid.Get("WarlockEnergyResistance"),
-                    nameof(GeneratedGuid.WarlockEnergyResistance))
+                    GeneratedGuid.Get("WarlockEnergyResistance"))
                     .Map((BlueprintFeature bp) =>
                     {
                         bp.m_DisplayName = LocalizedStrings.Features_EnergyResistance_DisplayName;
@@ -67,8 +65,7 @@ namespace HomebrewWarlock.Features
                         return bp;
                     }))
                 .Combine(context.NewBlueprint<BlueprintFeature>(
-                    GeneratedGuid.Get("WarlockEnergyResistanceAcid"),
-                    nameof(GeneratedGuid.WarlockEnergyResistanceAcid))
+                    GeneratedGuid.Get("WarlockEnergyResistanceAcid"))
                     .Map(f =>
                     {
                         f.m_DisplayName = LocalizedStrings.Features_EnergyResistance_DisplayNameAcid;
@@ -76,8 +73,7 @@ namespace HomebrewWarlock.Features
                         return f;
                     }))
                 .Combine(context.NewBlueprint<BlueprintFeature>(
-                    GeneratedGuid.Get("WarlockEnergyResistanceCold"),
-                    nameof(GeneratedGuid.WarlockEnergyResistanceCold))
+                    GeneratedGuid.Get("WarlockEnergyResistanceCold"))
                     .Map(f =>
                     {
                         f.m_DisplayName = LocalizedStrings.Features_EnergyResistance_DisplayNameCold;
@@ -85,8 +81,7 @@ namespace HomebrewWarlock.Features
                         return f;
                     }))
                 .Combine(context.NewBlueprint<BlueprintFeature>(
-                    GeneratedGuid.Get("WarlockEnergyResistanceElectricity"),
-                    nameof(GeneratedGuid.WarlockEnergyResistanceElectricity))
+                    GeneratedGuid.Get("WarlockEnergyResistanceElectricity"))
                     .Map(f =>
                     {
                         f.m_DisplayName = LocalizedStrings.Features_EnergyResistance_DisplayNameElectricity;
@@ -94,8 +89,7 @@ namespace HomebrewWarlock.Features
                         return f;
                     }))
                 .Combine(context.NewBlueprint<BlueprintFeature>(
-                    GeneratedGuid.Get("WarlockEnergyResistanceFire"),
-                    nameof(GeneratedGuid.WarlockEnergyResistanceFire))
+                    GeneratedGuid.Get("WarlockEnergyResistanceFire"))
                     .Map(f =>
                     {
                         f.m_DisplayName = LocalizedStrings.Features_EnergyResistance_DisplayNameFire;
@@ -103,8 +97,7 @@ namespace HomebrewWarlock.Features
                         return f;
                     }))
                 .Combine(context.NewBlueprint<BlueprintFeature>(
-                    GeneratedGuid.Get("WarlockEnergyResistanceSonic"),
-                    nameof(GeneratedGuid.WarlockEnergyResistanceSonic))
+                    GeneratedGuid.Get("WarlockEnergyResistanceSonic"))
                     .Map(f =>
                     {
                         f.m_DisplayName = LocalizedStrings.Features_EnergyResistance_DisplayNameSonic;

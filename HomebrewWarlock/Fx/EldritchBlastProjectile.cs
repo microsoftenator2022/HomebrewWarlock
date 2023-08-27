@@ -25,12 +25,11 @@ namespace HomebrewWarlock.Fx
     {
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintProjectile> CreateProjectile(BlueprintInitializationContext context)
         {
-            var projectile = context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.Disintegrate00)
+            var projectile = context.CloneBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.Disintegrate00,
+                GeneratedGuid.Get("EldritchBlastProjectile"))
                 .Map((BlueprintProjectile bp) =>
                 {
                     static Color RotateColor(Color color) => UnityUtil.RotateColorHue(color, 140);
-
-                    bp = AssetUtils.CloneBlueprint(bp, GeneratedGuid.Get("EldritchBlastProjectile"), nameof(GeneratedGuid.EldritchBlastProjectile));
 
                     bp.View = bp.View.CreateDynamicMonobehaviourProxy<ProjectileView, ProjectileLink>(pv =>
                     {

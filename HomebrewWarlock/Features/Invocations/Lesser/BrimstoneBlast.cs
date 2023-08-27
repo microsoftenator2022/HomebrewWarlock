@@ -116,8 +116,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
             BlueprintInitializationContext context)
         {
             var dotBuff = context.NewBlueprint<BlueprintBuff>(
-                GeneratedGuid.Get("BrimstoneBlastPerRoundDamage"),
-                nameof(GeneratedGuid.BrimstoneBlastPerRoundDamage))
+                GeneratedGuid.Get("BrimstoneBlastPerRoundDamage"))
                 .Map(buff =>
                 {
                     buff.AddComponent<AddFactContextActions>(c =>
@@ -173,8 +172,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
             //    });
 
             var essenceBuff = context.NewBlueprint<BlueprintBuff>(
-                GeneratedGuid.Get("BrimstoneBlastEssenceBuff"),
-                nameof(GeneratedGuid.BrimstoneBlastEssenceBuff))
+                GeneratedGuid.Get("BrimstoneBlastEssenceBuff"))
                 .Combine(dotBuff)
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.HellfireRay00))
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.FireCone30Feet00))
@@ -220,8 +218,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 });
 
             var ability = context.NewBlueprint<BlueprintActivatableAbility>(
-                GeneratedGuid.Get("BrimstonBlastAbility"),
-                nameof(GeneratedGuid.BrimstonBlastAbility))
+                GeneratedGuid.Get("BrimstonBlastAbility"))
                 .Combine(essenceBuff)
                 .Combine(dotBuff)
                 //.Combine(CreateProjectile(context))
@@ -245,8 +242,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 });
 
             return context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("BrimstoneBlastFeature"),
-                nameof(GeneratedGuid.BrimstoneBlastFeature))
+                GeneratedGuid.Get("BrimstoneBlastFeature"))
                 .Combine(ability)
                 .Map(bps =>
                 {

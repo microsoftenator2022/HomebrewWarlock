@@ -40,8 +40,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
         {
 
             var dexPenaltyBuff = context.NewBlueprint<BlueprintBuff>(
-                GeneratedGuid.Get("HellrimeBlastBuff"),
-                nameof(GeneratedGuid.HellrimeBlastBuff))
+                GeneratedGuid.Get("HellrimeBlastBuff"))
                 .Map(buff =>
                 {
                     buff.AddAddStatBonus(c =>
@@ -57,8 +56,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 });
 
             var essenceBuff = context.NewBlueprint<BlueprintBuff>(
-                GeneratedGuid.Get("HellrimeBlastEssenceBuff"),
-                nameof(GeneratedGuid.HellrimeBlastEssenceBuff))
+                GeneratedGuid.Get("HellrimeBlastEssenceBuff"))
                 .Combine(dexPenaltyBuff)
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.PolarRay00))
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.ColdCone30Feet00))
@@ -95,8 +93,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
 
             var ability = context.NewBlueprint<BlueprintActivatableAbility>(
-                GeneratedGuid.Get("HellrimeBlastToggleAbility"),
-                nameof(GeneratedGuid.HellrimeBlastToggleAbility))
+                GeneratedGuid.Get("HellrimeBlastToggleAbility"))
                 .Combine(essenceBuff)
                 .Combine(dexPenaltyBuff)
                 //.Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.PolarRay00))
@@ -131,8 +128,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("HellrimeBlastFeature"),
-                nameof(GeneratedGuid.HellrimeBlastFeature))
+                GeneratedGuid.Get("HellrimeBlastFeature"))
                 .Combine(ability)
                 .Map(bps =>
                 {

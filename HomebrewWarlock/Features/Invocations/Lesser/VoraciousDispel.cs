@@ -102,8 +102,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
             var baseAbility = context.CloneBlueprint(BlueprintsDb.Owlcat.BlueprintAbility.DispelMagic,
-                GeneratedGuid.Get("VoraciousDispelBaseAbility"),
-                nameof(GeneratedGuid.VoraciousDispelBaseAbility))
+                GeneratedGuid.Get("VoraciousDispelBaseAbility"))
                 .Map(baseAbility =>
                 {
                     baseAbility.m_DisplayName = LocalizedStrings.Features_Invocations_Lesser_VoraciousDispel_DisplayName;

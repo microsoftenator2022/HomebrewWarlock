@@ -35,8 +35,7 @@ namespace HomebrewWarlock.Features
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
             var resource = context.NewBlueprint<BlueprintAbilityResource>(
-                GeneratedGuid.Get("FiendishResilienceResource"),
-                nameof(GeneratedGuid.FiendishResilienceResource))
+                GeneratedGuid.Get("FiendishResilienceResource"))
                 .Map((BlueprintAbilityResource resource) => 
                 {
                     resource.m_MaxAmount = new() { BaseValue = 1 };
@@ -45,8 +44,7 @@ namespace HomebrewWarlock.Features
                 });
 
             var ability = context.NewBlueprint<BlueprintAbility>(
-                GeneratedGuid.Get("FiendishResiliendAbility"),
-                nameof(GeneratedGuid.FiendishResiliendAbility))
+                GeneratedGuid.Get("FiendishResiliendAbility"))
                 .Combine(resource)
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintBuff.FastHealing1))
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintBuff.FastHealing2))
@@ -126,8 +124,7 @@ namespace HomebrewWarlock.Features
                 });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get($"FiendishResilienceFeature"),
-                nameof(GeneratedGuid.FiendishResilienceFeature))
+                GeneratedGuid.Get($"FiendishResilienceFeature"))
                 .Combine(ability)
                 .Combine(resource)
                 .Map(far =>

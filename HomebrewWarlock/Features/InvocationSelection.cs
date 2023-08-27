@@ -81,8 +81,7 @@ namespace HomebrewWarlock.Features
                 });
 
             var lesserInvocationPrerequisite = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.LesserInvocationsPrerequisiteFeature,
-                nameof(GeneratedGuid.LesserInvocationsPrerequisiteFeature))
+                GeneratedGuid.LesserInvocationsPrerequisiteFeature)
                 .Map(feature =>
                 {
                     feature.m_DisplayName = LocalizedStrings.Features_InvocationSelection_LesserInvocationsDisplayName;
@@ -94,8 +93,7 @@ namespace HomebrewWarlock.Features
                 Invocations.Lesser.LesserInvocationSelection.Create(context, ebFeatures, lesserInvocationPrerequisite);
 
             var greaterInvocationsPrerequisite = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("GreaterInvocationsPrerequisiteFeature"),
-                nameof(GeneratedGuid.GreaterInvocationsPrerequisiteFeature))
+                GeneratedGuid.Get("GreaterInvocationsPrerequisiteFeature"))
                 .Map(feature =>
                 {
                     feature.m_DisplayName = LocalizedStrings.Features_InvocationSelection_GreaterInvocationsDisplayName;
@@ -107,8 +105,7 @@ namespace HomebrewWarlock.Features
                 Invocations.Greater.GreaterInvocationSelection.CreateSelection(context, ebFeatures, greaterInvocationsPrerequisite);
 
             var darkInvocationsPrerequisite = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("DarkInvocationsPrerequisiteFeature"),
-                nameof(GeneratedGuid.DarkInvocationsPrerequisiteFeature))
+                GeneratedGuid.Get("DarkInvocationsPrerequisiteFeature"))
                 .Map(feature =>
                 {
                     feature.m_DisplayName = LocalizedStrings.Features_InvocationSelection_DarkInvocationsDisplayName;

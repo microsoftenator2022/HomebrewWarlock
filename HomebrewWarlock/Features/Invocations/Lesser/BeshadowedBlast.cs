@@ -31,8 +31,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
             var essenceBuff = context.NewBlueprint<BlueprintBuff>(
-                GeneratedGuid.Get("BeshadowedBlastEssenceBuff"),
-                nameof(GeneratedGuid.BeshadowedBlastEssenceBuff))
+                GeneratedGuid.Get("BeshadowedBlastEssenceBuff"))
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintBuff.BlindnessBuff))
                 .Map(bps =>
                 {
@@ -60,8 +59,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 });
 
             var ability = context.NewBlueprint<BlueprintActivatableAbility>(
-                GeneratedGuid.Get("BeshadowedBlastToggleAbility"),
-                nameof(GeneratedGuid.BeshadowedBlastToggleAbility))
+                GeneratedGuid.Get("BeshadowedBlastToggleAbility"))
                 .Combine(essenceBuff)
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintBuff.BlindnessBuff))
                 .Map(bps =>
@@ -81,8 +79,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("BeshadowedBlastFeature"),
-                nameof(GeneratedGuid.BeshadowedBlastFeature))
+                GeneratedGuid.Get("BeshadowedBlastFeature"))
                 .Combine(ability)
                 .Map(bps =>
                 {

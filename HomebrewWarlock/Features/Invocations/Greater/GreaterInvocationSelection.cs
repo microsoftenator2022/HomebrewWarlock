@@ -25,8 +25,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
             BlueprintInitializationContext.ContextInitializer<BlueprintFeature> prerequisite)
         {
             return context.NewBlueprint<BlueprintFeatureSelection>(
-                GeneratedGuid.Get("GreaterInvocationSelection"),
-                nameof(GeneratedGuid.GreaterInvocationSelection))
+                GeneratedGuid.Get("GreaterInvocationSelection"))
                 .Combine(ebFeatures)
                 .Combine(prerequisite)
                 .Combine(ChillingTentacles.Create(context))

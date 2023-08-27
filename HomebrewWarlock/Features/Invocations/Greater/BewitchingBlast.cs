@@ -32,8 +32,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
             var buff = context.NewBlueprint<BlueprintBuff>(
-                GeneratedGuid.Get("BewitchingBlastEssenceBuff"),
-                nameof(GeneratedGuid.BewitchingBlastEssenceBuff))
+                GeneratedGuid.Get("BewitchingBlastEssenceBuff"))
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintBuff.Confusion))
                 .Map(bps =>
                 {
@@ -62,8 +61,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                 });
 
             var ability = context.NewBlueprint<BlueprintActivatableAbility>(
-                GeneratedGuid.Get("BewitchingBlastEssenceToggleAbility"),
-                nameof(GeneratedGuid.BewitchingBlastEssenceToggleAbility))
+                GeneratedGuid.Get("BewitchingBlastEssenceToggleAbility"))
                 .Combine(buff)
                 .Map(bps =>
                 {
@@ -81,8 +79,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                 });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("BewitchingBlastFeature"),
-                nameof(GeneratedGuid.BewitchingBlastFeature))
+                GeneratedGuid.Get("BewitchingBlastFeature"))
                 .Combine(ability)
                 .Map(bps =>
                 {

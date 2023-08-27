@@ -127,8 +127,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
             var secondaryProjectile = projectile.Map(baseProjectile =>
             {
                 var projectile = AssetUtils.CloneBlueprint(baseProjectile,
-                    GeneratedGuid.Get("EldritchChainSecondaryProjectile"),
-                    nameof(GeneratedGuid.EldritchChainSecondaryProjectile));
+                    GeneratedGuid.Get("EldritchChainSecondaryProjectile"));
 
                 projectile.SourceBone = "Locator_HitFX_00";
 
@@ -138,8 +137,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
             });
 
             var ability = context.NewBlueprint<BlueprintAbility>(
-                GeneratedGuid.Get("EldritchChainAbility"),
-                nameof(GeneratedGuid.EldritchChainAbility))
+                GeneratedGuid.Get("EldritchChainAbility"))
                 .Combine(rankFeature)
                 .Combine(projectile)
                 .Combine(secondaryProjectile)
@@ -179,8 +177,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 });
 
             var feature = context.NewBlueprint<BlueprintFeature>(
-                GeneratedGuid.Get("EldritchChainFeature"),
-                nameof(GeneratedGuid.EldritchChainFeature))
+                GeneratedGuid.Get("EldritchChainFeature"))
                 .Combine(ability)
                 .Map(bps =>
                 {
