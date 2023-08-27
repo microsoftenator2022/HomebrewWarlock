@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using HomebrewWarlock.Fx;
+using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
@@ -331,6 +332,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                 {
                     buff.m_DisplayName = LocalizedStrings.Features_Invocations_Greater_ChillingTentacles_DisplayName;
                     buff.m_Description = LocalizedStrings.Features_Invocations_Greater_ChillingTentacles_Description;
+                    buff.m_Icon = Sprites.ChillingTentacles;
 
                     buff.AddContextRankConfig(c =>
                     {
@@ -457,6 +459,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
 
                     ability.m_DisplayName = LocalizedStrings.Features_Invocations_Greater_ChillingTentacles_DisplayName;
                     ability.m_Description = LocalizedStrings.Features_Invocations_Greater_ChillingTentacles_Description;
+                    ability.m_Icon = Sprites.ChillingTentacles;
 
                     ability.AddComponent<AbilityEffectRunAction>(c =>
                     {
@@ -518,6 +521,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
 
                     feature.m_DisplayName = ability.m_DisplayName;
                     feature.m_Description = ability.m_Description;
+                    feature.m_Icon = ability.m_Icon;
 
                     feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
 

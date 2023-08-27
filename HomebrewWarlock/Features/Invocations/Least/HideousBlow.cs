@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using HomebrewWarlock.Features.EldritchBlast.Components;
 using HomebrewWarlock.Fx;
+using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
@@ -125,6 +126,9 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     attackAbility.m_Description = ability.m_Description =
                         LocalizedStrings.Features_Invocations_Least_HideousBlow_Description;
+
+                    attackAbility.m_Icon = ability.m_Icon = Sprites.HideousBlow;
+
 
                     ability.Type = AbilityType.Special;
                     ability.Range = AbilityRange.Weapon;

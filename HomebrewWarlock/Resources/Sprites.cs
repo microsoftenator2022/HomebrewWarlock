@@ -28,9 +28,12 @@ namespace HomebrewWarlock.Resources
             internal static Sprite Will => GetAssemblyResourceSprite("dol_icon_Will.png");
         }
 
+        internal static Sprite HideousBlow => GetAssemblyResourceSprite("hblow.png");
+        internal static Sprite ChillingTentacles => GetAssemblyResourceSprite("tentacles.png");
         internal static Sprite EldritchCone => GetAssemblyResourceSprite("cone.png");
         internal static Sprite DarkDiscorporation => GetAssemblyResourceSprite("darkbats.png");
         internal static Sprite EldritchDoom => GetAssemblyResourceSprite("aoe.png");
+        internal static Sprite EnervateRotated => GetAssemblyResourceSprite("rotatervate.png");
 
         internal static Sprite SummonSwarm => AssetUtils.Direct.GetSprite("4abed12203b403a47b0b32425580e5bb", 21300000);
         internal static Sprite BeguilingInfluence => AssetUtils.Direct.GetSprite("494cc3f31fcb2a24cb7e69ec5df0055c", 21300000);
@@ -48,6 +51,8 @@ namespace HomebrewWarlock.Resources
         internal static Sprite Confusion => AssetUtils.Direct.GetSprite("767a6ba6e391aff4388d2350778e899c", 21300000);
         internal static Sprite Nauseated => AssetUtils.Direct.GetSprite("64eaa7a3a1b457845812acfd7309739a", 21300000);
         internal static Sprite AcidArrow02 => AssetUtils.Direct.GetSprite("823ce7f3a53d1474eaad50c3d1d2bc17", 21300000);
+        internal static Sprite BatteringBlast => AssetUtils.Direct.GetSprite("d8118b5286e9b354ca8865fcd3c44055", 21300000);
+        internal static Sprite SpellCombat => AssetUtils.Direct.GetSprite("d7f95c54ea7a4b24f91b3f01cd84e251", 21300000);
 
         internal static Sprite EssenceSprite(Sprite baseSprite) => Sprite.Create(UnityUtil.AlphaBlend(
             UnityUtil.CopyReadable(baseSprite.texture), EldritchBlastOverlay.texture), baseSprite.rect, baseSprite.pivot);
@@ -60,5 +65,7 @@ namespace HomebrewWarlock.Resources
         internal static Sprite BewitchingBlast => EssenceSprite(Confusion);
         internal static Sprite NoxiousBlast => EssenceSprite(Nauseated);
         internal static Sprite VitriolicBlast => EssenceSprite(AcidArrow02);
+        internal static Sprite RepellingBlast => EssenceSprite(BatteringBlast);
+        internal static Sprite UtterdarkBlast => EssenceSprite(EnervateRotated);
     }
 }

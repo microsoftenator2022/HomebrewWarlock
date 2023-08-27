@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using HomebrewWarlock.Features.EldritchBlast.Components;
+using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
@@ -143,6 +144,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
 
                     ability.m_DisplayName = LocalizedStrings.Features_Invocations_Dark_UtterdarkBlast_DisplayName;
                     ability.m_Description = LocalizedStrings.Features_Invocations_Dark_UtterdarkBlast_Description;
+                    ability.m_Icon = Sprites.UtterdarkBlast;
 
                     ability.m_Buff = buff.ToReference<BlueprintBuffReference>();
 
@@ -159,6 +161,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
 
                     feature.m_DisplayName = ability.m_DisplayName;
                     feature.m_Description = ability.m_Description;
+                    feature.m_Icon = ability.m_Icon;
 
                     feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
 

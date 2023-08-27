@@ -10,6 +10,7 @@ using HarmonyLib;
 
 using HomebrewWarlock.Features.EldritchBlast.Components;
 using HomebrewWarlock.Fx;
+using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
@@ -483,6 +484,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     buff.m_DisplayName = LocalizedStrings.Features_Invocations_Least_EldritchGlaive_DisplayName;
                     buff.m_Description = LocalizedStrings.Features_Invocations_Least_EldritchGlaive_Description;
+                    buff.m_Icon = Sprites.SpellCombat;
 
                     buff.AddComponent<AddEldritchGlaive>(c => c.Weapon = weapon.ToReference<BlueprintItemWeaponReference>());
 
@@ -499,6 +501,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     var (ability, buff) = bps;
 
                     ability.m_DisplayName = buff.m_DisplayName;
+                    ability.m_Icon = buff.m_Icon;
 
                     ability.AddComponent<DeliverFullAttack>(c => c.IgnoreDamageStatBonus = true);
 
@@ -525,6 +528,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     ability.m_DisplayName = buff.m_DisplayName;
                     ability.m_Description = buff.m_Description;
+                    ability.m_Icon = buff.m_Icon;
 
                     ability.Type = AbilityType.Special;
 
@@ -574,6 +578,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     toggle.m_DisplayName = buff.m_DisplayName;
                     toggle.m_Description = buff.m_Description;
+                    toggle.m_Icon = buff.m_Icon;
 
                     toggle.ActivationType = AbilityActivationType.WithUnitCommand;
                     toggle.m_ActivateWithUnitCommand = UnitCommand.CommandType.Move;
@@ -594,6 +599,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     feature.m_DisplayName = ability.m_DisplayName;
                     feature.m_Description = ability.m_Description;
+                    feature.m_Icon = ability.m_Icon;
 
                     feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
 
