@@ -21,7 +21,6 @@ using Kingmaker.UnitLogic.Mechanics.Components;
 using Kingmaker.Visual.Animation.Kingmaker.Actions;
 
 using MicroWrath.BlueprintInitializationContext;
-using MicroWrath.BlueprintsDb;
 
 namespace HomebrewWarlock.Features.Invocations.Least
 {
@@ -159,6 +158,12 @@ namespace HomebrewWarlock.Features.Invocations.Least
                         ));
 
                     ability.AddComponent<AbilityCasterMainWeaponIsMelee>();
+
+                    ability.AddComponent<AbilityCasterHasNoFacts>(c =>
+                    {
+                        // TODO: actually use the buff blueprint
+                        c.m_Facts = new[] { GeneratedGuid.EldritchGlaiveBuff.ToBlueprintReference<BlueprintUnitFactReference>() };
+                    });
 
                     ability.AddComponent<EldritchBlastCalculateSpellLevel>();
 
