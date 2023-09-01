@@ -49,6 +49,9 @@ using MicroWrath.BlueprintsDb;
 
 using UnityEngine;
 
+using UniRx;
+using Kingmaker.Blueprints.Facts;
+
 namespace HomebrewWarlock.Features.Invocations.Least
 {
     using BaseBlastFeatures =
@@ -335,9 +338,20 @@ namespace HomebrewWarlock.Features.Invocations.Least
         [LocalizedString]
         internal const string Duration = "1 round";
 
+        [LocalizedString]
+        internal const string AbilityTypeSettingDescription =
+            "Eldritch Glaive ability type";
+
+        [LocalizedString]
+        internal const string AbilityTypeRAW = "Full-round action";
+
+        [LocalizedString]
+        internal const string AbilityTypeToggle = "Toggle";
+
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintItemWeapon> CreateWeapon(
             BlueprintInitializationContext context,
-            BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures)
+            BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures,
+            BlueprintInitializationContext.ContextInitializer<BlueprintAbility> ebTouch)
         {
             var weaponModel = context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintItemWeapon.DemonicHungerItem)
                 .Map(weapon =>
@@ -388,33 +402,33 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     return wt;
                 });
 
-            var onHit = context.NewBlueprint<BlueprintAbility>(
-                GeneratedGuid.Get("EldritchGlaiveOnHitAbility"))
-                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintItemWeapon.TouchItem))
-                .Combine(baseFeatures)
-                .Map(bps =>
-                {
-                    var (ability, touch, baseFeatures) = bps.Expand();
+            //var onHit = context.NewBlueprint<BlueprintAbility>(
+            //    GeneratedGuid.Get("EldritchGlaiveOnHitAbility"))
+            //    .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintItemWeapon.TouchItem))
+            //    .Combine(baseFeatures)
+            //    .Map(bps =>
+            //    {
+            //        var (ability, touch, baseFeatures) = bps.Expand();
 
-                    ability.m_DisplayName = baseFeatures.baseFeature.m_DisplayName;
+            //        ability.m_DisplayName = baseFeatures.baseFeature.m_DisplayName;
 
-                    ability = new EldritchBlastTouch(touch.ToReference<BlueprintItemWeaponReference>())
-                        .ConfigureAbility(ability, baseFeatures.rankFeature.ToReference<BlueprintFeatureReference>());
+            //        ability = new EldritchBlastTouch(touch.ToReference<BlueprintItemWeaponReference>())
+            //            .ConfigureAbility(ability, baseFeatures.rankFeature.ToReference<BlueprintFeatureReference>());
 
-                    ability.GetComponent<AbilityEffectRunAction>().Actions.Add(new EldritchBlastOnHitFx()
-                    {
-                        DefaultProjectile = baseFeatures.projectile.ToReference<BlueprintProjectileReference>()
-                    });
+            //        ability.GetComponent<AbilityEffectRunAction>().Actions.Add(new EldritchBlastOnHitFx()
+            //        {
+            //            DefaultProjectile = baseFeatures.projectile.ToReference<BlueprintProjectileReference>()
+            //        });
 
-                    return ability;
-                });
+            //        return ability;
+            //    });
 
             var enchant = context.NewBlueprint<BlueprintWeaponEnchantment>(
                 GeneratedGuid.Get("EldritchGlaiveWeaponEnchantment"))
-                .Combine(onHit)
+                .Combine(ebTouch)
                 .Map(bps =>
                 {
-                    var (enchant, onHit) = bps;
+                    (BlueprintWeaponEnchantment enchant, var onHit) = bps;
 
                     enchant.m_EnchantName = LocalizedStrings.Features_EldritchBlast_EldritchBlast_DisplayName;
 
@@ -436,7 +450,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 .Combine(enchant)
                 .Map(weaponAndModel =>
                 {
-                    var (weapon, weaponType, model, enchant) = weaponAndModel.Expand();
+                    (BlueprintItemWeapon weapon, var weaponType, var model, var enchant) = weaponAndModel.Expand();
 
                     weapon.m_Type = weaponType.ToReference<BlueprintWeaponTypeReference>();
 
@@ -471,9 +485,10 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(
             BlueprintInitializationContext context,
-            BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures)
+            BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures,
+            BlueprintInitializationContext.ContextInitializer<BlueprintAbility> ebTouch)
         {
-            var weapon = CreateWeapon(context, baseFeatures);
+            var weapon = CreateWeapon(context, baseFeatures, ebTouch);
 
             var buff = context.NewBlueprint<BlueprintBuff>(
                 GeneratedGuid.Get("EldritchGlaiveBuff"))
@@ -498,7 +513,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 .Combine(buff)
                 .Map(bps =>
                 {
-                    var (ability, buff) = bps;
+                    (BlueprintAbility ability, var buff) = bps;
 
                     ability.m_DisplayName = buff.m_DisplayName;
                     ability.m_Icon = buff.m_Icon;
@@ -524,7 +539,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 .Combine(attack)
                 .Map(bps =>
                 {
-                    var (ability, buff, baseFeatures, weapon, attack) = bps.Expand();
+                    (BlueprintAbility ability, var buff, var baseFeatures, var weapon, var attack) = bps.Expand();
 
                     ability.m_DisplayName = buff.m_DisplayName;
                     ability.m_Description = buff.m_Description;
@@ -590,6 +605,18 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     return toggle;
                 });
 
+            var settings = new Settings.SettingsGroup();
+            (settings, var useToggle) = settings.AddDropdown<bool>(
+                "EldritchGlaiveToggle",
+                LocalizedStrings.Features_Invocations_Least_EldritchGlaive_AbilityTypeSettingDescription,
+                new()
+                {
+                    (false, LocalizedStrings.Features_Invocations_Least_EldritchGlaive_AbilityTypeRAW),
+                    (true, LocalizedStrings.Features_Invocations_Least_EldritchGlaive_AbilityTypeToggle)
+                });
+
+            Settings.Instance.Groups.Add(settings);
+
             var feature = context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get("EldritchGlaiveFeature"))
                 .Combine(ability)
                 .Combine(toggle)
@@ -601,7 +628,23 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     feature.m_Description = ability.m_Description;
                     feature.m_Icon = ability.m_Icon;
 
-                    feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
+                    var addFacts = feature.AddAddFacts();
+
+                    void setAbility(bool useToggle)
+                    {
+                        MicroLogger.Debug(() => $"Eldritch Glaive: Use Toggle? {useToggle}");
+
+                        BlueprintUnitFact fact = useToggle ? toggle : ability;
+
+                        addFacts.m_Facts = new[]
+                        {
+                            fact.ToReference<BlueprintUnitFactReference>()
+                        };
+                    }
+
+                    useToggle.Changed.Subscribe(setAbility);
+
+                    setAbility(useToggle.Value);
 
                     return feature;
                 });

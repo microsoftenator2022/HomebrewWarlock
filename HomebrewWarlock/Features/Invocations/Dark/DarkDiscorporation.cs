@@ -204,7 +204,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                 .Combine(BlueprintsDb.Owlcat.BlueprintBuff.Nauseated)
                 .Map(bps =>
                 {
-                    var (buff, nauseated) = bps;
+                    (BlueprintBuff buff, var nauseated) = bps;
 
                     //buff.m_Flags = BlueprintBuff.Flags.HiddenInUi;
 
@@ -246,7 +246,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                 .Combine(areaBuff)
                 .Map (bps =>
                 {
-                    var (area, areaBuff) = bps;
+                    (BlueprintAbilityAreaEffect area, var areaBuff) = bps;
 
                     area.Shape = AreaEffectShape.Cylinder;
                     area.Size = 5.Feet();
@@ -282,7 +282,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                 .Combine(area)
                 .Map(bps =>
                 {
-                    var (swarmBuff, area) = bps;
+                    (BlueprintBuff swarmBuff, var area) = bps;
 
                     swarmBuff.m_AllowNonContextActions = true;
                     swarmBuff.m_Flags = BlueprintBuff.Flags.HiddenInUi;
@@ -344,7 +344,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                 .Combine(swarmBuff)
                 .Map(bps =>
                 {
-                    var (buff, barks, airborne, bleedImmunity, swarmBrain, swarmBuff) = bps.Expand();
+                    (BlueprintBuff buff, var barks, var airborne, var bleedImmunity, var swarmBrain, var swarmBuff) = bps.Expand();
 
                     buff.m_Flags = BlueprintBuff.Flags.HiddenInUi | BlueprintBuff.Flags.RemoveOnRest;
 

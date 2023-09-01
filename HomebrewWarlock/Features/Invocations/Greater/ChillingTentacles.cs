@@ -328,7 +328,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
             var buff = context.NewBlueprint<BlueprintBuff>(GeneratedGuid.Get("ChillingTentaclesGrappleBuff"))
-                .Map(buff =>
+                .Map((BlueprintBuff buff) =>
                 {
                     buff.m_DisplayName = LocalizedStrings.Features_Invocations_Greater_ChillingTentacles_DisplayName;
                     buff.m_Description = LocalizedStrings.Features_Invocations_Greater_ChillingTentacles_Description;
@@ -380,7 +380,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintBuff.EntangleBuffDifficultTerrain))
                 .Map(bps =>
                 {
-                    var (aoe, buff, difficultTerrain) = bps.Expand();
+                    (BlueprintAbilityAreaEffect aoe, var buff, var difficultTerrain) = bps.Expand();
 
                     TentacleGrapple GrappleAction() => new()
                     {
@@ -455,7 +455,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                 .Combine(areaEffect)
                 .Map(bps =>
                 {
-                    var (ability, aoe) = bps;
+                    (BlueprintAbility ability, var aoe) = bps;
 
                     ability.m_DisplayName = LocalizedStrings.Features_Invocations_Greater_ChillingTentacles_DisplayName;
                     ability.m_Description = LocalizedStrings.Features_Invocations_Greater_ChillingTentacles_Description;

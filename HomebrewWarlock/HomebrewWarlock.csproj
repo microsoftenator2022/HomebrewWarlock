@@ -60,6 +60,10 @@
     <ProjectReference Include="..\..\MicroWrath\MicroWrath\MicroWrath.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="ModMenu" HintPath="$(WrathPath)\Mods\ModMenu\ModMenu.dll" Private="False" />
+  </ItemGroup>
+
   <UsingTask TaskName="MicroWrath.Generator.GenerateGuidsFile" AssemblyFile="..\..\MicroWrath\MicroWrath.Generator.Tasks\bin\$(Configuration)\net472\MicroWrath.Generator.Tasks.dll" />
 
   <ItemGroup>

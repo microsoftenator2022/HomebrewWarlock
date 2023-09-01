@@ -5,11 +5,13 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
+using HomebrewWarlock.Features.EldritchBlast.Components;
 using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
+using Kingmaker.UnitLogic.Abilities.Components;
 
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.BlueprintsDb;
@@ -148,6 +150,35 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 });
 
             return blast;
+        }
+
+        internal static BlueprintInitializationContext.ContextInitializer<BlueprintAbility> CreateTouchAbility(
+            BlueprintInitializationContext context,
+            BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures)
+        {
+            var ability = context.NewBlueprint<BlueprintAbility>(
+                GeneratedGuid.Get("EldritchBlastTouchAbility"))
+                .Combine(baseFeatures)
+                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintItemWeapon.TouchItem))
+                .Map(bps =>
+                {
+                    (BlueprintAbility ability, BaseBlastFeatures baseFeatures, var touch) = bps.Expand();
+
+                    ability.m_DisplayName = baseFeatures.baseFeature.m_DisplayName;
+                    ability.m_Description = baseFeatures.baseFeature.m_Description;
+
+                    ability = new EldritchBlastTouch(touch.ToReference<BlueprintItemWeaponReference>())
+                        .ConfigureAbility(ability, baseFeatures.rankFeature.ToReference<BlueprintFeatureReference>());
+
+                    ability.GetComponent<AbilityEffectRunAction>().Actions.Add(new EldritchBlastOnHitFx()
+                    {
+                        DefaultProjectile = baseFeatures.projectile.ToReference<BlueprintProjectileReference>()
+                    });
+
+                    return ability;
+                });
+
+            return ability;
         }
     }
 }

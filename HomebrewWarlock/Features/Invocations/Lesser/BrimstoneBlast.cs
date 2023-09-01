@@ -117,7 +117,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
         {
             var dotBuff = context.NewBlueprint<BlueprintBuff>(
                 GeneratedGuid.Get("BrimstoneBlastPerRoundDamage"))
-                .Map(buff =>
+                .Map((BlueprintBuff buff) =>
                 {
                     buff.AddComponent<AddFactContextActions>(c =>
                     {
@@ -178,7 +178,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.FireCone30Feet00))
                 .Map(bps =>
                 {
-                    var (essenceBuff, dotBuff, simpleProjectile, coneProjectile) = bps.Expand();
+                    (BlueprintBuff essenceBuff, var dotBuff, var simpleProjectile, var coneProjectile) = bps.Expand();
 
                     essenceBuff.m_Flags = BlueprintBuff.Flags.StayOnDeath | BlueprintBuff.Flags.HiddenInUi;
 

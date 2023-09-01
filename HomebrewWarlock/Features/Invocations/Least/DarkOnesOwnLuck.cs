@@ -174,7 +174,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     baseAbility.m_Icon = feature.m_Icon = Sprites.DarkOnesOwnLuck.Base;
 
-                    foreach (var (save, buff, ability, sprite) in abilities.Select(x => (x.save, x.buff, x.ability, x.sprite)))
+                    foreach ((var save, BlueprintBuff buff, BlueprintActivatableAbility ability, var sprite) in abilities.Select(x => (x.save, x.buff, x.ability, x.sprite)))
                     {
                         buff.m_Description = ability.m_Description = feature.m_Description;
 

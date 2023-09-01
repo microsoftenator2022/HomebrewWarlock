@@ -88,7 +88,7 @@ namespace HomebrewWarlock.Fx
             return texture;
         }
 
-        internal static void ChangeAllColors(GameObject obj, Func<Color, Color> f, bool includeBaseMap = false)
+        internal static void ChangeAllColors(GameObject obj, Func<Color, Color> f, bool includeBaseMap = false, bool includeMaterialColor = false)
         {
             var wasActive = obj.activeSelf;
             obj.SetActive(false);
@@ -132,6 +132,11 @@ namespace HomebrewWarlock.Fx
                     var bm = psr.material.GetTexture(ShaderProps._BaseMap) as Texture2D;
                     if (bm is not null)
                         psr.material.SetTexture(ShaderProps._BaseMap, ChangeTextureColors(bm, f));
+                }
+
+                if (includeMaterialColor)
+                {
+                    psr.material.color = f(psr.material.color);
                 }
 
                 var pmc = ps.gameObject.GetComponent<ParticlesMaterialController>();

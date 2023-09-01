@@ -146,11 +146,13 @@ namespace HomebrewWarlock.Features.EldritchBlast
                     return ebFeatures;
                 });
 
+            var ebTouch = EldritchBlast.CreateTouchAbility(context, baseFeatures);
+
             ebFeatures = ebFeatures
                 .Combine(EldritchSpear.CreateBlast(context, baseFeatures))
-                .Combine(HideousBlow.Create(context, baseFeatures))
+                .Combine(HideousBlow.Create(context, baseFeatures, ebTouch))
                 .Combine(EldritchChain.CreateBlast(context, baseFeatures))
-                .Combine(EldritchGlaive.Create(context, baseFeatures))
+                .Combine(EldritchGlaive.Create(context, baseFeatures, ebTouch))
                 .Combine(EldritchCone.Create(context, baseFeatures))
                 .Combine(EldritchDoom.Create(context, baseFeatures))
                 .Map(features =>

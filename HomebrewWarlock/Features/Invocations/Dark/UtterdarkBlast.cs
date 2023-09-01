@@ -72,7 +72,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                 .Combine(BlueprintsDb.Owlcat.BlueprintBuff.TemporaryNegativeLevel)
                 .Map(bps =>
                 {
-                    var (buff, negativeEnergyAffinity, deathDomainGreaterLiving, negativeLevel) = bps.Expand();
+                    (BlueprintBuff buff, var negativeEnergyAffinity, var deathDomainGreaterLiving, var negativeLevel) = bps.Expand();
 
                     buff.AddComponent<Essence>(c =>
                     {
@@ -157,7 +157,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                 .Combine(ability)
                 .Map(bps =>
                 {
-                    var (feature, ability) = bps;
+                    (BlueprintFeature feature, var ability) = bps;
 
                     feature.m_DisplayName = ability.m_DisplayName;
                     feature.m_Description = ability.m_Description;

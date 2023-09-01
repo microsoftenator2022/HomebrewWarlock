@@ -59,7 +59,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
         {
             var dotBuff = context.NewBlueprint<BlueprintBuff>(
                 GeneratedGuid.Get("VitriolicBlastPerRoundDamage"))
-                .Map(buff =>
+                .Map((BlueprintBuff buff) =>
                 {
                     buff.AddComponent<AddFactContextActions>(c =>
                     {
@@ -86,7 +86,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.AcidCone30Feet00))
                 .Map(bps =>
                 {
-                    var (buff, dotBuff, simpleProjectile, coneProjectile) = bps.Expand();
+                    (BlueprintBuff buff, var dotBuff, var simpleProjectile, var coneProjectile) = bps.Expand();
 
                     buff.m_Flags = BlueprintBuff.Flags.StayOnDeath | BlueprintBuff.Flags.HiddenInUi;
 

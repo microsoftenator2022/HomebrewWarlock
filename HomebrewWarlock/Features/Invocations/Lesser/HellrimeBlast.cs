@@ -41,7 +41,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
             var dexPenaltyBuff = context.NewBlueprint<BlueprintBuff>(
                 GeneratedGuid.Get("HellrimeBlastBuff"))
-                .Map(buff =>
+                .Map((BlueprintBuff buff) =>
                 {
                     buff.AddAddStatBonus(c =>
                     {
@@ -62,7 +62,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.ColdCone30Feet00))
                 .Map(bps =>
                 {
-                    var (buff, dexPenaltyBuff, simpleProjectile, coneProjectile) = bps.Expand();
+                    (BlueprintBuff buff, var dexPenaltyBuff, var simpleProjectile, var coneProjectile) = bps.Expand();
 
                     buff.m_Flags = BlueprintBuff.Flags.StayOnDeath | BlueprintBuff.Flags.HiddenInUi;
 

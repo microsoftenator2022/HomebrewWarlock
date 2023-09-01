@@ -45,33 +45,34 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(
             BlueprintInitializationContext context,
-            BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures)
+            BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures,
+            BlueprintInitializationContext.ContextInitializer<BlueprintAbility> ebTouch)
         {
-            var onHitAbility = context.NewBlueprint<BlueprintAbility>(
-                GeneratedGuid.Get("HideousBlowOnHitAbility"))
-                .Combine(baseFeatures)
-                .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintItemWeapon.TouchItem))
-                .Map(bps =>
-                {
-                    var (ability, baseFeatures, touchWeapon) = bps.Expand();
+            //var onHitAbility = context.NewBlueprint<BlueprintAbility>(
+            //    GeneratedGuid.Get("HideousBlowOnHitAbility"))
+            //    .Combine(baseFeatures)
+            //    .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintItemWeapon.TouchItem))
+            //    .Map(bps =>
+            //    {
+            //        var (ability, baseFeatures, touchWeapon) = bps.Expand();
 
-                    ability.m_DisplayName = baseFeatures.baseFeature.m_DisplayName;
-                    ability.m_Description = baseFeatures.baseFeature.m_Description;
+            //        ability.m_DisplayName = baseFeatures.baseFeature.m_DisplayName;
+            //        ability.m_Description = baseFeatures.baseFeature.m_Description;
 
-                    ability = new EldritchBlastTouch(touchWeapon.ToReference<BlueprintItemWeaponReference>())
-                        .ConfigureAbility(ability, baseFeatures.rankFeature.ToReference<BlueprintFeatureReference>());
+            //        ability = new EldritchBlastTouch(touchWeapon.ToReference<BlueprintItemWeaponReference>())
+            //            .ConfigureAbility(ability, baseFeatures.rankFeature.ToReference<BlueprintFeatureReference>());
 
-                    ability.GetComponent<AbilityEffectRunAction>().Actions.Add(new EldritchBlastOnHitFx()
-                    {
-                        DefaultProjectile = baseFeatures.projectile.ToReference<BlueprintProjectileReference>()
-                    });
+            //        ability.GetComponent<AbilityEffectRunAction>().Actions.Add(new EldritchBlastOnHitFx()
+            //        {
+            //            DefaultProjectile = baseFeatures.projectile.ToReference<BlueprintProjectileReference>()
+            //        });
 
-                    return ability;
-                });
+            //        return ability;
+            //    });
 
             var enchant = context.NewBlueprint<BlueprintWeaponEnchantment>(
                 GeneratedGuid.Get("HideousBlowWeaponEnchantment"))
-                .Combine(onHitAbility)
+                .Combine(ebTouch)
                 .Combine(baseFeatures)
                 .Map(bps =>
                 {
@@ -119,7 +120,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 .Combine(attackAbility)
                 .Map(bps =>
                 {
-                    var (ability, enchant, attackAbility) = bps.Expand();
+                    (BlueprintAbility ability, var enchant, var attackAbility) = bps.Expand();
 
                     attackAbility.m_DisplayName = ability.m_DisplayName =
                         LocalizedStrings.Features_Invocations_Least_HideousBlow_DisplayName;
