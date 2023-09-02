@@ -348,6 +348,8 @@ namespace HomebrewWarlock.Features.Invocations.Least
         [LocalizedString]
         internal const string AbilityTypeToggle = "Toggle";
 
+        public static readonly IMicroBlueprint<BlueprintAbility> AbilityRef = GeneratedGuid.EldritchGlaiveAbility.ToMicroBlueprint<BlueprintAbility>();
+
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintItemWeapon> CreateWeapon(
             BlueprintInitializationContext context,
             BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures,
@@ -435,7 +437,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     enchant.AddComponent<AddInitiatorAttackWithWeaponTrigger>(c =>
                     {
                         c.OnlyHit = true;
-                        c.Action.Add(GameActions.ContextActionCastSpell(c => c.m_Spell = onHit.ToReference<BlueprintAbilityReference>()));
+                        c.Action.Add(GameActions.ContextActionCastSpell(c => c.m_Spell = onHit.ToReference()));
                     });
 
                     enchant.WeaponFxPrefab = WeaponFxPrefabs.Standard;
@@ -452,7 +454,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 {
                     (BlueprintItemWeapon weapon, var weaponType, var model, var enchant) = weaponAndModel.Expand();
 
-                    weapon.m_Type = weaponType.ToReference<BlueprintWeaponTypeReference>();
+                    weapon.m_Type = weaponType.ToReference();
 
                     weapon.Components = new BlueprintComponent[0];
 
@@ -470,7 +472,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     weapon.m_Enchantments = new[]
                     {
-                        enchant.ToReference<BlueprintWeaponEnchantmentReference>()
+                        enchant.ToReference()
                     };
 
                     weapon.m_OverrideDamageDice = true;
@@ -501,7 +503,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     buff.m_Description = LocalizedStrings.Features_Invocations_Least_EldritchGlaive_Description;
                     buff.m_Icon = Sprites.SpellCombat;
 
-                    buff.AddComponent<AddEldritchGlaive>(c => c.Weapon = weapon.ToReference<BlueprintItemWeaponReference>());
+                    buff.AddComponent<AddEldritchGlaive>(c => c.Weapon = weapon.ToReference());
 
                     buff.m_Flags = BlueprintBuff.Flags.HiddenInUi | BlueprintBuff.Flags.IsFromSpell;
 
@@ -566,18 +568,18 @@ namespace HomebrewWarlock.Features.Invocations.Least
                             GameActions.ContextActionApplyBuff(a =>
                             {
                                 a.ToCaster = true;
-                                a.m_Buff = buff.ToReference<BlueprintBuffReference>();
+                                a.m_Buff = buff.ToReference();
                                 a.DurationValue.BonusValue = 1;
                             }),
                             GameActions.ContextActionCastSpell(a =>
                             {
-                                a.m_Spell = attack.ToReference<BlueprintAbilityReference>();
+                                a.m_Spell = attack.ToReference();
                             }));
                     });
 
                     ability.Range = AbilityRange.Weapon;
                     
-                    ability.AddComponent<UseCustomWeaponRange>(c => c.Weapon = weapon.ToReference<BlueprintItemWeaponReference>());
+                    ability.AddComponent<UseCustomWeaponRange>(c => c.Weapon = weapon.ToReference());
 
                     ability.LocalizedDuration = LocalizedStrings.Features_Invocations_Least_EldritchGlaive_Duration;
 
@@ -598,7 +600,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     toggle.ActivationType = AbilityActivationType.WithUnitCommand;
                     toggle.m_ActivateWithUnitCommand = UnitCommand.CommandType.Move;
 
-                    toggle.m_Buff = buff.ToReference<BlueprintBuffReference>();
+                    toggle.m_Buff = buff.ToReference();
 
                     toggle.DeactivateIfOwnerUnconscious = true;
 

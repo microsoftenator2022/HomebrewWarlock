@@ -78,6 +78,8 @@ namespace HomebrewWarlock.Features.Invocations.Greater
         [LocalizedString]
         internal const string SavingThrow = "Reflex half";
 
+        public static readonly IMicroBlueprint<BlueprintAbility> AbilityRef = GeneratedGuid.EldritchConeAbility.ToMicroBlueprint<BlueprintAbility>();
+
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(
             BlueprintInitializationContext context,
             BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures)
@@ -215,16 +217,16 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     ability.m_Icon = Sprites.EldritchCone;
 
                     ability = new EldritchConeBlast()
-                        .ConfigureAbility(ability, baseFeatures.rankFeature.ToReference<BlueprintFeatureReference>());
+                        .ConfigureAbility(ability, baseFeatures.rankFeature.ToReference());
 
                     ability.GetComponent<AbilityEffectRunAction>().Actions.Add(new EldritchBlastOnHitFx()
                     {
-                        DefaultProjectile = baseFeatures.projectile.ToReference<BlueprintProjectileReference>()
+                        DefaultProjectile = baseFeatures.projectile.ToReference()
                     });
 
                     ability.AddComponent<DeliverEldritchBlastProjectile>(c =>
                     {
-                        c.DefaultProjectile = projectile.ToReference<BlueprintProjectileReference>();
+                        c.DefaultProjectile = projectile.ToReference();
 
                         c.Type = AbilityProjectileType.Cone;
 

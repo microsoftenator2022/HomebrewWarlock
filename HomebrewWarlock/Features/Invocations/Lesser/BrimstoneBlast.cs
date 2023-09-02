@@ -194,13 +194,13 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                             savingThrow.Actions.Add(GameActions.ContextActionConditionalSaved(save => save.Failed.Add(
                                 GameActions.ContextActionApplyBuff(ab =>
                                 {
-                                    ab.m_Buff = dotBuff.ToReference<BlueprintBuffReference>();
+                                    ab.m_Buff = dotBuff.ToReference();
                                     ab.DurationValue.BonusValue.ValueType = ContextValueType.Rank;
                                 }))));
                         }));
 
-                        c.Projectiles.Add(AbilityProjectileType.Simple, new[] { simpleProjectile.ToReference<BlueprintProjectileReference>() });
-                        c.Projectiles.Add(AbilityProjectileType.Cone, new[] { coneProjectile.ToReference<BlueprintProjectileReference>() });
+                        c.Projectiles.Add(AbilityProjectileType.Simple, new[] { simpleProjectile.ToReference() });
+                        c.Projectiles.Add(AbilityProjectileType.Cone, new[] { coneProjectile.ToReference() });
                     });
 
                     essenceBuff.AddContextRankConfig(c =>
@@ -208,7 +208,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                         c.m_BaseValueType = ContextRankBaseValueType.ClassLevel;
                         c.m_Class = new[]
                         {
-                            WarlockClass.Blueprint.ToReference<BlueprintCharacterClass, BlueprintCharacterClassReference>()
+                            WarlockClass.Blueprint.ToReference()
                         };
                         c.m_Progression = ContextRankProgression.DelayedStartPlusDivStep;
                         c.m_StepLevel = 5;
@@ -234,7 +234,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     dotBuff.m_Icon = ability.m_Icon = Sprites.BrimstoneBlast;
 
-                    ability.m_Buff = essenceBuff.ToReference<BlueprintBuffReference>();
+                    ability.m_Buff = essenceBuff.ToReference();
 
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
 

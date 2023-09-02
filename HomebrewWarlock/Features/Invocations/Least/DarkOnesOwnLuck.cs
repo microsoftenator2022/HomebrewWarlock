@@ -182,14 +182,13 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                         buff.AddComponent<SaveBonusComponent>(c =>
                         {
-                            c.classRef = WarlockClass.Blueprint
-                                .ToReference<BlueprintCharacterClass, BlueprintCharacterClassReference>();
+                            c.classRef = WarlockClass.Blueprint.ToReference();
                             c.Save = save;
                         });
 
                         ability.Group = AbilityGroup;
 
-                        ability.m_Buff = buff.ToReference<BlueprintBuffReference>();
+                        ability.m_Buff = buff.ToReference();
 
                         ability.ActivationType = AbilityActivationType.WithUnitCommand;
                         ability.m_ActivateWithUnitCommand = UnitCommand.CommandType.Standard;
@@ -201,7 +200,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     baseAbility.AddActivatableAbilityVariants(c =>
                     {
-                        c.m_Variants = abilities.Select(x => x.ability.ToReference<BlueprintActivatableAbilityReference>()).ToArray();
+                        c.m_Variants = abilities.Select(x => x.ability.ToReference()).ToArray();
                     });
 
                     baseAbility.AddActivationDisable();

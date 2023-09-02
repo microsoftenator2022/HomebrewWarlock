@@ -56,7 +56,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                         var castName = variantCastAbility.name.Replace("BestowCurse", "CurseOfDespair");
                         var castCopy = AssetUtils.CloneBlueprint(variantCastAbility, GeneratedGuid.Get(castName), castName);
 
-                        castCopy.m_Parent = ability.ToReference<BlueprintAbilityReference>();
+                        castCopy.m_Parent = ability.ToReference();
                         castCopy.Type = AbilityType.SpellLike;
                         castCopy.AddInvocationComponents(4);
 
@@ -69,14 +69,14 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                             .OfType<ContextActionConditionalSaved>()
                             .FirstOrDefault().Succeed.Add(GameActions.ContextActionApplyBuff(a =>
                             {
-                                a.m_Buff = buff.ToReference<BlueprintBuffReference>();
+                                a.m_Buff = buff.ToReference();
                                 a.DurationValue.Rate = DurationRate.Minutes;
                                 a.DurationValue.BonusValue.Value = 1;
                             }));
 
-                        castCopy.GetComponent<AbilityEffectStickyTouch>().m_TouchDeliveryAbility = effectCopy.ToReference<BlueprintAbilityReference>();
+                        castCopy.GetComponent<AbilityEffectStickyTouch>().m_TouchDeliveryAbility = effectCopy.ToReference();
 
-                        ability.AbilityVariants.m_Variants[index] = castCopy.ToReference<BlueprintAbilityReference>();
+                        ability.AbilityVariants.m_Variants[index] = castCopy.ToReference();
                     }
 
                     return ability;

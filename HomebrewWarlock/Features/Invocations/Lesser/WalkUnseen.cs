@@ -48,7 +48,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     ability.m_Icon = invisibilityAbility.m_Icon;
 
-                    ability.m_Buff = invisibilityBuff.ToReference<BlueprintBuffReference>();
+                    ability.m_Buff = invisibilityBuff.ToReference();
 
                     ability.ActivationType = AbilityActivationType.WithUnitCommand;
                     ability.m_ActivateWithUnitCommand = UnitCommand.CommandType.Standard;

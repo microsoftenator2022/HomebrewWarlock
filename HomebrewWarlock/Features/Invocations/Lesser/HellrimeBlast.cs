@@ -78,14 +78,14 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                             savingThrow.Actions.Add(GameActions.ContextActionConditionalSaved(save => save.Failed.Add(
                                 GameActions.ContextActionApplyBuff(ab =>
                                 {
-                                    ab.m_Buff = dexPenaltyBuff.ToReference<BlueprintBuffReference>();
+                                    ab.m_Buff = dexPenaltyBuff.ToReference();
                                     ab.DurationValue.Rate = DurationRate.Minutes;
                                     ab.DurationValue.BonusValue = 10;
                                 }))));
                         }));
 
-                        c.Projectiles.Add(AbilityProjectileType.Simple, new[] { simpleProjectile.ToReference<BlueprintProjectileReference>() });
-                        c.Projectiles.Add(AbilityProjectileType.Cone, new[] { coneProjectile.ToReference<BlueprintProjectileReference>() });
+                        c.Projectiles.Add(AbilityProjectileType.Simple, new[] { simpleProjectile.ToReference() });
+                        c.Projectiles.Add(AbilityProjectileType.Cone, new[] { coneProjectile.ToReference() });
                     });
 
                     return buff;
@@ -109,7 +109,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     dexPenaltyBuff.m_Icon = ability.m_Icon = Sprites.HellrimeBlast;
 
-                    ability.m_Buff = essenceBuff.ToReference<BlueprintBuffReference>();
+                    ability.m_Buff = essenceBuff.ToReference();
 
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
 

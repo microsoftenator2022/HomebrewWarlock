@@ -111,7 +111,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                             {
                                 a.ToCaster = true;
 
-                                a.m_Buff = buff.ToReference<BlueprintBuffReference>();
+                                a.m_Buff = buff.ToReference();
                                 
                                 a.DurationValue.Rate = DurationRate.Minutes;
                                 a.DurationValue.BonusValue = 1;

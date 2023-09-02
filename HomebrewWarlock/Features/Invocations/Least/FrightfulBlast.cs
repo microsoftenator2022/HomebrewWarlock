@@ -64,7 +64,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                                         GameActions.ContextActionConditionalSaved(save => save.Failed.Add(
                                             GameActions.ContextActionApplyBuff(applyBuff =>
                                             {
-                                                applyBuff.m_Buff = shaken.ToReference<BlueprintBuffReference>();
+                                                applyBuff.m_Buff = shaken.ToReference();
                                                 applyBuff.DurationValue.Rate = DurationRate.Minutes;
                                                 applyBuff.DurationValue.BonusValue = 1;
                                             }))));
@@ -86,7 +86,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     ability.m_Description = LocalizedStrings.Features_Invocations_Least_FrightfulBlast_Description;
                     ability.m_Icon = Sprites.FrightfulBlast;
 
-                    ability.m_Buff = essenceBuff.ToReference<BlueprintBuffReference>();
+                    ability.m_Buff = essenceBuff.ToReference();
 
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
 

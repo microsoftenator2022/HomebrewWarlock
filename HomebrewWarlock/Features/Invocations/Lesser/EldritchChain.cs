@@ -116,6 +116,8 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
             Environment.NewLine +
             "You must make a separate spell penetration check for each target, if applicable.";
 
+        public static readonly IMicroBlueprint<BlueprintAbility> AbilityRef = GeneratedGuid.EldritchChainAbility.ToMicroBlueprint<BlueprintAbility>();
+
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> CreateBlast(
            BlueprintInitializationContext context,
            BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures)
@@ -149,22 +151,22 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                     ability.m_Description = LocalizedStrings.Features_Invocations_Lesser_EldritchChain_Description;
                     ability.m_Icon = Sprites.ChainLightning;
 
-                    ability = new EldritchChainBlastAbility().ConfigureAbility(ability, rankFeature.ToReference<BlueprintFeatureReference>());
+                    ability = new EldritchChainBlastAbility().ConfigureAbility(ability, rankFeature.ToReference());
 
                     var chain = ability.GetComponent<DeliverEldritchChain>();
 
                     chain.TargetsCount.ValueType = ContextValueType.Rank;
                     chain.TargetsCount.ValueRank = AbilityRankType.ProjectilesCount;
 
-                    chain.DefaultProjectileFirst = projectile.ToReference<BlueprintProjectileReference>();
-                    chain.DefaultProjectile = secondProjectile.ToReference<BlueprintProjectileReference>();
+                    chain.DefaultProjectileFirst = projectile.ToReference();
+                    chain.DefaultProjectile = secondProjectile.ToReference();
 
                     ability.AddContextRankConfig(c =>
                     {
                         c.m_Type = AbilityRankType.ProjectilesCount;
 
                         c.m_BaseValueType = ContextRankBaseValueType.ClassLevel;
-                        c.m_Class = new[] { WarlockClass.Blueprint.ToReference<BlueprintCharacterClass, BlueprintCharacterClassReference>() };
+                        c.m_Class = new[] { WarlockClass.Blueprint.ToReference() };
 
                         c.m_Progression = ContextRankProgression.OnePlusDivStep;
                         c.m_StepLevel = 5;

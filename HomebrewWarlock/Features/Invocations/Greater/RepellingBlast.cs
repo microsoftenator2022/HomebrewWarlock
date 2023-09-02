@@ -189,7 +189,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
 
                         c.Actions.Add(GameActions.ContextActionCastSpell(a =>
                         {
-                            a.m_Spell = onHit.ToReference<BlueprintAbilityReference>();
+                            a.m_Spell = onHit.ToReference();
                             a.MarkAsChild = true;
                         }));
                     });
@@ -209,7 +209,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     ability.m_Description = LocalizedStrings.Features_Invocations_Greater_RepellingBlast_Description;
                     ability.m_Icon = Sprites.RepellingBlast;
 
-                    ability.m_Buff = buff.ToReference<BlueprintBuffReference>();
+                    ability.m_Buff = buff.ToReference();
 
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
 

@@ -104,7 +104,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                                     s.Failed.Add(
                                         GameActions.ContextActionApplyBuff(ab =>
                                         {
-                                            ab.m_Buff = negativeLevel.ToReference<BlueprintBuffReference>();
+                                            ab.m_Buff = negativeLevel.ToReference();
                                             ab.IsNotDispelable = true;
 
                                             ab.DurationValue.BonusValue = 1;
@@ -112,7 +112,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                                         }),
                                         GameActions.ContextActionApplyBuff(ab =>
                                         {
-                                            ab.m_Buff = negativeLevel.ToReference<BlueprintBuffReference>();
+                                            ab.m_Buff = negativeLevel.ToReference();
                                             ab.IsNotDispelable = true;
 
                                             ab.DurationValue.BonusValue = 1;
@@ -146,7 +146,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                     ability.m_Description = LocalizedStrings.Features_Invocations_Dark_UtterdarkBlast_Description;
                     ability.m_Icon = Sprites.UtterdarkBlast;
 
-                    ability.m_Buff = buff.ToReference<BlueprintBuffReference>();
+                    ability.m_Buff = buff.ToReference();
 
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
 

@@ -389,11 +389,11 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                             Actions = new[] { GameActions.Conditional(conditional =>
                             {
                                 conditional.AddCondition(Conditions.HasBuff(c =>
-                                    c.m_Buff = buff.ToReference<BlueprintBuffReference>()));
+                                    c.m_Buff = buff.ToReference()));
 
                                 conditional.IfFalse.Add(GameActions.ContextActionApplyBuff(a =>
                                 {
-                                    a.m_Buff = buff.ToReference<BlueprintBuffReference>();
+                                    a.m_Buff = buff.ToReference();
                                     a.Permanent = true;
                                 }));
                             }) }
@@ -401,7 +401,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                         OnFailure = new()
                         {
                             Actions = new[] { GameActions.ContextActionRemoveBuff(a =>
-                                a.m_Buff = buff.ToReference<BlueprintBuffReference>()) }
+                                a.m_Buff = buff.ToReference()) }
                         }
                     };
 
@@ -422,7 +422,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                             GrappleAction(),
                             GameActions.ContextActionApplyBuff(c =>
                             {
-                                c.m_Buff = difficultTerrain.ToReference<BlueprintBuffReference>();
+                                c.m_Buff = difficultTerrain.ToReference();
                                 c.Permanent = true;
                             }));
 
@@ -439,9 +439,9 @@ namespace HomebrewWarlock.Features.Invocations.Greater
 
                         c.UnitExit.Add(
                             GameActions.ContextActionRemoveBuff(c =>
-                                c.m_Buff = buff.ToReference<BlueprintBuffReference>()),
+                                c.m_Buff = buff.ToReference()),
                             GameActions.ContextActionRemoveBuff(c =>
-                                c.m_Buff = difficultTerrain.ToReference<BlueprintBuffReference>()));
+                                c.m_Buff = difficultTerrain.ToReference()));
                     });
 
                     aoe.Shape = AreaEffectShape.Cylinder;
@@ -465,7 +465,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     {
                         c.Actions.Add(GameActions.ContextActionSpawnAreaEffect(a =>
                         {
-                            a.m_AreaEffect = aoe.ToReference<BlueprintAbilityAreaEffectReference>();
+                            a.m_AreaEffect = aoe.ToReference();
                             a.DurationValue.BonusValue.ValueType = ContextValueType.Rank;
                         }));
                     });

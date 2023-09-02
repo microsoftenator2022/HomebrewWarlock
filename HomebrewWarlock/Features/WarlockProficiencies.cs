@@ -32,15 +32,19 @@ namespace HomebrewWarlock.Features
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context) =>
             context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get(nameof(WarlockProficiencies)), nameof(WarlockProficiencies))
-                .Map((BlueprintFeature feature) =>
+                .Combine(BlueprintsDb.Owlcat.BlueprintFeature.LightArmorProficiency)
+                .Combine(BlueprintsDb.Owlcat.BlueprintFeature.SimpleWeaponProficiency)
+                .Map(bps =>
                 {
+                    (BlueprintFeature feature, var lightArmor, var simpleWeapons) = bps.Expand();
+
                     feature.m_DisplayName = LocalizedStrings.Features_WarlockProficiencies_DisplayName;
                     feature.m_Description = LocalizedStrings.Features_WarlockProficiencies_Description;
 
                     feature.AddAddFacts(c => c.m_Facts = new[]
                     {
-                        BlueprintsDb.Owlcat.BlueprintFeature.LightArmorProficiency.ToReference<BlueprintUnitFact, BlueprintUnitFactReference>(),
-                        BlueprintsDb.Owlcat.BlueprintFeature.SimpleWeaponProficiency.ToReference<BlueprintUnitFact, BlueprintUnitFactReference>()
+                        lightArmor.ToReference<BlueprintUnitFactReference>(),
+                        simpleWeapons.ToReference<BlueprintUnitFactReference>()
                     });
 
                     feature.AddArcaneArmorProficiency(c => c.Armor = new[] { ArmorProficiencyGroup.Light });

@@ -49,7 +49,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                             savingThrow.Actions.Add(GameActions.ContextActionConditionalSaved(save => save.Failed.Add(
                                 GameActions.ContextActionApplyBuff(ab =>
                                 {
-                                    ab.m_Buff = blindness.ToReference<BlueprintBuffReference>();
+                                    ab.m_Buff = blindness.ToReference();
                                     ab.DurationValue.BonusValue = 1;
                                 }))));
                         }));
@@ -66,7 +66,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                 {
                     var (ability, essenceBuff, blindness) = bps.Expand();
 
-                    ability.m_Buff = essenceBuff.ToReference<BlueprintBuffReference>();
+                    ability.m_Buff = essenceBuff.ToReference();
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
 
                     //return (ability,

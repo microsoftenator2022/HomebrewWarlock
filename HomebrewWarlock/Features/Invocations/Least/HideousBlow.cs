@@ -42,33 +42,13 @@ namespace HomebrewWarlock.Features.Invocations.Least
             "addition to any weapon damage that you deal with your attack, although you need not deal damage with " +
             "this attack to trigger the eldritch blast effect.";
 
+        public static readonly IMicroBlueprint<BlueprintAbility> AbilityRef = GeneratedGuid.HideousBlowAbility.ToMicroBlueprint<BlueprintAbility>();
+
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(
             BlueprintInitializationContext context,
             BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures,
             BlueprintInitializationContext.ContextInitializer<BlueprintAbility> ebTouch)
         {
-            //var onHitAbility = context.NewBlueprint<BlueprintAbility>(
-            //    GeneratedGuid.Get("HideousBlowOnHitAbility"))
-            //    .Combine(baseFeatures)
-            //    .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintItemWeapon.TouchItem))
-            //    .Map(bps =>
-            //    {
-            //        var (ability, baseFeatures, touchWeapon) = bps.Expand();
-
-            //        ability.m_DisplayName = baseFeatures.baseFeature.m_DisplayName;
-            //        ability.m_Description = baseFeatures.baseFeature.m_Description;
-
-            //        ability = new EldritchBlastTouch(touchWeapon.ToReference<BlueprintItemWeaponReference>())
-            //            .ConfigureAbility(ability, baseFeatures.rankFeature.ToReference<BlueprintFeatureReference>());
-
-            //        ability.GetComponent<AbilityEffectRunAction>().Actions.Add(new EldritchBlastOnHitFx()
-            //        {
-            //            DefaultProjectile = baseFeatures.projectile.ToReference<BlueprintProjectileReference>()
-            //        });
-
-            //        return ability;
-            //    });
-
             var enchant = context.NewBlueprint<BlueprintWeaponEnchantment>(
                 GeneratedGuid.Get("HideousBlowWeaponEnchantment"))
                 .Combine(ebTouch)
@@ -85,7 +65,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                         c.Action.Add(
                             GameActions.ContextActionCastSpell(a =>
                             {
-                                a.m_Spell = onHitAbility.ToReference<BlueprintAbilityReference>();
+                                a.m_Spell = onHitAbility.ToReference();
                             }));
                     });
 
@@ -154,7 +134,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                             a.DurationValue.BonusValue.Value = 1;
                         }),
                         GameActions.ContextActionCastSpell(a =>
-                            a.m_Spell = attackAbility.ToReference<BlueprintAbilityReference>())
+                            a.m_Spell = attackAbility.ToReference())
                         ));
 
                     ability.AddComponent<AbilityCasterMainWeaponIsMelee>();

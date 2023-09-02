@@ -55,7 +55,7 @@ namespace HomebrewWarlock.Features
 
                     ability.AddAbilityResourceLogic(c =>
                     {
-                        c.m_RequiredResource = resource.ToReference<BlueprintAbilityResourceReference>();
+                        c.m_RequiredResource = resource.ToReference();
                         c.m_IsSpendResource = true;
                         c.Amount = 1;
                     });
@@ -79,7 +79,7 @@ namespace HomebrewWarlock.Features
 
                             conditional.IfTrue.Add(GameActions.ContextActionApplyBuff(a =>
                             {
-                                a.m_Buff = buff1.ToReference<BlueprintBuffReference>();
+                                a.m_Buff = buff1.ToReference();
                                 a.DurationValue.Rate = DurationRate.Minutes;
                                 a.DurationValue.BonusValue.Value = 2;
                             }));
@@ -96,7 +96,7 @@ namespace HomebrewWarlock.Features
 
                             conditional.IfTrue.Add(GameActions.ContextActionApplyBuff(a =>
                             {
-                                a.m_Buff = buff2.ToReference<BlueprintBuffReference>();
+                                a.m_Buff = buff2.ToReference();
                                 a.DurationValue.Rate = DurationRate.Minutes;
                                 a.DurationValue.BonusValue.Value = 2;
                             }));
@@ -113,7 +113,7 @@ namespace HomebrewWarlock.Features
 
                             conditional.IfTrue.Add(GameActions.ContextActionApplyBuff(a =>
                             {
-                                a.m_Buff = buff5.ToReference<BlueprintBuffReference>();
+                                a.m_Buff = buff5.ToReference();
                                 a.DurationValue.Rate = DurationRate.Minutes;
                                 a.DurationValue.BonusValue.Value = 2;
                             }));
@@ -148,7 +148,7 @@ namespace HomebrewWarlock.Features
                     ability.AddContextRankConfig(c =>
                     {
                         c.m_BaseValueType = ContextRankBaseValueType.FeatureRank;
-                        c.m_Feature = feature.ToReference<BlueprintFeatureReference>();
+                        c.m_Feature = feature.ToReference();
                         c.m_Progression = ContextRankProgression.AsIs;
                         c.m_StartLevel = 0;
                         c.m_StepLevel = 1;
@@ -164,7 +164,7 @@ namespace HomebrewWarlock.Features
 
                     feature.AddAddAbilityResources(c =>
                     {
-                        c.m_Resource = resource.ToReference<BlueprintAbilityResourceReference>();
+                        c.m_Resource = resource.ToReference();
                         c.RestoreAmount = true;
                     });
 

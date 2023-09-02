@@ -37,7 +37,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     feature.GetComponent<AddFacts>().m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() };
 
-                    ability.m_Buff = buff.ToReference<BlueprintBuffReference>();
+                    ability.m_Buff = buff.ToReference();
 
                     ability.ActivationType = AbilityActivationType.WithUnitCommand;
                     ability.m_ActivateWithUnitCommand = UnitCommand.CommandType.Standard;

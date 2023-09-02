@@ -46,6 +46,8 @@ namespace HomebrewWarlock.Features.Invocations.Dark
         [LocalizedString]
         internal const string LocalizedSavingThrow = "Reflex half";
 
+        public static readonly IMicroBlueprint<BlueprintAbility> AbilityRef = GeneratedGuid.EldritchDoomAbility.ToMicroBlueprint<BlueprintAbility>();
+
         class EldritchDoomBlast() : BlastAbility(8)
         {
             public override ActionList DamageActions
@@ -234,11 +236,11 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                     ability.LocalizedSavingThrow = LocalizedStrings.Features_Invocations_Dark_EldritchDoom_LocalizedSavingThrow;
                     ability.m_Icon = Sprites.EldritchDoom;
 
-                    ability = new EldritchDoomBlast().ConfigureAbility(ability, baseFeatures.rankFeature.ToReference<BlueprintFeatureReference>());
+                    ability = new EldritchDoomBlast().ConfigureAbility(ability, baseFeatures.rankFeature.ToReference());
 
                     ability.GetComponent<AbilityEffectRunAction>().Actions.Add(new EldritchBlastOnHitFx()
                     {
-                        DefaultProjectile = baseFeatures.projectile.ToReference<BlueprintProjectileReference>()
+                        DefaultProjectile = baseFeatures.projectile.ToReference()
                     });
 
                     ability.AddComponent<AbilityTargetsAround>(c =>

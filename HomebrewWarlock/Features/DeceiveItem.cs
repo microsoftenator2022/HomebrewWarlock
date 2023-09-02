@@ -73,7 +73,7 @@ namespace HomebrewWarlock.Features
                     ability.m_Description = feature.m_Description;
                     ability.m_Icon = feature.m_Icon;
 
-                    ability.m_Buff = buff.ToReference<BlueprintBuffReference>();
+                    ability.m_Buff = buff.ToReference();
                     ability.ActivationType = AbilityActivationType.Immediately;
                     ability.DeactivateImmediately = true;
 

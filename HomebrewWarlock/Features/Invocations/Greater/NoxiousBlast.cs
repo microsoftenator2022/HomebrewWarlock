@@ -51,7 +51,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                                     GameActions.ContextActionConditionalSaved(save => save.Failed.Add(
                                         GameActions.ContextActionApplyBuff(applyBuff =>
                                         {
-                                            applyBuff.m_Buff = nauseated.ToReference<BlueprintBuffReference>();
+                                            applyBuff.m_Buff = nauseated.ToReference();
                                             applyBuff.DurationValue.Rate = DurationRate.Minutes;
                                             applyBuff.DurationValue.BonusValue = 1;
                                         }))));
@@ -72,7 +72,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     ability.m_Description = LocalizedStrings.Features_Invocations_Greater_NoxiousBlast_Description;
                     ability.m_Icon = Sprites.NoxiousBlast;
 
-                    ability.m_Buff = buff.ToReference<BlueprintBuffReference>();
+                    ability.m_Buff = buff.ToReference();
                     
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
 

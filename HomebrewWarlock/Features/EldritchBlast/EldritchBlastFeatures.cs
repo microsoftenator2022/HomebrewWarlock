@@ -10,7 +10,10 @@ using HomebrewWarlock.Features.Invocations.Least;
 using HomebrewWarlock.Features.Invocations.Lesser;
 using HomebrewWarlock.Fx;
 
+using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.UnitLogic.Abilities.Blueprints;
+using Kingmaker.UnitLogic.FactLogic;
 
 using MicroWrath.BlueprintInitializationContext;
 
@@ -171,5 +174,20 @@ namespace HomebrewWarlock.Features.EldritchBlast
 
             return ebFeatures;
         }
+
+        private static readonly IEnumerable<IMicroBlueprint<BlueprintAbility>> blastAbilities = new[]
+        {
+            EldritchBlast.AbilityRef,
+            EldritchSpear.AbilityRef,
+            HideousBlow.AbilityRef,
+            EldritchGlaive.AbilityRef,
+            EldritchChain.AbilityRef,
+            EldritchCone.AbilityRef,
+            EldritchDoom.AbilityRef
+        };
+
+        public static IEnumerable<BlueprintAbilityReference> BlastAbilities =>
+            blastAbilities
+                .Select(ar => ar.ToReference());
     }
 }

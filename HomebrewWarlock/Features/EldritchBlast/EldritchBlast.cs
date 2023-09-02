@@ -51,8 +51,10 @@ namespace HomebrewWarlock.Features.EldritchBlast
             "A warlock attacks his foes with eldritch power, using baleful magical energy to deal damage and " +
             "sometimes impart other debilitating effects.";
 
-        public static readonly IMicroBlueprint<BlueprintFeature> FeatureRef = new MicroBlueprint<BlueprintFeature>(GeneratedGuid.EldritchBlastRank);
-        public static readonly IMicroBlueprint<BlueprintFeature> RankFeatureRef = new MicroBlueprint<BlueprintFeature>(GeneratedGuid.EldritchBlastRank);
+        public static readonly IMicroBlueprint<BlueprintFeature> FeatureRef = GeneratedGuid.EldritchBlastRank.ToMicroBlueprint<BlueprintFeature>();
+        public static readonly IMicroBlueprint<BlueprintFeature> RankFeatureRef = GeneratedGuid.EldritchBlastRank.ToMicroBlueprint<BlueprintFeature>();
+        public static readonly IMicroBlueprint<BlueprintAbility> AbilityRef = GeneratedGuid.EldritchBlastAbility.ToMicroBlueprint<BlueprintAbility>();
+        public static readonly IMicroBlueprint<BlueprintAbility> TouchAbilityRef = GeneratedGuid.EldritchBlastAbility.ToMicroBlueprint<BlueprintAbility>();
 
         private static readonly Components.BlastAbility BasicBlast = new(1);
 
@@ -67,20 +69,20 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 {
                     var (ability, projectile, rayItem) = bps.Expand();
 
-                    ability = BasicBlast.ConfigureAbility(ability, RankFeatureRef.ToReference<BlueprintFeature, BlueprintFeatureReference>());
+                    ability = BasicBlast.ConfigureAbility(ability, RankFeatureRef.ToReference());
                     
                     ability.Range = AbilityRange.Close;
                     
                     ability.AddComponent<Components.DeliverEldritchBlastProjectile>(c =>
                     {
-                        c.DefaultProjectile = projectile.ToReference<BlueprintProjectileReference>();
+                        c.DefaultProjectile = projectile.ToReference();
 
                         c.m_Length = new();
                         c.m_LineWidth = new(5);
 
                         c.NeedAttackRoll = true;
 
-                        c.m_Weapon = rayItem.ToReference<BlueprintItemWeaponReference>();
+                        c.m_Weapon = rayItem.ToReference();
                     });
 
                     return ability;
@@ -167,12 +169,12 @@ namespace HomebrewWarlock.Features.EldritchBlast
                     ability.m_DisplayName = baseFeatures.baseFeature.m_DisplayName;
                     ability.m_Description = baseFeatures.baseFeature.m_Description;
 
-                    ability = new EldritchBlastTouch(touch.ToReference<BlueprintItemWeaponReference>())
-                        .ConfigureAbility(ability, baseFeatures.rankFeature.ToReference<BlueprintFeatureReference>());
+                    ability = new EldritchBlastTouch(touch.ToReference())
+                        .ConfigureAbility(ability, baseFeatures.rankFeature.ToReference());
 
                     ability.GetComponent<AbilityEffectRunAction>().Actions.Add(new EldritchBlastOnHitFx()
                     {
-                        DefaultProjectile = baseFeatures.projectile.ToReference<BlueprintProjectileReference>()
+                        DefaultProjectile = baseFeatures.projectile.ToReference()
                     });
 
                     return ability;

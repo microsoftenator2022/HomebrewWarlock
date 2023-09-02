@@ -114,9 +114,9 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                         var name = variant.name.Replace("DispelMagic", "VoraciousDispel");
                         var copy = AssetUtils.CloneBlueprint(variant, GeneratedGuid.Get(name), name);
 
-                        baseAbility.AbilityVariants.m_Variants[index] = copy.ToReference<BlueprintAbilityReference>();
+                        baseAbility.AbilityVariants.m_Variants[index] = copy.ToReference();
 
-                        copy.m_Parent = baseAbility.ToReference<BlueprintAbilityReference>();
+                        copy.m_Parent = baseAbility.ToReference();
 
                         copy.AddInvocationComponents(4);
 

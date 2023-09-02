@@ -221,7 +221,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                                 {
                                     save.Failed.Add(GameActions.ContextActionApplyBuff(ab =>
                                     {
-                                        ab.m_Buff = nauseated.ToReference<BlueprintBuffReference>();
+                                        ab.m_Buff = nauseated.ToReference();
                                         ab.DurationValue.BonusValue = 1;
                                         ab.IsNotDispelable = true;
                                         ab.AsChild = false;
@@ -255,7 +255,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                     {
                         //c.Condition.Add(Conditions.ContextConditionIsEnemy());
                         c.Condition.Add(Conditions.ContextConditionIsCaster(isCaster => isCaster.Not = true));
-                        c.m_Buff = areaBuff.ToReference<BlueprintBuffReference>();
+                        c.m_Buff = areaBuff.ToReference();
                     });
 
                     area.Fx = new PrefabLink() { AssetId = "627d8b7231dd249418a21735d12d6a69" }
@@ -289,7 +289,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
 
                     swarmBuff.AddComponent<AddAreaEffect>(c =>
                     {
-                        c.m_AreaEffect = area.ToReference<BlueprintAbilityAreaEffectReference>();
+                        c.m_AreaEffect = area.ToReference();
                     });
 
                     swarmBuff.AddComponent<AddFactContextActions>(c =>
@@ -383,7 +383,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                                 });
                         }
 
-                        c.Brain = swarmBrain.ToReference<BlueprintBrainReference>();
+                        c.Brain = swarmBrain.ToReference();
 
                         c.m_Facts = new[]
                         {
@@ -399,7 +399,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                         //c.m_SilentCaster = true;
                     });
 
-                    buff.AddReplaceAsksList(c => c.m_Asks = barks.ToReference<BlueprintUnitAsksListReference>());
+                    buff.AddReplaceAsksList(c => c.m_Asks = barks.ToReference());
 
                     buff.AddComponent<SetMovementSpeed>(c => c.Value = 40);
                     
@@ -462,7 +462,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                     {
                         c.Activated.Add(GameActions.ContextActionApplyBuff(applyBuff =>
                         {
-                            applyBuff.m_Buff = swarmBuff.ToReference<BlueprintBuffReference>();
+                            applyBuff.m_Buff = swarmBuff.ToReference();
                             applyBuff.IsNotDispelable = true;
                             applyBuff.AsChild = true;
                             applyBuff.ToCaster = true;
@@ -484,7 +484,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                     ability.m_DescriptionShort = LocalizedStrings.Features_Invocations_Dark_DarkDiscorporation_ShortDescription;
                     ability.m_Icon = Sprites.DarkDiscorporation;
 
-                    ability.m_Buff = buff.ToReference<BlueprintBuffReference>();
+                    ability.m_Buff = buff.ToReference();
 
                     ability.ActivationType = AbilityActivationType.WithUnitCommand;
                     ability.m_ActivateWithUnitCommand = UnitCommand.CommandType.Standard;

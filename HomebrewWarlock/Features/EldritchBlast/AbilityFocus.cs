@@ -15,7 +15,7 @@ using Kingmaker.UnitLogic;
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.BlueprintsDb;
 
-namespace HomebrewWarlock.Features
+namespace HomebrewWarlock.Features.EldritchBlast
 {
     internal static class AbilityFocusEldritchBlast
     {
@@ -25,15 +25,6 @@ namespace HomebrewWarlock.Features
         {
             public void OnEventAboutToTrigger(RuleCalculateAbilityParams evt)
             {
-                //MicroLogger.Debug(sb =>
-                //{
-                //    sb.AppendLine($"evt: {evt}");
-                //    sb.AppendLine($"evt.Blueprint: {evt.Blueprint}");
-                //    sb.AppendLine($"evt.AbilityData: {evt.AbilityData}");
-                //    sb.AppendLine($"evt.AbilityData?.Blueprint: {evt.AbilityData?.Blueprint}");
-                //    sb.Append($"evt.AbilityData?.Blueprint?.Components: {evt.AbilityData?.Blueprint?.Components}");
-                //});
-
                 var blueprint = evt.AbilityData?.Blueprint ?? evt.Blueprint;
 
                 if (blueprint is null || !blueprint.Components.OfType<EldritchBlastCalculateSpellLevel>().Any())
@@ -56,13 +47,13 @@ namespace HomebrewWarlock.Features
                 {
                     var (feature, abilityFocus) = bps;
 
-                    feature.m_DisplayName = LocalizedStrings.Features_AbilityFocusEldritchBlast_DisplayName;
+                    feature.m_DisplayName = LocalizedStrings.Features_EldritchBlast_AbilityFocusEldritchBlast_DisplayName;
                     feature.m_Description = abilityFocus.m_Description;
                     feature.m_Icon = Sprites.SkillFocus;
 
                     feature.AddComponent<AbilityFocusEldritchBlast.Component>();
 
-                    feature.AddPrerequisiteFeature(EldritchBlast.EldritchBlast.FeatureRef);
+                    feature.AddPrerequisiteFeature(EldritchBlast.FeatureRef);
 
                     return feature;
                 });

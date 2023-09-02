@@ -33,6 +33,8 @@ namespace HomebrewWarlock.Features.Invocations.Least
             "This blast shape invocation extends your eldritch blast attacks to great distances. Eldritch spear " +
             "increases the range of an eldritch blast attack to long range.";
 
+        public static readonly IMicroBlueprint<BlueprintAbility> AbilityRef = GeneratedGuid.EldritchSpearAbility.ToMicroBlueprint<BlueprintAbility>();
+
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> CreateBlast(
             BlueprintInitializationContext context,
             BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures)

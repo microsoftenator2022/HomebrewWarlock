@@ -65,7 +65,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                                         GameActions.ContextActionConditionalSaved(save => save.Failed.Add(
                                             GameActions.ContextActionApplyBuff(applyBuff =>
                                             {
-                                                applyBuff.m_Buff = sickened.ToReference<BlueprintBuffReference>();
+                                                applyBuff.m_Buff = sickened.ToReference();
                                                 applyBuff.DurationValue.Rate = DurationRate.Minutes;
                                                 applyBuff.DurationValue.BonusValue = 1;
                                             }))));
@@ -87,7 +87,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     ability.m_Description = LocalizedStrings.Features_Invocations_Least_SickeningBlast_Description;
                     ability.m_Icon = Sprites.SickeningBlast;
 
-                    ability.m_Buff = essenceBuff.ToReference<BlueprintBuffReference>();
+                    ability.m_Buff = essenceBuff.ToReference();
 
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
 

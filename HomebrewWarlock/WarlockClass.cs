@@ -59,10 +59,10 @@ namespace HomebrewWarlock
 
                 @class.SkillPoints = 2;
                 @class.HitDie = DiceType.D6;
-                @class.m_BaseAttackBonus = babMedium.ToReference<BlueprintStatProgressionReference>();
-                @class.m_FortitudeSave = savesLow.ToReference<BlueprintStatProgressionReference>();
-                @class.m_ReflexSave = savesLow.ToReference<BlueprintStatProgressionReference>();
-                @class.m_WillSave = savesHigh.ToReference<BlueprintStatProgressionReference>();
+                @class.m_BaseAttackBonus = babMedium.ToReference();
+                @class.m_FortitudeSave = savesLow.ToReference();
+                @class.m_ReflexSave = savesLow.ToReference();
+                @class.m_WillSave = savesHigh.ToReference();
                 
                 @class.ClassSkills = new[]
                 {
@@ -124,17 +124,17 @@ namespace HomebrewWarlock
                     {
                         new()
                         {
-                            m_Class = @class.ToReference<BlueprintCharacterClassReference>(),
+                            m_Class = @class.ToReference(),
                             AdditionalLevel = 0
                         }
                     };
 
-                    @class.m_Progression = progression.ToReference<BlueprintProgressionReference>();
+                    @class.m_Progression = progression.ToReference();
 
                     @class.m_SignatureAbilities = new[]
                     {
-                        EldritchBlast.FeatureRef.ToReference<BlueprintFeature, BlueprintFeatureReference>(),
-                        WarlockProgression.BasicInvocations.ToReference<BlueprintFeature, BlueprintFeatureReference>()
+                        EldritchBlast.FeatureRef.ToReference(),
+                        WarlockProgression.BasicInvocations.ToReference()
                     };
 
                     @class.m_StartingItems = new BlueprintItemReference[]
@@ -150,7 +150,7 @@ namespace HomebrewWarlock
 
                     Game.Instance.BlueprintRoot.Progression.m_CharacterClasses =
                         Game.Instance.BlueprintRoot.Progression.m_CharacterClasses
-                            .Append(@class.ToReference<BlueprintCharacterClassReference>());
+                            .Append(@class.ToReference());
 
                     return @class;
                 });

@@ -47,10 +47,10 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     unit.AddBuffOnEntityCreated(c =>
                     {
-                        c.m_Buff = unlootableBuff.ToReference<BlueprintBuffReference>();
+                        c.m_Buff = unlootableBuff.ToReference();
                     });
 
-                    unit.m_Faction = summonedFaction.ToReference<BlueprintFactionReference>();
+                    unit.m_Faction = summonedFaction.ToReference();
 
                     return unit;
                 });
@@ -77,12 +77,12 @@ namespace HomebrewWarlock.Features.Invocations.Least
                         .SelectMany(c => c.Actions.Actions.OfType<ContextActionSpawnMonster>())
                         .First();
                         
-                    spawnAction.m_Blueprint = unit.ToReference<BlueprintUnitReference>();
+                    spawnAction.m_Blueprint = unit.ToReference();
 
                     var spellListComponents = spell.Components.OfType<SpellListComponent>();
 
                     spellListComponents.First(slc => slc.SpellList == clericSpellList).m_SpellList =
-                        shamanSpellList.ToReference<BlueprintSpellListReference>();
+                        shamanSpellList.ToReference();
 
                     foreach (var slc in spellListComponents)
                     {

@@ -49,7 +49,7 @@ namespace HomebrewWarlock.Features
                     feature.AddContextRankConfig(c =>
                     {
                         c.m_BaseValueType = ContextRankBaseValueType.FeatureRank;
-                        c.m_Feature = feature.ToReference<BlueprintFeatureReference>();
+                        c.m_Feature = feature.ToReference();
                         c.m_Progression = ContextRankProgression.AsIs;
                         c.m_StartLevel = 0;
                         c.m_StepLevel = 1;
