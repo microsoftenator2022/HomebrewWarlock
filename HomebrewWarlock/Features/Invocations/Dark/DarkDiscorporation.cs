@@ -201,7 +201,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
             var areaBuff = context.NewBlueprint<BlueprintBuff>(GeneratedGuid.Get("DarkDiscorporationAreaEffectBuff"))
-                .Combine(BlueprintsDb.Owlcat.BlueprintBuff.Nauseated)
+                .GetBlueprint(BlueprintsDb.Owlcat.BlueprintBuff.Nauseated)
                 .Map(bps =>
                 {
                     (BlueprintBuff buff, var nauseated) = bps;
@@ -337,10 +337,10 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                 });
 
             var polymorphBuff = context.NewBlueprint<BlueprintBuff>(GeneratedGuid.Get("DarkDiscorporationPolymorphBuff"))
-                .Combine(BlueprintsDb.Owlcat.BlueprintUnitAsksList.SwarmCrows_Barks)
-                .Combine(BlueprintsDb.Owlcat.BlueprintFeature.Airborne)
-                .Combine(BlueprintsDb.Owlcat.BlueprintFeature.ImmunityToBleed)
-                .Combine(BlueprintsDb.Owlcat.BlueprintBrain.SwarmBrain)
+                .GetBlueprint(BlueprintsDb.Owlcat.BlueprintUnitAsksList.SwarmCrows_Barks)
+                .GetBlueprint(BlueprintsDb.Owlcat.BlueprintFeature.Airborne)
+                .GetBlueprint(BlueprintsDb.Owlcat.BlueprintFeature.ImmunityToBleed)
+                .GetBlueprint(BlueprintsDb.Owlcat.BlueprintBrain.SwarmBrain)
                 .Combine(swarmBuff)
                 .Map(bps =>
                 {

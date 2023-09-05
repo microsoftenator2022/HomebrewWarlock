@@ -10,6 +10,7 @@ using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Components;
 
@@ -176,6 +177,8 @@ namespace HomebrewWarlock.Features.EldritchBlast
                     {
                         DefaultProjectile = baseFeatures.projectile.ToReference()
                     });
+
+                    ability.Type = AbilityType.Special;
 
                     return ability;
                 });

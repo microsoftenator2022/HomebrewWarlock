@@ -150,12 +150,13 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 });
 
             var ebTouch = EldritchBlast.CreateTouchAbility(context, baseFeatures);
+            var enchant = WeaponEnchant.CreateWeaponEnchant(context);
 
             ebFeatures = ebFeatures
                 .Combine(EldritchSpear.CreateBlast(context, baseFeatures))
-                .Combine(HideousBlow.Create(context, baseFeatures, ebTouch))
+                .Combine(HideousBlow.Create(context, baseFeatures, ebTouch, enchant))
                 .Combine(EldritchChain.CreateBlast(context, baseFeatures))
-                .Combine(EldritchGlaive.Create(context, baseFeatures, ebTouch))
+                .Combine(EldritchGlaive.Create(context, baseFeatures, ebTouch, enchant))
                 .Combine(EldritchCone.Create(context, baseFeatures))
                 .Combine(EldritchDoom.Create(context, baseFeatures))
                 .Map(features =>
@@ -178,6 +179,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
         private static readonly IEnumerable<IMicroBlueprint<BlueprintAbility>> blastAbilities = new[]
         {
             EldritchBlast.AbilityRef,
+            //EldritchBlast.TouchAbilityRef,
             EldritchSpear.AbilityRef,
             HideousBlow.AbilityRef,
             EldritchGlaive.AbilityRef,

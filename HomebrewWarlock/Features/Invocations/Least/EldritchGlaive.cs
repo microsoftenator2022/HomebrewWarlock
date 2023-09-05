@@ -51,6 +51,8 @@ using UnityEngine;
 
 using UniRx;
 using Kingmaker.Blueprints.Facts;
+using Kingmaker.UnitLogic.Mechanics;
+using Owlcat.Runtime.Core.Utils;
 
 namespace HomebrewWarlock.Features.Invocations.Least
 {
@@ -241,7 +243,23 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 if (target?.Unit is not { } targetUnit)
                     yield break;
 
-                var attacks = UnitAttack.EnumerateFullAttack(caster).ToList();
+                var attacks = UnitAttack.EnumerateFullAttack(caster)
+                    .Where(attack =>
+                    {
+                        if (attack.Hand?.Weapon is not null)
+                        {
+                            var range = attack.Hand.Weapon.AttackRange;
+                            var distance = GeometryUtils.Distance2D(caster.Position, targetUnit.Position);
+
+                            MicroLogger.Debug(() => $"{attack.Hand.Weapon} range: {range}");
+                            MicroLogger.Debug(() => $"target distance: {distance}");
+
+                            return (float)range.Value >= distance;
+                        }
+
+                        return true;
+                    })
+                    .ToList();
 
                 MicroLogger.Debug(() => $"{attacks.Count()} attacks");
 
@@ -261,6 +279,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     }
                     
                     UnitAnimationType at = UnitAnimationType.SpecialAttack;
+
                     if (attackInfo.Hand == caster.Body.PrimaryHand)
                         at = UnitAnimationType.MainHandAttack;
                     else if (attackInfo.Hand == caster.Body.SecondaryHand)
@@ -268,19 +287,35 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     MicroLogger.Debug(() => $"Animation type: {at}");
 
-                    var animation = caster.View.AnimationManager.CreateHandle(at);
-                    animation.AttackWeaponStyle = weapon?.GetAnimationStyle() ?? WeaponAnimationStyle.None;
+                    UnitAnimationActionHandle? animation = null;
 
-                    caster.View.AnimationManager.Execute(animation);
-
-                    while (!animation.IsStarted || !animation.IsActed)
+                    if (at is UnitAnimationType.SpecialAttack && weapon is not null)
                     {
-                        //caster.View.AnimationManager.Tick();
-                        yield return null;
+                        var vp = weapon.Blueprint.VisualParameters;
+
+                        if (vp.HasSpecialAnimation && vp.SpecialAnimation is not UnitAnimationSpecialAttackType.None)
+                            animation = caster.View.AnimationManager.CreateSpecialAttackHandle(vp.SpecialAnimation);
+                    }
+                    else
+                    {
+                        animation = caster.View.AnimationManager.CreateHandle(at);
+
+                        animation.AttackWeaponStyle = weapon?.GetAnimationStyle() ?? WeaponAnimationStyle.None;
                     }
 
-                    MicroLogger.Debug(() => $"Animation weapon style: {animation?.AttackWeaponStyle}");
-                    MicroLogger.Debug(() => $"Animation handle execution mode: {animation?.ExecutionMode}");
+                    if (animation is not null)
+                    {
+                        caster.View.AnimationManager.Execute(animation);
+
+                        while (!animation.IsStarted || !animation.IsActed)
+                        {
+                            //caster.View.AnimationManager.Tick();
+                            yield return null;
+                        }
+
+                        MicroLogger.Debug(() => $"Animation weapon style: {animation?.AttackWeaponStyle}");
+                        MicroLogger.Debug(() => $"Animation handle execution mode: {animation?.ExecutionMode}");
+                    }
 
                     MicroLogger.Debug(sb =>
                     {
@@ -350,10 +385,27 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
         public static readonly IMicroBlueprint<BlueprintAbility> AbilityRef = GeneratedGuid.EldritchGlaiveAbility.ToMicroBlueprint<BlueprintAbility>();
 
-        internal static BlueprintInitializationContext.ContextInitializer<BlueprintItemWeapon> CreateWeapon(
+        static readonly Lazy<Settings.Setting<bool>> UseToggle = new(() =>
+        {
+            var settings = new Settings.SettingsGroup();
+            (settings, var useToggle) = settings.AddDropdown<bool>(
+                "EldritchGlaiveToggle",
+                LocalizedStrings.Features_Invocations_Least_EldritchGlaive_AbilityTypeSettingDescription,
+                new()
+                {
+                    (false, LocalizedStrings.Features_Invocations_Least_EldritchGlaive_AbilityTypeRAW),
+                    (true, LocalizedStrings.Features_Invocations_Least_EldritchGlaive_AbilityTypeToggle)
+                });
+
+            Settings.Instance.Groups.Add(settings);
+
+            return useToggle;
+        });
+
+        internal static BlueprintInitializationContext.ContextInitializer<(BlueprintItemWeapon, BlueprintWeaponType)> CreateWeapon(
             BlueprintInitializationContext context,
             BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures,
-            BlueprintInitializationContext.ContextInitializer<BlueprintAbility> ebTouch)
+            BlueprintInitializationContext.ContextInitializer<BlueprintWeaponEnchantment> enchant)
         {
             var weaponModel = context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintItemWeapon.DemonicHungerItem)
                 .Map(weapon =>
@@ -404,46 +456,38 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     return wt;
                 });
 
-            //var onHit = context.NewBlueprint<BlueprintAbility>(
-            //    GeneratedGuid.Get("EldritchGlaiveOnHitAbility"))
-            //    .Combine(context.GetBlueprint(BlueprintsDb.Owlcat.BlueprintItemWeapon.TouchItem))
-            //    .Combine(baseFeatures)
+            //var enchant = context.NewBlueprint<BlueprintWeaponEnchantment>(
+            //    GeneratedGuid.Get("EldritchGlaiveWeaponEnchantment"))
+            //    .Combine(ebTouch)
             //    .Map(bps =>
             //    {
-            //        var (ability, touch, baseFeatures) = bps.Expand();
+            //        (BlueprintWeaponEnchantment enchant, var onHit) = bps;
 
-            //        ability.m_DisplayName = baseFeatures.baseFeature.m_DisplayName;
+            //        enchant.m_EnchantName = LocalizedStrings.Features_EldritchBlast_EldritchBlast_DisplayName;
 
-            //        ability = new EldritchBlastTouch(touch.ToReference<BlueprintItemWeaponReference>())
-            //            .ConfigureAbility(ability, baseFeatures.rankFeature.ToReference<BlueprintFeatureReference>());
+            //        //enchant.AddComponent<AddInitiatorAttackWithWeaponTrigger>(c =>
+            //        //{
+            //        //    c.OnlyHit = true;
 
-            //        ability.GetComponent<AbilityEffectRunAction>().Actions.Add(new EldritchBlastOnHitFx()
-            //        {
-            //            DefaultProjectile = baseFeatures.projectile.ToReference<BlueprintProjectileReference>()
-            //        });
+            //        //    c.Action.Add(GameActions.ContextActionCastSpell(cast =>
+            //        //    {
+            //        //        cast.m_Spell = onHit.ToReference();
 
-            //        return ability;
+            //        //        void setIsChild(bool isToggle)
+            //        //        {
+            //        //            cast.MarkAsChild = !isToggle;
+            //        //        }
+
+            //        //        UseToggle.Value.Changed.Subscribe(toggle => setIsChild(toggle));
+
+            //        //        setIsChild(UseToggle.Value.Value);
+            //        //    }));
+            //        //});
+
+            //        enchant.WeaponFxPrefab = WeaponFxPrefabs.Standard;
+
+            //        return enchant;
             //    });
-
-            var enchant = context.NewBlueprint<BlueprintWeaponEnchantment>(
-                GeneratedGuid.Get("EldritchGlaiveWeaponEnchantment"))
-                .Combine(ebTouch)
-                .Map(bps =>
-                {
-                    (BlueprintWeaponEnchantment enchant, var onHit) = bps;
-
-                    enchant.m_EnchantName = LocalizedStrings.Features_EldritchBlast_EldritchBlast_DisplayName;
-
-                    enchant.AddComponent<AddInitiatorAttackWithWeaponTrigger>(c =>
-                    {
-                        c.OnlyHit = true;
-                        c.Action.Add(GameActions.ContextActionCastSpell(c => c.m_Spell = onHit.ToReference()));
-                    });
-
-                    enchant.WeaponFxPrefab = WeaponFxPrefabs.Standard;
-
-                    return enchant;
-                });
 
             var weapon = context.CloneBlueprint(BlueprintsDb.Owlcat.BlueprintItemWeapon.DemonicHungerItem,
                 GeneratedGuid.Get("EldritchGlaiveWeapon"))
@@ -482,28 +526,57 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     return weapon;
                 });
 
-            return weapon;
+            return weapon.Combine(weaponType);
         }
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(
             BlueprintInitializationContext context,
             BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures,
-            BlueprintInitializationContext.ContextInitializer<BlueprintAbility> ebTouch)
+            BlueprintInitializationContext.ContextInitializer<BlueprintAbility> ebTouch,
+            BlueprintInitializationContext.ContextInitializer<BlueprintWeaponEnchantment> enchant)
         {
-            var weapon = CreateWeapon(context, baseFeatures, ebTouch);
+            var weaponAndType = CreateWeapon(context, baseFeatures, enchant);
+            var weapon = weaponAndType.Map(bps => bps.Item1);
 
             var buff = context.NewBlueprint<BlueprintBuff>(
                 GeneratedGuid.Get("EldritchGlaiveBuff"))
-                .Combine(weapon)
+                .Combine(weaponAndType)
+                .Combine(ebTouch)
                 .Map(bps =>
                 {
-                    var (buff, weapon) = bps;
+                    var (buff, (weapon, weaponType), touch) = bps.Expand();
 
                     buff.m_DisplayName = LocalizedStrings.Features_Invocations_Least_EldritchGlaive_DisplayName;
                     buff.m_Description = LocalizedStrings.Features_Invocations_Least_EldritchGlaive_Description;
                     buff.m_Icon = Sprites.SpellCombat;
 
                     buff.AddComponent<AddEldritchGlaive>(c => c.Weapon = weapon.ToReference());
+
+                    buff.AddReplaceAbilityParamsWithContext(c =>
+                    {
+                        c.m_Ability = touch.ToReference();
+                    });
+
+                    buff.AddComponent<AddInitiatorAttackWithWeaponTrigger>(c =>
+                    {
+                        c.m_WeaponType = weaponType.ToReference();
+
+                        c.OnlyHit = true;
+
+                        c.Action.Add(GameActions.ContextActionCastSpell(cast =>
+                        {
+                            cast.m_Spell = touch.ToReference();
+
+                            void setIsChild(bool isToggle)
+                            {
+                                cast.MarkAsChild = !isToggle;
+                            }
+
+                            UseToggle.Value.Changed.Subscribe(toggle => setIsChild(toggle));
+
+                            setIsChild(UseToggle.Value.Value);
+                        }));
+                    });
 
                     buff.m_Flags = BlueprintBuff.Flags.HiddenInUi | BlueprintBuff.Flags.IsFromSpell;
 
@@ -569,11 +642,15 @@ namespace HomebrewWarlock.Features.Invocations.Least
                             {
                                 a.ToCaster = true;
                                 a.m_Buff = buff.ToReference();
+                                a.IsNotDispelable = true;
                                 a.DurationValue.BonusValue = 1;
+                                a.DurationValue.Rate = DurationRate.Rounds;
                             }),
                             GameActions.ContextActionCastSpell(a =>
                             {
                                 a.m_Spell = attack.ToReference();
+
+                                a.MarkAsChild = true;
                             }));
                     });
 
@@ -607,18 +684,6 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     return toggle;
                 });
 
-            var settings = new Settings.SettingsGroup();
-            (settings, var useToggle) = settings.AddDropdown<bool>(
-                "EldritchGlaiveToggle",
-                LocalizedStrings.Features_Invocations_Least_EldritchGlaive_AbilityTypeSettingDescription,
-                new()
-                {
-                    (false, LocalizedStrings.Features_Invocations_Least_EldritchGlaive_AbilityTypeRAW),
-                    (true, LocalizedStrings.Features_Invocations_Least_EldritchGlaive_AbilityTypeToggle)
-                });
-
-            Settings.Instance.Groups.Add(settings);
-
             var feature = context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get("EldritchGlaiveFeature"))
                 .Combine(ability)
                 .Combine(toggle)
@@ -644,9 +709,9 @@ namespace HomebrewWarlock.Features.Invocations.Least
                         };
                     }
 
-                    useToggle.Changed.Subscribe(setAbility);
+                    UseToggle.Value.Changed.Subscribe(setAbility);
 
-                    setAbility(useToggle.Value);
+                    setAbility(UseToggle.Value.Value);
 
                     return feature;
                 });

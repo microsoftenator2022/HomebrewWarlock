@@ -11,12 +11,18 @@ using HomebrewWarlock.Resources;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Items.Ecnchantments;
+using Kingmaker.RuleSystem;
+using Kingmaker.RuleSystem.Rules.Abilities;
 using Kingmaker.UI.GenericSlot;
+using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Components;
 using Kingmaker.UnitLogic.Abilities.Components.CasterCheckers;
+using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Commands.Base;
+using Kingmaker.UnitLogic.FactLogic;
 using Kingmaker.UnitLogic.Mechanics;
+using Kingmaker.UnitLogic.Mechanics.Actions;
 using Kingmaker.UnitLogic.Mechanics.Components;
 using Kingmaker.Visual.Animation.Kingmaker.Actions;
 
@@ -29,6 +35,38 @@ namespace HomebrewWarlock.Features.Invocations.Least
         BlueprintFeature rankFeature,
         BlueprintAbility baseAbility,
         BlueprintProjectile projectile);
+
+    internal class CastSpellWithContextParams : ContextAction
+    {
+        public BlueprintAbilityReference? Spell;
+        public bool MarkAsChild;
+
+        public override string GetCaption() => $"Cast {Spell?.Get()}";
+        public override void RunAction()
+        {
+            if (base.Context.MaybeCaster is not { } caster)
+                return;
+            if (base.Target.Unit is not { } target)
+                return;
+
+            var data = new AbilityData(this.Spell, caster);
+            
+            data.OverrideCasterLevel = base.Context.Params.CasterLevel;
+            data.OverrideDC = base.Context.Params.DC;
+            data.OverrideSpellLevel = base.Context.Params.SpellLevel;
+            
+            data.MetamagicData = new() { MetamagicMask = base.Context.Params.Metamagic };
+
+            if (this.MarkAsChild)
+                data.IsChildSpell = true;
+
+            var rule = new RuleCastSpell(data, target);
+
+            rule.IsDuplicateSpellApplied = base.AbilityContext?.IsDuplicateSpellApplied ?? false;
+
+            Rulebook.Trigger(rule);
+        }
+    }
 
     internal static class HideousBlow
     {
@@ -47,37 +85,85 @@ namespace HomebrewWarlock.Features.Invocations.Least
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(
             BlueprintInitializationContext context,
             BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures,
-            BlueprintInitializationContext.ContextInitializer<BlueprintAbility> ebTouch)
+            BlueprintInitializationContext.ContextInitializer<BlueprintAbility> ebTouch,
+            BlueprintInitializationContext.ContextInitializer<BlueprintWeaponEnchantment> enchant)
         {
-            var enchant = context.NewBlueprint<BlueprintWeaponEnchantment>(
-                GeneratedGuid.Get("HideousBlowWeaponEnchantment"))
+            //var enchant = context.NewBlueprint<BlueprintWeaponEnchantment>(
+            //    GeneratedGuid.Get("HideousBlowWeaponEnchantment"))
+            //    .Combine(ebTouch)
+            //    .Combine(baseFeatures)
+            //    .Map(bps =>
+            //    {
+            //        var (enchant, onHitAbility, baseFeatures) = bps.Expand();
+
+            //        enchant.m_EnchantName = baseFeatures.baseFeature.m_DisplayName;
+
+            //        enchant.WeaponFxPrefab = WeaponFxPrefabs.Standard;
+
+            //        return enchant;
+            //    });
+
+            var buff = context.NewBlueprint<BlueprintBuff>(GeneratedGuid.Get("HideousBlowBuff"))
                 .Combine(ebTouch)
-                .Combine(baseFeatures)
+                .Combine(enchant)
                 .Map(bps =>
                 {
-                    var (enchant, onHitAbility, baseFeatures) = bps.Expand();
+                    (BlueprintBuff buff, var touch, var enchant) = bps.Expand();
 
-                    enchant.m_EnchantName = baseFeatures.baseFeature.m_DisplayName;
+                    buff.m_DisplayName = LocalizedStrings.Features_Invocations_Least_HideousBlow_DisplayName;
+                    buff.m_Description = LocalizedStrings.Features_Invocations_Least_HideousBlow_Description;
+                    buff.m_Icon = Sprites.HideousBlow;
 
-                    enchant.AddComponent<AddInitiatorAttackWithWeaponTrigger>(c =>
+                    buff.m_Flags = BlueprintBuff.Flags.HiddenInUi | BlueprintBuff.Flags.IsFromSpell;
+
+                    buff.AddComponent<BuffEnchantWornItem>(bewi =>
+                    {
+                        bewi.Slot = EquipSlotBase.SlotType.PrimaryHand;
+                        bewi.m_EnchantmentBlueprint = enchant.ToReference<BlueprintItemEnchantmentReference>();
+                    });
+
+                    //buff.AddComponent<AddFactContextActions>(actions =>
+                    //{
+                    //    actions.Activated.Add(GameActions.ContextActionEnchantWornItem(a =>
+                    //    {
+                    //        a.ToCaster = true;
+                    //        a.RemoveOnUnequip = true;
+                    //        a.m_Enchantment = enchant.ToReference<BlueprintItemEnchantmentReference>();
+                    //        a.Slot = EquipSlotBase.SlotType.PrimaryHand;
+                    //        a.DurationValue.Rate = DurationRate.Rounds;
+                    //        a.DurationValue.BonusValue.Value = 1;
+                    //    }));
+                    //});
+
+                    //buff.AddReplaceAbilityParamsWithContext(c =>
+                    //{
+                    //    c.m_Ability = touch.ToReference();
+                    //});
+
+                    buff.AddComponent<AddInitiatorAttackWithWeaponTrigger>(c =>
                     {
                         c.OnlyHit = true;
                         c.Action.Add(
-                            GameActions.ContextActionCastSpell(a =>
+                            //GameActions.ContextActionCastSpell(a =>
+                            //{
+                            //    a.m_Spell = touch.ToReference();
+                            //    a.MarkAsChild = true;
+                            //})
+                            new CastSpellWithContextParams()
                             {
-                                a.m_Spell = onHitAbility.ToReference();
-                            }));
+                                Spell = touch.ToReference(),
+                                MarkAsChild = true
+                            }
+                            );
                     });
 
-                    enchant.AddComponent<AddInitiatorAttackWithWeaponTrigger>(c =>
+                    buff.AddComponent<AddInitiatorAttackWithWeaponTrigger>(c =>
                     {
                         c.OnlyHit = false;
-                        c.Action.Add(new EnchantmentRemoveSelf());
+                        c.Action.Add(GameActions.ContextActionRemoveSelf());
                     });
 
-                    enchant.WeaponFxPrefab = WeaponFxPrefabs.Standard;
-
-                    return enchant;
+                    return buff;
                 });
 
             var attackAbility = context.NewBlueprint<BlueprintAbility>(
@@ -85,6 +171,8 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 .Map(ability =>
                 {
                     ability.AddComponent<AbilityDeliverAttackWithWeapon>();
+
+                    ability.ActionType = UnitCommand.CommandType.Free;
 
                     ability.CanTargetEnemies = true;
                     ability.ShouldTurnToTarget = true;
@@ -95,11 +183,11 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
             var ability = context.NewBlueprint<BlueprintAbility>(
                 GeneratedGuid.Get("HideousBlowAbility"))
-                .Combine(enchant)
+                .Combine(buff)
                 .Combine(attackAbility)
                 .Map(bps =>
                 {
-                    (BlueprintAbility ability, var enchant, var attackAbility) = bps.Expand();
+                    (BlueprintAbility ability, var buff, var attackAbility) = bps.Expand();
 
                     attackAbility.m_DisplayName = ability.m_DisplayName =
                         LocalizedStrings.Features_Invocations_Least_HideousBlow_DisplayName;
@@ -108,7 +196,6 @@ namespace HomebrewWarlock.Features.Invocations.Least
                         LocalizedStrings.Features_Invocations_Least_HideousBlow_Description;
 
                     attackAbility.m_Icon = ability.m_Icon = Sprites.HideousBlow;
-
 
                     ability.Type = AbilityType.Special;
                     ability.Range = AbilityRange.Weapon;
@@ -124,24 +211,33 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     ability.AddComponent<EldritchBlastComponent>();
 
                     ability.AddComponent<AbilityEffectRunAction>(c => c.AddActions(
-                        GameActions.ContextActionEnchantWornItem(a =>
+                        //GameActions.ContextActionEnchantWornItem(a =>
+                        //{
+                        //    a.ToCaster = true;
+                        //    a.RemoveOnUnequip = true;
+                        //    a.m_Enchantment = enchant.ToReference<BlueprintItemEnchantmentReference>();
+                        //    a.Slot = EquipSlotBase.SlotType.PrimaryHand;
+                        //    a.DurationValue.Rate = DurationRate.Rounds;
+                        //    a.DurationValue.BonusValue.Value = 1;
+                        //}),
+                        GameActions.ContextActionApplyBuff(ab =>
                         {
-                            a.ToCaster = true;
-                            a.RemoveOnUnequip = true;
-                            a.m_Enchantment = enchant.ToReference<BlueprintItemEnchantmentReference>();
-                            a.Slot = EquipSlotBase.SlotType.PrimaryHand;
-                            a.DurationValue.Rate = DurationRate.Rounds;
-                            a.DurationValue.BonusValue.Value = 1;
+                            ab.ToCaster = true;
+                            ab.m_Buff = buff.ToReference();
+                            ab.IsNotDispelable = true;
+                            ab.DurationValue.BonusValue = 1;
+                            ab.DurationValue.Rate = DurationRate.Rounds;
                         }),
                         GameActions.ContextActionCastSpell(a =>
-                            a.m_Spell = attackAbility.ToReference())
-                        ));
+                        {
+                            a.m_Spell = attackAbility.ToReference();
+                            a.MarkAsChild = true;
+                        })));
 
                     ability.AddComponent<AbilityCasterMainWeaponIsMelee>();
 
                     ability.AddComponent<AbilityCasterHasNoFacts>(c =>
                     {
-                        // TODO: actually use the buff blueprint
                         c.m_Facts = new[] { GeneratedGuid.EldritchGlaiveBuff.ToBlueprintReference<BlueprintUnitFactReference>() };
                     });
 

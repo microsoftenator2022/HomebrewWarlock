@@ -67,9 +67,9 @@ namespace HomebrewWarlock.Features.Invocations.Dark
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
             var essenceBuff = context.NewBlueprint<BlueprintBuff>(GeneratedGuid.Get("UtterdarkBlastEssenceBuff"))
-                .Combine(BlueprintsDb.Owlcat.BlueprintFeature.NegativeEnergyAffinity)
-                .Combine(BlueprintsDb.Owlcat.BlueprintFeature.DeathDomainGreaterLiving)
-                .Combine(BlueprintsDb.Owlcat.BlueprintBuff.TemporaryNegativeLevel)
+                .GetBlueprint(BlueprintsDb.Owlcat.BlueprintFeature.NegativeEnergyAffinity)
+                .GetBlueprint(BlueprintsDb.Owlcat.BlueprintFeature.DeathDomainGreaterLiving)
+                .GetBlueprint(BlueprintsDb.Owlcat.BlueprintBuff.TemporaryNegativeLevel)
                 .Map(bps =>
                 {
                     (BlueprintBuff buff, var negativeEnergyAffinity, var deathDomainGreaterLiving, var negativeLevel) = bps.Expand();

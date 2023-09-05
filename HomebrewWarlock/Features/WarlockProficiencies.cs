@@ -32,8 +32,8 @@ namespace HomebrewWarlock.Features
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context) =>
             context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get(nameof(WarlockProficiencies)), nameof(WarlockProficiencies))
-                .Combine(BlueprintsDb.Owlcat.BlueprintFeature.LightArmorProficiency)
-                .Combine(BlueprintsDb.Owlcat.BlueprintFeature.SimpleWeaponProficiency)
+                .GetBlueprint(BlueprintsDb.Owlcat.BlueprintFeature.LightArmorProficiency)
+                .GetBlueprint(BlueprintsDb.Owlcat.BlueprintFeature.SimpleWeaponProficiency)
                 .Map(bps =>
                 {
                     (BlueprintFeature feature, var lightArmor, var simpleWeapons) = bps.Expand();

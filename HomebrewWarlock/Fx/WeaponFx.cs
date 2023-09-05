@@ -4,14 +4,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.ResourceLinks;
 using Kingmaker.Visual.MaterialEffects.ColorTint;
 using Kingmaker.Visual.MaterialEffects.RimLighting;
+
+using MicroWrath.BlueprintInitializationContext;
 
 using UnityEngine;
 
 namespace HomebrewWarlock.Fx
 {
+    internal static class WeaponEnchant
+    {
+        internal static BlueprintInitializationContext.ContextInitializer<BlueprintWeaponEnchantment> CreateWeaponEnchant(
+            BlueprintInitializationContext context) =>
+            context.NewBlueprint<BlueprintWeaponEnchantment>(GeneratedGuid.Get("EldritchBlastWeaponEnchantFx"))
+                .Map(enchant =>
+                {
+                    enchant.m_EnchantName = LocalizedStrings.Features_EldritchBlast_EldritchBlast_DisplayName;
+
+                    enchant.WeaponFxPrefab = WeaponFxPrefabs.Standard;
+
+                    return enchant;
+                });
+    }
+
     internal static class WeaponFxPrefabs
     {
         internal static PrefabLink Standard =>
