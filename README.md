@@ -5,8 +5,9 @@ My attempt at porting 3.5e Complete Arcane's Warlock to WotR.
 Mild changes were made in a few areas to fit better with PF1e and WotR. eg. some 24h invocations are now permanent, some are toggled intead.
 Where possible I have tried to use Pathfinder equivalents for spells and feats.
 
-![EB_screenshot](https://github.com/microsoftenator2022/HomebrewWarlock/assets/105488202/86ad3700-8c2d-49b3-8aff-999393bc0068)
+### Requires [ModMenu](https://github.com/WittleWolfie/ModMenu)
 
+![EB_screenshot](https://github.com/microsoftenator2022/HomebrewWarlock/assets/105488202/86ad3700-8c2d-49b3-8aff-999393bc0068)
 
 ## Currently implemented
 
