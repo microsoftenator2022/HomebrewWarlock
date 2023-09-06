@@ -31,55 +31,69 @@ resistance 5 vs 2 elements, increases to 10 at level 20
 ### Invocations
 #### Least
 
-- Beguiling influence
-- Dark One's Own Luck
-- Eldritch Glaive (eldritch blast shape, Dragon Magic)
+- Beguiling influence - +6 to persuade checks. Permanent.
+- Dark One's Own Luck - +CHA to one save type. Toggled.
+- Eldritch Glaive - Blast Shape. Reach touch attack weapon. Makes a full attack as a full round action and can perform AoO for 1 round.
 
 ![EG_screenshot](https://github.com/microsoftenator2022/HomebrewWarlock/assets/105488202/ea7b966f-da5e-4b56-a649-d711c5d33154)
 
-- Eldritch Spear (eldritch blast shape)
-- Frightful Blast (eldritch blast essence)
-- Hideous Blow (eldritch blast shape)
-- See the Unseen
-- Sickening Blast (eldritch blast essence)
-- Summon Swarm (Spiders)
+- Eldritch Spear - EB shape: Short -> Long range.
+- Frightful Blast - EB essence: Inflicts shaken.
+- Hideous Blow - Single melee weapon attack + EB damage
+- See the Unseen - +6 to Knowledge (Arcana) and Lore (Religion). Permanent.
+- Sickening Blast - EB essence: inflicts sickened.
+- Summon Swarm (Spiders) - As Summon Swarm spell.
 
 #### Lesser
-- Beshadowed Blast (eldritch blast essence)
-- Brimstone Blast (eldritch blast essence)
+- Beshadowed Blast - EB essence: inflicts blinded.
+- Brimstone Blast - EB essence: Fire damage + 2d6 fire damage per round for CL/5 rounds.
 
 ![BB_screenshot](https://github.com/microsoftenator2022/HomebrewWarlock/assets/105488202/c2ad6aa8-549e-410b-92eb-43a70e55ffb5)
 
-- Curse of Despair
-- Eldritch Chain (eldritch blast shape)
-- Fell Flight
-- Hellrime Blast (eldritch blast essence)
-- The Dead Walk
-- Voidsense
-- Voracious Dispel
-- Walk Unseen
+- Curse of Despair - As Bestow Curse spell.
+- Eldritch Chain - EB shape: Chains to an additional target per 5 CL.
+- Fell Flight - Wings. Toggled.
+- Hellrime Blast - EB essence: Cold damage and -4 DEX for 10 minutes.
+- The Dead Walk - As Animate Dead spell.
+- Voidsense - 30ft Blindsense.
+- Voracious Dispel - Dispel + damages caster of dispelled effect.
+- Walk Unseen - Standard invisibility. Toggled.
 
 #### Greater
-- Bewitching Blast (eldritch blast essence)
-- Chilling Tentacles (!!!)
-- Devour Magic
-- Eldritch Cone (eldritch blast shape)
-- Noxious Blast (eldritch blast essence)
-- Repelling Blast (eldritch blast essence) YEET
-- Vitriolic Blast (eldritch blast essence)
+- Bewitching Blast - EB essence: inflicts confused.
+- Chilling Tentacles (!!!) - Black Tentacles + cold AoE.
+- Devour Magic - Targeted Greater Dispel + heal.
+- Eldritch Cone - EB shape: 30ft Cone.
+- Noxious Blast - EB essence: Inflicts nausea.
+- Repelling Blast - EB essence: YEET!
+- Vitriolic Blast - EB essence: Acid damage, ignores SR, 2d6 acid damage per round for 3 rounds.
 
 ![VB_screenshot](https://github.com/microsoftenator2022/HomebrewWarlock/assets/105488202/fe47652f-b3d4-4364-8617-ea9b37fa940d)
 
 #### Dark
 
-- Dark Discorporation (ravens instead of bats)
+- Dark Discorporation - Polymorph to ~~bat~~raven swarm
 
 ![DD_screenshot](https://github.com/microsoftenator2022/HomebrewWarlock/assets/105488202/a084d530-66a5-487c-ad0e-2ff0152e9373)
-- Eldritch Doom (eldritch blast shape)
-- Utterdark Blast (eldritch blast essence)
-- Word of Changing
+- Eldritch Doom - EB shape: 20ft AoE centered on caster.
+- Utterdark Blast - EB essence: Negative energy damage + 2 negative levels.
+- Word of Changing - As Baleful Polymorph spell.
 
-#### Homebrew
+### Feats
+Ability Focus (Eldritch Blast)
+
+#### Metamagic (Eldritch Blast)
+- Empower
+- Maximize
+- Quicken
+
+### Homebrew
 - Mythic Eldritch Blast: 1d6 + 1 divine damage on eldritch blasts per mythic rank.
   Compared to Kineticist, Warlock's raw damage output is pretty unimpressive. This is a rough attempt to address this. This is subject to change.
 - Eldritch Glaive Toggle: optionally can change Eldritch Glaive to a toggle like Kinetic Blade instead of a full-round action.
+
+### Known Issues and Missing Features
+- Imbue Item: will be added in the future
+- Utterdark blast does not heal undead (they are just immune)
+- Missing elemental weapon enchant FX
+- 
