@@ -13,15 +13,20 @@ Where possible I have tried to use Pathfinder equivalents for spells and feats.
 
 All base class features except Imbue Item (crafting). Will be implemented for the final release:
 
-Eldritch Blast: 1d6 Magic damage. Increases by 1d6 at levels 3, 5, 7, 9, 11, 13, 14, 17, 20
+#### Eldritch Blast
+1d6 Magic damage. Increases by 1d6 at levels 3, 5, 7, 9, 11, 13, 14, 17, 20
 
-Deceive Item: Take 10 on UMD
+#### Deceive Item
+Take 10 on UMD
 
-Damage reduction: +1/cold iron at levels 3, 7, 11, 15, 19
+#### Damage reduction
++1/cold iron at levels 3, 7, 11, 15, 19
 
-Fiendish Resilience: Fast Healing 1/2/5 (levels 8, 13, 18)
+#### Fiendish Resilience
+Fast Healing 1/2/5 (levels 8, 13, 18)
 
-Energy Resistance: resistance 5 vs 2 elements, increases to 10 at level 20
+#### Energy Resistance
+resistance 5 vs 2 elements, increases to 10 at level 20
 
 ### Invocations
 #### Least
