@@ -1,6 +1,6 @@
 # HomebrewWarlock (name pending)
 
-My attempt at porting 3.5e Complete Arcane's Warlock to WotR.
+My attempt at porting 3.5e Warlock (Complete Arcane) to WotR.
 
 ### Requires [ModMenu](https://github.com/WittleWolfie/ModMenu)
 
