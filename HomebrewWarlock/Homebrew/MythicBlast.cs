@@ -4,17 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using HarmonyLib;
+
 using HomebrewWarlock.Features.EldritchBlast;
 using HomebrewWarlock.Features.EldritchBlast.Components;
+using HomebrewWarlock.Features.Invocations;
+using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Enums;
 using Kingmaker.Enums.Damage;
+using Kingmaker.PubSubSystem;
 using Kingmaker.RuleSystem;
 using Kingmaker.RuleSystem.Rules.Damage;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
+using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Commands.Base;
 using Kingmaker.UnitLogic.FactLogic;
@@ -60,6 +66,53 @@ namespace HomebrewWarlock.Homebrew
         }
     }
 
+    internal class AddDamageToBundle : UnitFactComponentDelegate, IInitiatorRulebookHandler<RulePrepareDamage>
+    {
+        public DamageTypeDescription DamageType = Default.DamageTypeDescription;
+
+        public ContextDiceValue Value = Default.ContextDiceValue;
+
+        public virtual void OnEventAboutToTrigger(RulePrepareDamage evt) { }
+
+        public virtual void OnEventDidTrigger(RulePrepareDamage evt)
+        {
+            var damage = this.DamageType.CreateDamage(
+                new DiceFormula(this.Value.DiceCountValue.Calculate(base.Context), this.Value.DiceType),
+                this.Value.BonusValue.Calculate(base.Context));
+
+            var fst = evt.DamageBundle.First();
+
+            foreach (var dm in fst.Modifiers)
+            {
+                MicroLogger.Debug(() => $"{dm.Fact}, {dm.Value}, {dm.Descriptor}");
+                damage.AddModifier(dm);
+            }
+
+            damage.CriticalModifier = fst.CriticalModifier;
+            damage.CalculationType.Copy(fst.CalculationType);
+            damage.AlignmentsMask = fst.AlignmentsMask;
+            damage.Durability = fst.Durability;
+            damage.EmpowerBonus.Copy(fst.EmpowerBonus);
+            damage.BonusPercent = fst.BonusPercent;
+
+            damage.SourceFact = base.Fact;
+
+            evt.Add(damage);
+        }
+    }
+
+    internal class AddDamageToEldritchBlast : AddDamageToBundle
+    {
+        public override void OnEventDidTrigger(RulePrepareDamage evt)
+        {
+            if (evt.ParentRule?.SourceAbility is not { } sourceBlueprint) return;
+
+            if (!sourceBlueprint.Components.OfType<EldritchBlastComponent>().Any()) return;
+
+            base.OnEventDidTrigger(evt);
+        }
+    }
+
     internal static class MythicBlast
     {
         [LocalizedString]
@@ -74,13 +127,39 @@ namespace HomebrewWarlock.Homebrew
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
-            var castBuff = context.NewBlueprint<BlueprintBuff>(GeneratedGuid.Get("MythicEldritchBlastCastBuff"));
+            var castBuff = context.NewBlueprint<BlueprintBuff>(GeneratedGuid.Get("MythicEldritchBlastCastBuff"))
+                .Map(buff =>
+                {
+                    buff.m_DisplayName = LocalizedStrings.Homebrew_MythicBlast_DisplayName;
+                    buff.m_Description = LocalizedStrings.Homebrew_MythicBlast_Description;
+                    buff.m_Icon = Sprites.EldritchBlastMythic;
+
+                    buff.AddContextRankConfig(crc =>
+                    {
+                        crc.m_BaseValueType = ContextRankBaseValueType.MythicLevel;
+                    });
+
+                    buff.AddComponent<AddDamageToEldritchBlast>(c =>
+                    {
+                        c.DamageType.Type = DamageType.Energy;
+                        c.DamageType.Energy = DamageEnergyType.Divine;
+
+                        c.Value.DiceType = DiceType.D6;
+                        c.Value.DiceCountValue.ValueType = ContextValueType.Rank;
+
+                        c.Value.BonusValue.ValueType = ContextValueType.Rank;
+                    });
+
+                    return buff;
+                });
 
             var buff = context.NewBlueprint<BlueprintBuff>(GeneratedGuid.Get("MythicEldritchBlastBuff"))
                 .Combine(castBuff)
                 .Map(bps =>
                 {
                     (BlueprintBuff buff, var castBuff) = bps;
+
+                    buff.m_Flags = BlueprintBuff.Flags.HiddenInUi;
 
                     buff.AddComponent<ChangeAbilityCommandType>(changeCT => 
                     {
@@ -120,25 +199,46 @@ namespace HomebrewWarlock.Homebrew
 
                     return buff;
                 });
-                
 
-            var feature = context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get("MythicEldritchBlastFeature"))
+            var toggle = context.NewBlueprint<BlueprintActivatableAbility>(GeneratedGuid.Get("MythicEldritchBlastToggleAbility"))
                 .Combine(buff)
                 .Map(bps =>
                 {
-                    var (feature, buff) = bps;
+                    (BlueprintActivatableAbility toggle, var buff) = bps;
 
-                    feature.m_DisplayName = LocalizedStrings.Homebrew_MythicBlast_DisplayName;
+                    toggle.m_DisplayName = LocalizedStrings.Homebrew_MythicBlast_DisplayName;
+                    toggle.m_Description = LocalizedStrings.Homebrew_MythicBlast_Description;
+                    toggle.m_Icon = Sprites.EldritchBlastMythic;
 
-                    feature.AddComponent<AddFactContextActions>(actions =>
-                    {
-                        actions.Activated.Add(GameActions.ContextActionApplyBuff(ab =>
-                        {
-                            ab.m_Buff = buff.ToReference();
-                            ab.Permanent = true;
-                        }));
-                        actions.Deactivated.Add(GameActions.ContextActionRemoveBuff(rb => rb.m_Buff = buff.ToReference()));
-                    });
+                    toggle.m_Buff = buff.ToReference();
+
+                    toggle.DeactivateImmediately = true;
+
+                    return toggle;
+                });
+                
+
+            var feature = context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get("MythicEldritchBlastFeature"))
+                .Combine(toggle)
+                .Map(bps =>
+                {
+                    var (feature, toggle) = bps;
+
+                    feature.m_DisplayName = toggle.m_DisplayName;
+                    feature.m_Description = toggle.m_Description;
+                    feature.m_Icon = toggle.m_Icon;
+
+                    feature.AddAddFacts(af => af.m_Facts = new[] { toggle.ToReference<BlueprintUnitFactReference>() });
+
+                    //feature.AddComponent<AddFactContextActions>(actions =>
+                    //{
+                    //    actions.Activated.Add(GameActions.ContextActionApplyBuff(ab =>
+                    //    {
+                    //        ab.m_Buff = buff.ToReference();
+                    //        ab.Permanent = true;
+                    //    }));
+                    //    actions.Deactivated.Add(GameActions.ContextActionRemoveBuff(rb => rb.m_Buff = buff.ToReference()));
+                    //});
 
                     return feature;
                 });

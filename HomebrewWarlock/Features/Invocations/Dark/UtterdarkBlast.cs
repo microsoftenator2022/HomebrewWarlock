@@ -58,7 +58,8 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                 {   
                     if (damage is EnergyDamage ed && ed.EnergyType == base.BlastDamageType)
                     {
-                        var newDamage = damage.Copy();
+                        var newDamage = new EnergyDamage(ed.Dice, ed.Bonus, ed.EnergyType);
+                        newDamage.CopyFrom(ed);
 
                         newDamage.AddDecline(new(DamageDeclineType.Total, base.Fact));
 

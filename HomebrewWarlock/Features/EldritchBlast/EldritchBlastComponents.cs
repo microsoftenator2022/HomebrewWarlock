@@ -301,6 +301,9 @@ namespace HomebrewWarlock.Features.EldritchBlast.Components
                 action.Value.DiceCountValue.ValueType = ContextValueType.Rank;
                 action.Value.DiceCountValue.Value = 1;
                 action.Value.DiceCountValue.ValueRank = AbilityRankType.DamageDice;
+
+                action.WriteRawResultToSharedValue = true;
+                action.ResultSharedValue = AbilitySharedValue.Damage;
             });
 
         public readonly int EquivalentSpellLevel = equivalentSpellLevel;
@@ -350,33 +353,30 @@ namespace HomebrewWarlock.Features.EldritchBlast.Components
             runAction.Actions.Add(DamageActions.Actions);
             runAction.Actions.Add(new EldritchBlastEssenceActions());
 
-            ability.AddContextRankConfig(crc =>
-            {
-                crc.m_BaseValueType = ContextRankBaseValueType.MythicLevel;
-                crc.m_Type = AbilityRankType.DamageDiceAlternative;
-            });
+            //ability.AddContextRankConfig(crc =>
+            //{
+            //    crc.m_BaseValueType = ContextRankBaseValueType.MythicLevel;
+            //    crc.m_Type = AbilityRankType.DamageDiceAlternative;
+            //});
 
-            runAction.Actions.Add(GameActions.Conditional(c =>
-            {
-                c.ConditionsChecker.Add(Conditions.ContextConditionCasterHasFact(casterHas =>
-                    casterHas.m_Fact = MythicBlast.CastBuffRef.ToReference<BlueprintUnitFact, BlueprintUnitFactReference>()));
+            //runAction.Actions.Add(GameActions.Conditional(c =>
+            //{
+            //    c.ConditionsChecker.Add(Conditions.ContextConditionCasterHasFact(casterHas =>
+            //        casterHas.m_Fact = MythicBlast.CastBuffRef.ToReference<BlueprintUnitFact, BlueprintUnitFactReference>()));
 
-                c.IfTrue.Add(GameActions.ContextActionDealDamage(damage =>
-                {
-                    damage.DamageType.Type = DamageType.Energy;
-                    damage.DamageType.Energy = DamageEnergyType.Divine;
+            //    c.IfTrue.Add(GameActions.ContextActionDealDamage(damage =>
+            //    {
+            //        damage.DamageType.Type = DamageType.Energy;
+            //        damage.DamageType.Energy = DamageEnergyType.Divine;
 
-                    damage.Value.DiceType = DiceType.D6;
-                    damage.Value.DiceCountValue.ValueType = ContextValueType.Rank;
-                    damage.Value.DiceCountValue.ValueRank = AbilityRankType.DamageDiceAlternative;
+            //        damage.Value.DiceType = DiceType.D6;
+            //        damage.Value.DiceCountValue.ValueType = ContextValueType.Rank;
+            //        damage.Value.DiceCountValue.ValueRank = AbilityRankType.DamageDiceAlternative;
 
-                    damage.Value.BonusValue.ValueType = ContextValueType.Rank;
-                    damage.Value.BonusValue.ValueRank = AbilityRankType.DamageDiceAlternative;
-
-                    damage.WriteRawResultToSharedValue = true;
-                    damage.ResultSharedValue = AbilitySharedValue.Damage;
-                }));
-            }));
+            //        damage.Value.BonusValue.ValueType = ContextValueType.Rank;
+            //        damage.Value.BonusValue.ValueRank = AbilityRankType.DamageDiceAlternative;
+            //    }));
+            //}));
 
             return ability;
         }

@@ -52,8 +52,6 @@
   "BrimstoneBlastFeature": "6a1aba86-1092-4c35-9e65-621fb8a82c97",
   "BrimstoneBlastPerRoundDamage": "1fb3206c-af9d-40e5-9865-3b0fa2e429fc",
   "HideousBlowAbility": "225b5e0d-1811-48ad-96a8-9dabbde3087c",
-  "HideousBlowWeaponEnchantment": "989bb850-4a4b-4e77-9c38-4c72547bfee0",
-  "HideousBlowOnHitAbility": "5ca6b666-6019-47fc-938a-9c03cc3e7272",
   "HideousBlowAttackAbility": "b28e9e8a-4772-41c2-a2c7-b45485630c9c",
   "LesserInvocationsPrerequisiteFeature": "af0732af-344a-4423-ae9f-f1cda8b33852",
   "LesserInvocationSelection": "be3621e7-59cb-47a2-9225-38b247b1f593",
@@ -97,8 +95,6 @@
   "EldritchChainSecondaryProjectile": "92a344ed-c7f8-4083-9532-e9f96718d78a",
   "EldritchGlaiveWeapon": "f06af794-17b6-4ce8-90ca-1507a6316e38",
   "EldritchGlaiveWeaponType": "144290ee-a455-4a67-a403-5be6acf23ce5",
-  "EldritchGlaiveWeaponEnchantment": "8a1d6f2c-5582-442b-bbcf-2b7796ea073f",
-  "EldritchGlaiveOnHitAbility": "7f1ad9d8-fed3-4033-93f5-78a26007a064",
   "EldritchGlaiveBuff": "8ee9aeb7-f4cd-4adf-8539-16ab28f72c17",
   "EldritchGlaiveAbility": "a0f02f57-e71a-45b1-aac0-7c5dda57ba0c",
   "EldritchGlaiveToggleAbility": "bc420928-0703-4bd2-813e-87a8edf61f53",
@@ -160,7 +156,6 @@
   "QuickenEldritchBlastBuff": "a01f48f8-6417-4f7a-9e0a-0f7a6a92840f",
   "QuickenEldritchBlastFeature": "b45c122c-f4cc-4258-a47f-58d0fb035cf9",
   "QuickenEldritchBlastToggleAbility": "f6c58c3a-c18a-4a9f-9fd3-2bee4a6c709b",
-  "SuppressQuickenEldritchBlastBuff": "0f35910a-3c5e-40db-8d17-4cf453ee9fc9",
   "MaximizeEldritchBlastBuff": "b33b328c-8747-427b-b483-07d217d0c98d",
   "MaximizeEldritchBlastFeature": "a04069b5-40fa-4773-8486-8dd7c790605d",
   "MaximizeEldritchBlastResource": "269c641a-2a48-4c11-acda-6773c3458fb0",
@@ -169,5 +164,6 @@
   "MythicEldritchBlastBuff": "f4250b0d-7199-4bb0-8b92-1f3c01cb1ec8",
   "MythicEldritchBlastCastBuff": "4dfdd601-8547-4391-875c-f948336b3789",
   "UtterdarkBlastNegativeLevelAbility": "83c50130-70b2-48cc-a942-78037f08e58e",
-  "UtterdarkBlastHealUndeadAbility": "830e02dd-7250-4bab-9bfa-5c7cca93e138"
+  "UtterdarkBlastHealUndeadAbility": "830e02dd-7250-4bab-9bfa-5c7cca93e138",
+  "MythicEldritchBlastToggleAbility": "e127beac-f37c-4237-a326-fdbd0c1ddd68"
 }
