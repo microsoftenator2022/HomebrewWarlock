@@ -11,7 +11,7 @@ Where possible I have tried to use Pathfinder equivalents for spells and feats.
 
 ## Currently implemented
 
-All base class features except Imbue Item (crafting). Will be implemented for the final release:
+All base class features except Imbue Item (crafting).
 
 #### Eldritch Blast
 1d6 Magic damage. Increases by 1d6 at levels 3, 5, 7, 9, 11, 13, 14, 17, 20
