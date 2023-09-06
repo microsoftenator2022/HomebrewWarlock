@@ -240,6 +240,8 @@ namespace HomebrewWarlock.Homebrew
                     //    actions.Deactivated.Add(GameActions.ContextActionRemoveBuff(rb => rb.m_Buff = buff.ToReference()));
                     //});
 
+                    feature.AddPrerequisiteFeature(EldritchBlast.FeatureRef);
+
                     return feature;
                 });
 
