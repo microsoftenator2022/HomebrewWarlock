@@ -39,7 +39,7 @@ resistance 5 vs 2 elements, increases to 10 at level 20
 
 - Eldritch Spear - EB shape: Short -> Long range.
 - Frightful Blast - EB essence: Inflicts shaken.
-- Hideous Blow - Single melee weapon attack + EB damage
+- Hideous Blow - Single melee weapon attack + EB damage.
 - See the Unseen - +6 to Knowledge (Arcana) and Lore (Religion). Permanent.
 - Sickening Blast - EB essence: inflicts sickened.
 - Summon Swarm (Spiders) - As Summon Swarm spell.
@@ -91,9 +91,9 @@ Ability Focus (Eldritch Blast)
 - Mythic Eldritch Blast: 1d6 + 1 divine damage on eldritch blasts per mythic rank.
   Compared to Kineticist, Warlock's raw damage output is pretty unimpressive. This is a rough attempt to address this. This is subject to change.
 - Eldritch Glaive Toggle: optionally can change Eldritch Glaive to a toggle like Kinetic Blade instead of a full-round action.
+- More to come.
 
 ### Known Issues and Missing Features
 - Imbue Item: will be added in the future
 - Utterdark blast does not heal undead (they are just immune)
 - Missing elemental weapon enchant FX
-- 
