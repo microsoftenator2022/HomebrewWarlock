@@ -27,6 +27,7 @@ using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Mechanics.Actions;
+using Kingmaker.UnitLogic.Mechanics.Components;
 
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.BlueprintsDb;
@@ -121,12 +122,24 @@ namespace HomebrewWarlock.Features.Invocations.Dark
 
                     ability.m_DisplayName = LocalizedStrings.Features_Invocations_Dark_UtterdarkBlast_DisplayName;
 
+                    ability.AddContextRankConfig(c =>
+                    {
+                        c.m_Type = AbilityRankType.DamageDice;
+                        c.m_BaseValueType = ContextRankBaseValueType.FeatureRank;
+                        c.m_Feature = EldritchBlast.EldritchBlast.RankFeatureRef.ToReference();
+                        c.m_Progression = ContextRankProgression.AsIs;
+                        c.m_StartLevel = 0;
+                        c.m_StepLevel = 1;
+                    });
+
                     ability.AddComponent<AbilityEffectRunAction>(runAction =>
                     {
                         runAction.Actions.Add(GameActions.ContextActionHealTarget(a =>
                         {
-                            a.Value.BonusValue.ValueType = ContextValueType.Shared;
-                            a.Value.BonusValue.ValueShared = AbilitySharedValue.Damage;
+                            a.Value.DiceType = DiceType.D6;
+
+                            a.Value.DiceCountValue.ValueType = ContextValueType.Rank;
+                            a.Value.DiceCountValue.ValueRank = AbilityRankType.DamageDice;
                         }),
                         GameActions.ContextActionSpawnFx(casf => casf.PrefabLink = new() { AssetId = "9a38d742801be084d89bd34318c600e8" }));
                     });
@@ -199,12 +212,12 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                                 }));
                             }));
 
-                            //conditional.IfFalse.Add(
-                            //    new CastSpellWithContextParams()
-                            //    {
-                            //        MarkAsChild = true,
-                            //        Spell = healUndead.ToReference()
-                            //    });
+                            conditional.IfFalse.Add(
+                                new CastSpellWithContextParams()
+                                {
+                                    MarkAsChild = true,
+                                    Spell = healUndead.ToReference()
+                                });
                         }));
                     });
 
