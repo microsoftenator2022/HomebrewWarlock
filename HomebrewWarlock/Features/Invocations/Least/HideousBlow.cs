@@ -36,37 +36,37 @@ namespace HomebrewWarlock.Features.Invocations.Least
         BlueprintAbility baseAbility,
         BlueprintProjectile projectile);
 
-    internal class CastSpellWithContextParams : ContextAction
-    {
-        public BlueprintAbilityReference? Spell;
-        public bool MarkAsChild;
+    //internal class CastSpellWithContextParams : ContextAction
+    //{
+    //    public BlueprintAbilityReference? Spell;
+    //    public bool MarkAsChild;
 
-        public override string GetCaption() => $"Cast {Spell?.Get()}";
-        public override void RunAction()
-        {
-            if (base.Context.MaybeCaster is not { } caster)
-                return;
-            if (base.Target.Unit is not { } target)
-                return;
+    //    public override string GetCaption() => $"Cast {Spell?.Get()}";
+    //    public override void RunAction()
+    //    {
+    //        if (base.Context.MaybeCaster is not { } caster)
+    //            return;
+    //        if (base.Target.Unit is not { } target)
+    //            return;
 
-            var data = new AbilityData(this.Spell, caster);
+    //        var data = new AbilityData(this.Spell, caster);
             
-            data.OverrideCasterLevel = base.Context.Params.CasterLevel;
-            data.OverrideDC = base.Context.Params.DC;
-            data.OverrideSpellLevel = base.Context.Params.SpellLevel;
+    //        data.OverrideCasterLevel = base.Context.Params.CasterLevel;
+    //        data.OverrideDC = base.Context.Params.DC;
+    //        data.OverrideSpellLevel = base.Context.Params.SpellLevel;
             
-            data.MetamagicData = new() { MetamagicMask = base.Context.Params.Metamagic };
+    //        data.MetamagicData = new() { MetamagicMask = base.Context.Params.Metamagic };
 
-            if (this.MarkAsChild)
-                data.IsChildSpell = true;
+    //        if (this.MarkAsChild)
+    //            data.IsChildSpell = true;
 
-            var rule = new RuleCastSpell(data, target);
+    //        var rule = new RuleCastSpell(data, target);
 
-            rule.IsDuplicateSpellApplied = base.AbilityContext?.IsDuplicateSpellApplied ?? false;
+    //        rule.IsDuplicateSpellApplied = base.AbilityContext?.IsDuplicateSpellApplied ?? false;
 
-            Rulebook.Trigger(rule);
-        }
-    }
+    //        Rulebook.Trigger(rule);
+    //    }
+    //}
 
     internal static class HideousBlow
     {

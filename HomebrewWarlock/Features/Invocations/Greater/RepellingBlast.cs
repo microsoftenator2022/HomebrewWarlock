@@ -158,14 +158,14 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                         
                         rpAction.Distance.DiceType = DiceType.D6;
                         rpAction.Distance.DiceCountValue = 1;
-                        rpAction.DamageDiceShared = AbilitySharedValue.Damage;
+                        rpAction.DamageDiceShared = AbilitySharedValue.DamageBonus;
 
                         rpAction.EndedPrematurely.Add(GameActions.ContextActionDealDamage(a =>
                         {
                             a.DamageType.Type = DamageType.Untyped;
                             a.Value.DiceType = DiceType.D6;
                             a.Value.DiceCountValue.ValueType = ContextValueType.Shared;
-                            a.Value.DiceCountValue.ValueShared = AbilitySharedValue.Damage;
+                            a.Value.DiceCountValue.ValueShared = AbilitySharedValue.DamageBonus;
                         }));
 
                         c.Actions.Add(GameActions.ContextActionConditionalSaved(a =>
@@ -212,6 +212,8 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     ability.m_Buff = buff.ToReference();
 
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
+
+                    ability.DeactivateImmediately = true;
 
                     return ability;
                 });

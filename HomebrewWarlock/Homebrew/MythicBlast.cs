@@ -65,6 +65,10 @@ namespace HomebrewWarlock.Homebrew
         [LocalizedString]
         internal const string DisplayName = "Mythic Eldritch Blast";
 
+        [LocalizedString]
+        internal const string Description =
+            "As a full-round action, you can cast an eldritch blast that deals an additional 1d6 + 1 divine damage per mythic rank.";
+
         internal static readonly IMicroBlueprint<BlueprintBuff> BuffRef = GeneratedGuid.MythicEldritchBlastBuff.ToMicroBlueprint<BlueprintBuff>();
         internal static readonly IMicroBlueprint<BlueprintBuff> CastBuffRef = GeneratedGuid.MythicEldritchBlastCastBuff.ToMicroBlueprint<BlueprintBuff>();
 
@@ -152,6 +156,8 @@ namespace HomebrewWarlock.Homebrew
                 .Map(bps =>
                 {
                     (BlueprintFeature feature, var mythicFeats) = bps;
+
+
 
                     mythicFeats.AddFeatures(feature);
                 })

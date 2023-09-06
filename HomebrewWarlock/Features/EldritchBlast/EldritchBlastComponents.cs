@@ -21,6 +21,7 @@ using Kingmaker.Enums.Damage;
 using Kingmaker.PubSubSystem;
 using Kingmaker.RuleSystem;
 using Kingmaker.RuleSystem.Rules;
+using Kingmaker.RuleSystem.Rules.Abilities;
 using Kingmaker.RuleSystem.Rules.Damage;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
@@ -371,6 +372,9 @@ namespace HomebrewWarlock.Features.EldritchBlast.Components
 
                     damage.Value.BonusValue.ValueType = ContextValueType.Rank;
                     damage.Value.BonusValue.ValueRank = AbilityRankType.DamageDiceAlternative;
+
+                    damage.WriteRawResultToSharedValue = true;
+                    damage.ResultSharedValue = AbilitySharedValue.Damage;
                 }));
             }));
 
@@ -389,6 +393,38 @@ namespace HomebrewWarlock.Features.EldritchBlast.Components
             ability.AddComponent<AbilityDeliverTouch>(c => c.m_TouchWeapon = touchWeapon);
 
             return ability;
+        }
+    }
+
+    internal class CastSpellWithContextParams : ContextAction
+    {
+        public BlueprintAbilityReference? Spell;
+        public bool MarkAsChild;
+
+        public override string GetCaption() => $"Cast {Spell?.Get()}";
+        public override void RunAction()
+        {
+            if (base.Context.MaybeCaster is not { } caster)
+                return;
+            if (base.Target.Unit is not { } target)
+                return;
+
+            var data = new AbilityData(this.Spell, caster);
+
+            data.OverrideCasterLevel = base.Context.Params.CasterLevel;
+            data.OverrideDC = base.Context.Params.DC;
+            data.OverrideSpellLevel = base.Context.Params.SpellLevel;
+
+            data.MetamagicData = new() { MetamagicMask = base.Context.Params.Metamagic };
+
+            if (this.MarkAsChild)
+                data.IsChildSpell = true;
+
+            var rule = new RuleCastSpell(data, target);
+
+            rule.IsDuplicateSpellApplied = base.AbilityContext?.IsDuplicateSpellApplied ?? false;
+
+            Rulebook.Trigger(rule);
         }
     }
 }

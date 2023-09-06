@@ -139,6 +139,8 @@ namespace HomebrewWarlock.Features.Invocations.Greater
 
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
 
+                    ability.DeactivateImmediately = true;
+
                     return ability;
                 });
 

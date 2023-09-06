@@ -4,21 +4,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using HarmonyLib;
+
 using HomebrewWarlock.Features.EldritchBlast.Components;
 using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Designers.EventConditionActionSystem.Evaluators;
 using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Enums;
 using Kingmaker.Enums.Damage;
 using Kingmaker.Localization;
 using Kingmaker.RuleSystem;
+using Kingmaker.RuleSystem.Rules;
 using Kingmaker.RuleSystem.Rules.Damage;
+using Kingmaker.UnitLogic.Abilities;
+using Kingmaker.UnitLogic.Abilities.Blueprints;
+using Kingmaker.UnitLogic.Abilities.Components;
 using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Mechanics;
+using Kingmaker.UnitLogic.Mechanics.Actions;
 
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.BlueprintsDb;
@@ -46,10 +54,19 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                 var damageBundle = evt.DamageBundle.ToArray();
                 evt.Remove(_ => true);
 
-                foreach (var damage in damageBundle.Where(damage =>
-                    damage is not EnergyDamage ed || ed.EnergyType != base.BlastDamageType))
+                foreach (var damage in damageBundle)
                 {   
-                    evt.Add(damage);
+                    if (damage is EnergyDamage ed && ed.EnergyType == base.BlastDamageType)
+                    {
+                        var newDamage = damage.Copy();
+
+                        newDamage.AddDecline(new(DamageDeclineType.Total, base.Fact));
+
+                        newDamage.MaximumValue = 0;
+
+                        evt.Add(newDamage);
+                    }
+                    else evt.Add(damage);
                 }
             }
         }
@@ -60,19 +77,85 @@ namespace HomebrewWarlock.Features.Invocations.Dark
         [LocalizedString]
         internal const string Description =
             "This eldritch essence invocation allows you to change your eldritch blast into an utterdark blast. " +
-            "An utterdark blast deals negative energy damage, which heals undead creatures instead of damaging " +
-            "them (like inflict spells). Any creature struck by the attack must make a Fortitude save or gain two " +
+            //"An utterdark blast deals negative energy damage, which heals undead creatures instead of damaging " +
+            //"them (like inflict spells). " +
+            "Any living creature struck by the attack must make a Fortitude save or gain two " +
             "negative levels. The negative levels fade after 1 hour.";
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
+            var energyDrain = context.NewBlueprint<BlueprintAbility>(GeneratedGuid.Get("UtterdarkBlastNegativeLevelAbility"))
+                .Map(ability =>
+                {
+                    ability.Hidden = true;
+
+                    ability.m_DisplayName = LocalizedStrings.Features_Invocations_Dark_UtterdarkBlast_DisplayName;
+
+                    ability.AddComponent<AbilityEffectRunAction>(runAction =>
+                    {
+                        runAction.Actions.Add(GameActions.ContextActionDealDamage(dd =>
+                        {
+                            dd.m_Type = ContextActionDealDamage.Type.EnergyDrain;
+                            dd.EnergyDrainType = EnergyDrainType.Temporary;
+
+                            dd.Value.BonusValue = 2;
+
+                            dd.Duration.Rate = DurationRate.Hours;
+                            dd.Duration.BonusValue = 1;
+                        }));
+
+                        ability.CanTargetEnemies = true;
+                        ability.CanTargetFriends = true;
+                        ability.EffectOnEnemy = AbilityEffectOnUnit.Harmful;
+                        ability.EffectOnAlly = AbilityEffectOnUnit.Harmful;
+                    });
+
+                    return ability;
+                });
+
+            var healUndead = context.NewBlueprint<BlueprintAbility>(GeneratedGuid.Get("UtterdarkBlastHealUndeadAbility"))
+                .Map(ability =>
+                {
+                    ability.Hidden = true;
+
+                    ability.m_DisplayName = LocalizedStrings.Features_Invocations_Dark_UtterdarkBlast_DisplayName;
+
+                    ability.AddComponent<AbilityEffectRunAction>(runAction =>
+                    {
+                        runAction.Actions.Add(GameActions.ContextActionHealTarget(a =>
+                        {
+                            a.Value.BonusValue.ValueType = ContextValueType.Shared;
+                            a.Value.BonusValue.ValueShared = AbilitySharedValue.Damage;
+                        }),
+                        GameActions.ContextActionSpawnFx(casf => casf.PrefabLink = new() { AssetId = "9a38d742801be084d89bd34318c600e8" }));
+                    });
+
+                    
+
+                    ability.CanTargetEnemies = true;
+                    ability.CanTargetFriends = true;
+                    ability.EffectOnEnemy = AbilityEffectOnUnit.Helpful;
+                    ability.EffectOnAlly = AbilityEffectOnUnit.Helpful;
+
+                    return ability;
+                });
+
             var essenceBuff = context.NewBlueprint<BlueprintBuff>(GeneratedGuid.Get("UtterdarkBlastEssenceBuff"))
                 .GetBlueprint(BlueprintsDb.Owlcat.BlueprintFeature.NegativeEnergyAffinity)
                 .GetBlueprint(BlueprintsDb.Owlcat.BlueprintFeature.DeathDomainGreaterLiving)
+                .GetBlueprint(BlueprintsDb.Owlcat.BlueprintCharacterClass.UndeadClass)
                 .GetBlueprint(BlueprintsDb.Owlcat.BlueprintBuff.TemporaryNegativeLevel)
+                .Combine(energyDrain)
+                .Combine(healUndead)
                 .Map(bps =>
                 {
-                    (BlueprintBuff buff, var negativeEnergyAffinity, var deathDomainGreaterLiving, var negativeLevel) = bps.Expand();
+                    (BlueprintBuff buff,
+                    var negativeEnergyAffinity,
+                    var deathDomainGreaterLiving,
+                    var undeadClass,
+                    var negativeLevel,
+                    var energyDrain,
+                    var healUndead) = bps.Expand();
 
                     buff.AddComponent<Essence>(c =>
                     {
@@ -88,6 +171,12 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                             {
                                 condition.m_Fact = deathDomainGreaterLiving.ToReference<BlueprintUnitFactReference>();
                                 condition.Not = true;
+                            }), Conditions.UnitClass(uc =>
+                            {
+                                uc.Unit = new AbilityTargetUnit();
+                                uc.MinLevel = new IntConstant() { Value = 1 };
+                                uc.m_Class = undeadClass.ToReference();
+                                uc.Not = true;
                             }));
 
                         c.DamageConditions.Operation = Operation.And;
@@ -101,33 +190,20 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                                 st.Type = SavingThrowType.Fortitude;
                                 st.Actions.Add(GameActions.ContextActionConditionalSaved(s =>
                                 {
-                                    s.Failed.Add(
-                                        GameActions.ContextActionApplyBuff(ab =>
-                                        {
-                                            ab.m_Buff = negativeLevel.ToReference();
-                                            ab.IsNotDispelable = true;
-
-                                            ab.DurationValue.BonusValue = 1;
-                                            ab.DurationValue.Rate = DurationRate.Hours;
-                                        }),
-                                        GameActions.ContextActionApplyBuff(ab =>
-                                        {
-                                            ab.m_Buff = negativeLevel.ToReference();
-                                            ab.IsNotDispelable = true;
-
-                                            ab.DurationValue.BonusValue = 1;
-                                            ab.DurationValue.Rate = DurationRate.Hours;
-                                        }));
+                                    s.Failed.Add(GameActions.ContextActionCastSpell(cacs =>
+                                    {
+                                        cacs.MarkAsChild = true;
+                                        cacs.m_Spell = energyDrain.ToReference();
+                                    }));
                                 }));
                             }));
 
-                            conditional.IfFalse.Add(GameActions.ContextActionHealTarget(a =>
-                            {
-                                a.Value.DiceType = DiceType.D6;
-                                
-                                a.Value.DiceCountValue.ValueType = ContextValueType.Rank;
-                                a.Value.DiceCountValue.ValueRank = AbilityRankType.DamageDice;
-                            }));
+                            //conditional.IfFalse.Add(
+                            //    new CastSpellWithContextParams()
+                            //    {
+                            //        MarkAsChild = true,
+                            //        Spell = healUndead.ToReference()
+                            //    });
                         }));
                     });
 
@@ -149,6 +225,8 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                     ability.m_Buff = buff.ToReference();
 
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
+
+                    ability.DeactivateImmediately = true;
 
                     return ability;
                 });

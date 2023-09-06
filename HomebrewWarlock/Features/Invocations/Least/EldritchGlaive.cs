@@ -161,9 +161,41 @@ namespace HomebrewWarlock.Features.Invocations.Least
             }
         }
 
-        internal class UseCustomWeaponRange : BlueprintComponent
+        // Cache a copy of the weapon in a UnitPart so it doesn't get created and destroyed every round
+        internal class UnitPartForCustomWeaponRange : OldStyleUnitPart
+        {
+            readonly List<ItemEntityWeapon> Weapons = new();
+
+            public ItemEntityWeapon Get(BlueprintItemWeapon blueprint)
+            {
+                foreach (var w in this.Weapons)
+                {
+                    if (w.Blueprint == blueprint)
+                        return w;
+                }
+
+                var weapon = blueprint.CreateEntity<ItemEntityWeapon>();
+
+                Weapons.Add(weapon);
+
+                return weapon;
+            }
+
+            public void Remove(BlueprintItemWeapon? blueprint)
+            {
+                if (blueprint is not null)
+                    Weapons.RemoveAll(w => w.Blueprint == blueprint);
+
+                if (Weapons.Count == 0)
+                    base.RemoveSelf();
+            }
+        }
+
+        internal class UseCustomWeaponRange : UnitFactComponentDelegate
         {
             public BlueprintItemWeaponReference? Weapon;
+
+            public override void OnTurnOff() => base.Owner?.Ensure<UnitPartForCustomWeaponRange>()?.Remove(Weapon?.Get());
 
             [HarmonyPatch(typeof(AbilityData), nameof(AbilityData.GetApproachDistance))]
             static class AbilityData_GetApproachDistance_Patch
@@ -172,7 +204,12 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 {
                     var c = abilityData.Blueprint.ComponentsArray.OfType<UseCustomWeaponRange>().FirstOrDefault();
                     
-                    return c?.Weapon?.Get()?.CreateEntity<ItemEntityWeapon>();
+                    if (c is not null && c.Weapon is not null)
+                    {
+                        return abilityData.Caster?.Ensure<UnitPartForCustomWeaponRange>()?.Get(c.Weapon);
+                    }
+                    
+                    return null;
                 }
 
                 [HarmonyTranspiler]

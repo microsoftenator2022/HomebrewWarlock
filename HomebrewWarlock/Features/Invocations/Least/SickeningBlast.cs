@@ -91,7 +91,8 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
 
-                    //return (ability, new EldritchBlastComponents.EssenceEffect(essenceBuff, () => new[] { onHit() }, 2));
+                    ability.DeactivateImmediately = true;
+
                     return ability;
                 });
 

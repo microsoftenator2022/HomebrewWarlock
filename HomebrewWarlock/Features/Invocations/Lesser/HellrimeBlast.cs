@@ -113,16 +113,7 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
 
-                    //return (ability, new EldritchBlastComponents.EssenceEffect(
-                    //    essenceBuff,
-                    //    () => new[] { onHit() },
-                    //    4,
-                    //    DamageEnergyType.Cold,
-                    //    new[]
-                    //    {
-                    //        (AbilityProjectileType.Simple,
-                    //        new[] { projectile.ToReference<BlueprintProjectileReference>() })
-                    //    }));
+                    ability.DeactivateImmediately = true;
 
                     return ability;
                 });

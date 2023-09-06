@@ -491,12 +491,13 @@ namespace HomebrewWarlock.Features.EldritchBlast
 
             CreateEmpower(context, parent)
                 .Combine(CreateQuicken(context, parent))
+                .Combine(CreateMaximize(context, parent))
                 .GetBlueprint(BlueprintsDb.Owlcat.BlueprintFeatureSelection.BasicFeatSelection)
                 .Map(bps =>
                 {
-                    var (empower, quicken, basicFeats) = bps.Expand();
+                    var (empower, quicken, maximize, basicFeats) = bps.Expand();
 
-                    basicFeats.AddFeatures(empower, quicken);
+                    basicFeats.AddFeatures(empower, quicken, maximize);
                 })
                 .Register();
         }

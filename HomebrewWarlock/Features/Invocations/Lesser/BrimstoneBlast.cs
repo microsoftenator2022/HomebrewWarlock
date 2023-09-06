@@ -238,6 +238,8 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
 
+                    ability.DeactivateImmediately = true;
+
                     return ability;
                 });
 

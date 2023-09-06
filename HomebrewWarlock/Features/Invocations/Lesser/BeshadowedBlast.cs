@@ -67,13 +67,10 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                     var (ability, essenceBuff, blindness) = bps.Expand();
 
                     ability.m_Buff = essenceBuff.ToReference();
+                    
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
-
-                    //return (ability,
-                    //    new EldritchBlastComponents.EssenceEffect(
-                    //    essenceBuff,
-                    //    () => new[] { onHit() },
-                    //    4));
+                    
+                    ability.DeactivateImmediately = true;
 
                     return ability;
                 });

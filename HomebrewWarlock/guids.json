@@ -167,5 +167,7 @@
   "MaximizeEldritchBlastToggleAbility": "6959434d-0949-4fe2-99e3-e20ea9238f34",
   "MythicEldritchBlastFeature": "78ff8480-2212-4ce3-9a96-c65177d1ac98",
   "MythicEldritchBlastBuff": "f4250b0d-7199-4bb0-8b92-1f3c01cb1ec8",
-  "MythicEldritchBlastCastBuff": "4dfdd601-8547-4391-875c-f948336b3789"
+  "MythicEldritchBlastCastBuff": "4dfdd601-8547-4391-875c-f948336b3789",
+  "UtterdarkBlastNegativeLevelAbility": "83c50130-70b2-48cc-a942-78037f08e58e",
+  "UtterdarkBlastHealUndeadAbility": "830e02dd-7250-4bab-9bfa-5c7cca93e138"
 }

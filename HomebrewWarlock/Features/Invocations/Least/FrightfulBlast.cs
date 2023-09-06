@@ -90,6 +90,8 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     ability.Group = InvocationComponents.EssenceInvocationAbilityGroup;
 
+                    ability.DeactivateImmediately = true;
+
                     return ability;
                 });
 
