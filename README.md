@@ -9,7 +9,7 @@ Where possible I have tried to use Pathfinder equivalents for spells and feats.
 
 ## Currently implemented
 
-All base class features except Imbue Item (crafting).
+All base class features:
 
 #### Eldritch Blast
 1d6 Magic damage. Increases by 1d6 at levels 3, 5, 7, 9, 11, 13, 14, 17, 20
@@ -27,6 +27,9 @@ Fast Healing 1/2/5 (levels 8, 13, 18)
 
 #### Energy Resistance
 resistance 5 vs 2 elements, increases to 10 at level 20
+
+#### Imbue Item
+Craft any scroll/potion without needing to know the spell (UMD check)
 
 ### Invocations
 #### Least
@@ -94,7 +97,7 @@ Ability Focus (Eldritch Blast)
 - More to come.
 
 ### Known Issues and Missing Features
-- Imbue Item: will be added in the future
+- ~~Imbue Item: will be added in the future~~ added in 0.9.2
 - ~~Utterdark blast does not heal undead (they are just immune)~~ fixed in 0.9.1
 - Missing elemental weapon enchant FX.
 - Hideous Blow does not work with unarmed attacks
