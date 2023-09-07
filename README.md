@@ -95,7 +95,7 @@ Ability Focus (Eldritch Blast)
 
 ### Known Issues and Missing Features
 - Imbue Item: will be added in the future
-- Utterdark blast does not heal undead (they are just immune)
+- ~~Utterdark blast does not heal undead (they are just immune)~~ fixed in 0.9.1
 - Missing elemental weapon enchant FX.
 - Hideous Blow does not work with unarmed attacks
-- Mythic Eldritch Blast cannot be toggled so all blasts become full actions
+- ~~Mythic Eldritch Blast cannot be toggled so all blasts become full actions~~ fixed in 0.9.1
