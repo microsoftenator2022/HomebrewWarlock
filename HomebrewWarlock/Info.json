@@ -10,6 +10,8 @@
 
   "Requirements": [ "ModMenu-1.3.0" ],
 
-  "GameVersion": "2.1.3"
-
+  "GameVersion": "2.1.3",
+  
+  "HomePage": "https://github.com/microsoftenator2022/HomebrewWarlock",
+  "Repository": "https://raw.githubusercontent.com/microsoftenator2022/HomebrewWarlock/master/repository.json"
 }
