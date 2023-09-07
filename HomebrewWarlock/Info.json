@@ -1,6 +1,6 @@
 {
   "Id": "HomebrewWarlock",
-  "Version": "0.9.1.0",
+  "Version": "0.9.1.1",
   "AssemblyName": "MicroWrath.Loader.dll",
   "EntryMethod": "MicroWrath.MicroMod.Load",
 

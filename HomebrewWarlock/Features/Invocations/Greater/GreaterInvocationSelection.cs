@@ -36,9 +36,9 @@ namespace HomebrewWarlock.Features.Invocations.Greater
 
                     selection.m_DisplayName = LocalizedStrings.Features_Invocations_Greater_GreaterInvocationSelection_DispayName;
 
-//#if !DEBUG
-//                    selection.AddPrerequisiteFeature(prerequisite.ToMicroBlueprint());
-//#endif
+                    //#if !DEBUG
+                    selection.AddPrerequisiteFeature(prerequisite.ToMicroBlueprint());
+                    //#endif
 
                     selection.AddFeatures(
                         features.Essence.Greater.BewitchingBlast,
