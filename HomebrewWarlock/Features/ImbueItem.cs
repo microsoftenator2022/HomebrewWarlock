@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 using HarmonyLib;
 
+using HomebrewWarlock.Resources;
+
 using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
@@ -254,6 +256,24 @@ namespace HomebrewWarlock.Features
         [LocalizedString]
         internal const string FeatureDisplayName = "Imbue Item";
 
+        [LocalizedString]
+        internal const string ArcaneSpellbookDisplayName = "Imbue Item (Arcane)";
+
+        [LocalizedString]
+        internal const string DivineSpellbookDisplayName = "Imbue Item (Divine)";
+
+        [LocalizedString]
+        internal static readonly string Description =
+            "A warlock of 12th level or higher can use his supernatural power to create magic items, even if he " +
+            "does not know the spells required to make an item (although he must know the appropriate item creation " +
+            "feat). He can substitute a Use Magic Device check (DC 15 + spell level for arcane spells or 25 + spell " +
+            "level for divine spells) in place of a required spell he doesn't know or can't cast." +
+            Environment.NewLine +
+            "If the check succeeds, the warlock can create the item as if he had cast the required spell. If it " +
+            "fails, he cannot complete the item. He does not expend any resources for making the item; his " +
+            "progress is simply arrested.";
+            //"He cannot retry this Use Magic Device check for that spell until he gains a new level.";
+
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {
             var table = context.NewBlueprint<BlueprintSpellsTable>(
@@ -295,6 +315,8 @@ namespace HomebrewWarlock.Features
                 {
                     var (spellbook, spellList, table) = bps.Expand();
 
+                    spellbook.Name = LocalizedStrings.Features_ImbueItem_ArcaneSpellbookDisplayName;
+
                     spellbook.m_CharacterClass = WarlockClass.Blueprint.ToReference<BlueprintCharacterClass, BlueprintCharacterClassReference>();
 
                     spellbook.AllSpellsKnown = true;
@@ -326,6 +348,8 @@ namespace HomebrewWarlock.Features
                 {
                     var (spellbook, spellList, table) = bps.Expand();
 
+                    spellbook.Name = LocalizedStrings.Features_ImbueItem_DivineSpellbookDisplayName;
+
                     spellbook.m_CharacterClass = WarlockClass.Blueprint.ToReference<BlueprintCharacterClass, BlueprintCharacterClassReference>();
 
                     spellbook.AllSpellsKnown = true;
@@ -348,6 +372,8 @@ namespace HomebrewWarlock.Features
                     var (feature, arcane, divine) = bps.Expand();
 
                     feature.m_DisplayName = LocalizedStrings.Features_ImbueItem_FeatureDisplayName;
+                    feature.m_Description = LocalizedStrings.Features_ImbueItem_Description;
+                    feature.m_Icon = Sprites.InfusedCurative;
 
                     feature.AddComponent<ImbueItemComponent>(c =>
                     {
