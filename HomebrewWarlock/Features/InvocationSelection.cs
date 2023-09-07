@@ -138,9 +138,9 @@ namespace HomebrewWarlock.Features
                         lesser,
                         greater,
                         dark
-#if DEBUG
-                        ,placeholder
-#endif
+//#if DEBUG
+//                        ,placeholder
+//#endif
                         );
 
                     return selection;

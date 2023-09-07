@@ -35,9 +35,9 @@ namespace HomebrewWarlock.Features.Invocations.Dark
 
                     selection.m_DisplayName = LocalizedStrings.Features_Invocations_Dark_DarkInvocationSelection_DisplayName;
 
-#if !DEBUG
-                    selection.AddPrerequisiteFeature(prerequisite.ToMicroBlueprint());
-#endif
+//#if !DEBUG
+//                    selection.AddPrerequisiteFeature(prerequisite.ToMicroBlueprint());
+//#endif
 
                     selection.AddFeatures(
                         ebFeatures.Essence.Dark.UtterdarkBlast,

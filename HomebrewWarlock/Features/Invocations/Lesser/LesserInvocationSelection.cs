@@ -46,9 +46,9 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     selection.m_DisplayName =
                         LocalizedStrings.Features_Invocations_Lesser_LesserInvocationSelection_DisplayName;
-#if !DEBUG
-                    selection.AddPrerequisiteFeature(prerequisite.ToMicroBlueprint());
-#endif
+//#if !DEBUG
+//                    selection.AddPrerequisiteFeature(prerequisite.ToMicroBlueprint());
+//#endif
                     selection.AddFeatures(
                         ebFeatures.Essence.Lesser.BrimstoneBlast,
                         ebFeatures.Essence.Lesser.BeshadowedBlast,
