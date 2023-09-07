@@ -16,6 +16,7 @@ using Kingmaker.Blueprints.Root;
 using Kingmaker.Controllers.Rest;
 using Kingmaker.Craft;
 using Kingmaker.Designers;
+using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.RuleSystem.Rules;
 using Kingmaker.UnitLogic;
@@ -60,7 +61,9 @@ namespace HomebrewWarlock.Features
         static IEnumerable<CraftableSpell> GetAllCraftableSpells(bool arcane)
         {
             var craftRoot = BlueprintRoot.Instance.CraftRoot;
-            var items = craftRoot.m_ScrollsItems.Concat(craftRoot.m_PotionsItems).Select(item => item.Get());
+            var items = craftRoot.m_ScrollsItems.Concat(craftRoot.m_PotionsItems)
+                .Select(item => item.Get())
+                .Where(item => item.Ability.GetComponent<CraftInfoComponent>() is not null);
 
             foreach (var item in items)
             {
@@ -125,7 +128,7 @@ namespace HomebrewWarlock.Features
             [HarmonyPatch]
             internal class CraftSpellbook(UnitDescriptor owner, BlueprintSpellbook blueprint, UnitPartImbueItem unitPart) : Spellbook(owner, blueprint)
             {
-                public new int BaseLevel => unitPart.Owner.Progression.CharacterLevel;
+                public new int BaseLevel => base.m_BaseLevelInternal = unitPart.Owner.Progression.CharacterLevel;
 
                 [HarmonyPatch(typeof(Spellbook), nameof(Spellbook.BaseLevel), MethodType.Getter)]
                 [HarmonyPostfix]
@@ -135,6 +138,16 @@ namespace HomebrewWarlock.Features
                         return cs.BaseLevel;
 
                     return value;
+                }
+
+                [HarmonyPatch(typeof(Spellbook), nameof(Spellbook.GetSpellsPerDay))]
+                [HarmonyPostfix]
+                public static int GetSpellsPerDay_Postfix(int num, Spellbook __instance)
+                {
+                    if (__instance is CraftSpellbook)
+                        return 0;
+
+                    return num;
                 }
             }
 
@@ -153,7 +166,7 @@ namespace HomebrewWarlock.Features
                         return null;
                     }
 
-                    if (arcane is null)
+                    if (arcane as CraftSpellbook is null)
                     {
                         var bp = component.ArcaneSpellbook?.Get();
                         if (bp is null) return null;
@@ -190,7 +203,7 @@ namespace HomebrewWarlock.Features
                         return null;
                     }
 
-                    if (divine is null)
+                    if (divine as CraftSpellbook is null)
                     {
                         var bp = component.DivineSpellbook?.Get();
                         if (bp is null) return null;
@@ -360,7 +373,8 @@ namespace HomebrewWarlock.Features
 
                 if (!__instance.Unit.Parts.Parts.OfType<UnitPartImbueItem>().Any())
                     yield break;
-
+                
+                #if !DEBUG
                 if (!new StackTrace().GetFrames().Any(frame =>
                     frame.GetMethod().DeclaringType is { } t &&
                     (t.Namespace.StartsWith("Kingmaker.Craft") ||
@@ -370,6 +384,7 @@ namespace HomebrewWarlock.Features
                     t.Namespace.StartsWith("Kingmaker.UI.MVVM._ConsoleView.Rest"))
                 ))
                     yield break;
+                #endif
 
                 if (__instance.Unit.Get<UnitPartImbueItem>().ArcaneSpellbook is { } asb)
                     yield return asb;
@@ -415,28 +430,27 @@ namespace HomebrewWarlock.Features
                 craftStatus.SetCheckResult(ImbueItemCheck(craftStatus.Check, __instance));
             }
 
-            //[HarmonyPatch(typeof(CraftRoot), nameof(CraftRoot.TryFindAbilityInSpellbooks))]
-            //[HarmonyPostfix]
-            //static void CraftRoot_TryFindAbilityInSpellbooks_Postfix(UnitEntityData crafter, BlueprintAbility abillity, ref Spellbook spellbook)
-            //{
-            //    if (crafter.Parts.Parts.OfType<UnitPartImbueItem>().FirstOrDefault() is not { } part)
-            //    {
-            //        return;
-            //    }
+            [HarmonyPatch(typeof(CraftRoot), nameof(CraftRoot.TryFindAbilityInSpellbooks))]
+            [HarmonyPostfix]
+            static void CraftRoot_TryFindAbilityInSpellbooks_Postfix(UnitEntityData crafter, BlueprintAbility abillity, ref Spellbook spellbook)
+            {
+                if (crafter.Parts.Parts.OfType<UnitPartImbueItem>().FirstOrDefault() is not { } part)
+                {
+                    return;
+                }
 
-            //    if (spellbook == null)
-            //    {
-            //        if (part.DivineSpellbook is not null && part.DivineSpellbook.IsKnown(abillity))
-            //        {
-            //            spellbook = part.DivineSpellbook;
-            //        }
-
-            //        if (part.ArcaneSpellbook is not null && part.ArcaneSpellbook.IsKnown(abillity))
-            //        {
-            //            spellbook = part.ArcaneSpellbook;
-            //        }
-            //    }
-            //}
+                if (!part.KnowsSpell(abillity))
+                {
+                    if (part.DivineSpellbook is not null && part.DivineSpellbook.IsKnown(abillity))
+                    {
+                        spellbook = part.DivineSpellbook;
+                    }
+                    else if (part.ArcaneSpellbook is not null && part.ArcaneSpellbook.IsKnown(abillity))
+                    {
+                        spellbook = part.ArcaneSpellbook;
+                    }
+                }
+            }
         }
     }
 }
