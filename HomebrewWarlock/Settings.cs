@@ -14,7 +14,8 @@ namespace HomebrewWarlock
 {
     internal class Settings
     {
-        public static readonly Settings Instance = new();
+        static readonly Lazy<Settings> instance = new(() => new());
+        public static Settings Instance => instance.Value;
 
         private static string SettingsRootKey => Main.Instance.ModEntry?.Info?.Id?.ToLower()!;
         private static string SettingKey(string key) => SettingsRootKey is null ? null! : $"{SettingsRootKey}.{key}".ToLower();
@@ -66,8 +67,15 @@ namespace HomebrewWarlock
 
         public IObservable<ISetting> SettingChanged { get; private set; } = Observable.Empty<ISetting>();
 
-        public readonly List<SettingsGroup> Groups = new();
-        
+        readonly List<SettingsGroup> groups = new();
+        public IEnumerable<SettingsGroup> Groups => groups.ToArray();
+
+        public SettingsGroup? AddGroup(SettingsGroup group)
+        {
+            groups.Add(group);
+            return groups.LastOrDefault();
+        }
+
         public record class SettingsGroup(Func<SettingsBuilder, SettingsBuilder> Build, string? Name = null)
         {
             public SettingsGroup(string? Name = null) : this(Functional.Identity, Name) { }
@@ -175,13 +183,19 @@ namespace HomebrewWarlock
         
         public void AddSettings(LocalizedString title)
         {
-            if (!Groups.Any()) return;
+            if (!Groups.Any())
+            {
+                MicroLogger.Error("No settings groups");
+                return;
+            }
 
             if (SettingsRootKey is null)
             {
                 MicroLogger.Critical("Unable to get root settings key");
                 return;
             }
+
+            MicroLogger.Debug(() => $"Settings root key: {SettingsRootKey}");
 
             SettingChanged = Groups.Select(g => g.SettingChanged).Merge();
 
@@ -203,7 +217,11 @@ namespace HomebrewWarlock
         [Init]
         internal static void Init() =>
             Triggers.BlueprintsCache_Init_Early
-                .Subscribe(_ => Settings.Instance.AddSettings(LocalizedStrings.Settings_Title));
+                .Subscribe(_ =>
+                {
+                    MicroLogger.Debug(() => $"Adding Settings");
+                    Settings.Instance.AddSettings(LocalizedStrings.Settings_Title);
+                });
 
         // Load localization early. Otherwise some setting strings will be missing
         [Init]

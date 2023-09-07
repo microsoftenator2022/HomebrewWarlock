@@ -422,9 +422,11 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
         public static readonly IMicroBlueprint<BlueprintAbility> AbilityRef = GeneratedGuid.EldritchGlaiveAbility.ToMicroBlueprint<BlueprintAbility>();
 
-        static readonly Lazy<Settings.Setting<bool>> UseToggle = new(() =>
+        static Settings.Setting<bool>? UseToggle;
+
+        static (Settings.SettingsGroup, Settings.Setting<bool>) CreateToggleSetting()
         {
-            var settings = new Settings.SettingsGroup();
+            var settings = new Settings.SettingsGroup("EldritchGlaive");
             (settings, var useToggle) = settings.AddDropdown<bool>(
                 "EldritchGlaiveToggle",
                 LocalizedStrings.Features_Invocations_Least_EldritchGlaive_AbilityTypeSettingDescription,
@@ -434,10 +436,16 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     (true, LocalizedStrings.Features_Invocations_Least_EldritchGlaive_AbilityTypeToggle)
                 });
 
-            Settings.Instance.Groups.Add(settings);
+            return (settings, useToggle);
+        }
 
-            return useToggle;
-        });
+        [Init]
+        internal static void InitSettings()
+        {
+            (var settings, UseToggle) = CreateToggleSetting();
+
+            Settings.Instance.AddGroup(settings);
+        }
 
         internal static BlueprintInitializationContext.ContextInitializer<(BlueprintItemWeapon, BlueprintWeaponType)> CreateWeapon(
             BlueprintInitializationContext context,
@@ -609,9 +617,9 @@ namespace HomebrewWarlock.Features.Invocations.Least
                                 cast.MarkAsChild = !isToggle;
                             }
 
-                            UseToggle.Value.Changed.Subscribe(toggle => setIsChild(toggle));
+                            UseToggle!.Changed.Subscribe(toggle => setIsChild(toggle));
 
-                            setIsChild(UseToggle.Value.Value);
+                            setIsChild(UseToggle!.Value);
                         }));
                     });
 
@@ -746,9 +754,9 @@ namespace HomebrewWarlock.Features.Invocations.Least
                         };
                     }
 
-                    UseToggle.Value.Changed.Subscribe(setAbility);
+                    UseToggle!.Changed.Subscribe(setAbility);
 
-                    setAbility(UseToggle.Value.Value);
+                    setAbility(UseToggle!.Value);
 
                     return feature;
                 });

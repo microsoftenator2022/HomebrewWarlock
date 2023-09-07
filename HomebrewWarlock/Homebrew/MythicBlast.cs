@@ -13,6 +13,7 @@ using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Enums;
 using Kingmaker.Enums.Damage;
 using Kingmaker.PubSubSystem;
@@ -31,6 +32,8 @@ using Kingmaker.UnitLogic.Parts;
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.BlueprintsDb;
 using MicroWrath.Util.Linq;
+
+using UniRx;
 
 namespace HomebrewWarlock.Homebrew
 {
@@ -248,8 +251,25 @@ namespace HomebrewWarlock.Homebrew
             return feature;
         }
 
+
+        [LocalizedString]
+        internal const string ToggleSettingDisplayName = "Mythic Eldritch Blast";
+
+        static Settings.Setting<bool> enabled = null!;
+
         [Init]
-        static void Init()
+        internal static void InitSettings()
+        {
+            var settings = new Settings.SettingsGroup("Mythic");
+
+            (settings, enabled) = settings.AddToggle("MythicEldritchBlastToggle",
+                LocalizedStrings.Homebrew_MythicBlast_ToggleSettingDisplayName);
+
+            Settings.Instance.AddGroup(settings);
+        }
+
+        [Init]
+        internal static void Init()
         {
             var context = new BlueprintInitializationContext(Triggers.BlueprintsCache_Init);
 
@@ -257,11 +277,27 @@ namespace HomebrewWarlock.Homebrew
                 .GetBlueprint(BlueprintsDb.Owlcat.BlueprintFeatureSelection.MythicFeatSelection)
                 .Map(bps =>
                 {
-                    (BlueprintFeature feature, var mythicFeats) = bps;
+                    (BlueprintFeature feature, BlueprintFeatureSelection mythicFeats) = bps;
 
+                    void addAbility(bool value)
+                    {
+                        MicroLogger.Debug(() => $"Enable Mythic Blast? {value}");
 
+                        if (value)
+                        {
+                            mythicFeats.AddFeatures(feature);
+                        }
+                        else if (mythicFeats.AllFeatures.Contains(feature))
+                        {
+                            mythicFeats.m_Features = mythicFeats.m_Features.Where(f => f.deserializedGuid != feature.AssetGuid).ToArray();
+                            mythicFeats.m_AllFeatures = mythicFeats.m_AllFeatures.Where(f => f.deserializedGuid != feature.AssetGuid).ToArray();
+                        }
+                    }
 
-                    mythicFeats.AddFeatures(feature);
+                    enabled.Changed.Subscribe(addAbility);
+
+                    addAbility(enabled.Value);
+
                 })
                 .Register();
         }

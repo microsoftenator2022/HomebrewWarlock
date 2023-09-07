@@ -484,7 +484,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
         }
 
         [Init]
-        static void Init()
+        internal static void Init()
         {
             var context = new BlueprintInitializationContext(Triggers.BlueprintsCache_Init);
             var parent = CreateParentAbility(context);
