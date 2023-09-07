@@ -24,7 +24,11 @@ namespace HomebrewWarlock.Features.Invocations.Greater
         internal const string DisplayName = "Bewitching Blast";
 
         [LocalizedString]
-        internal const string Description =
+        internal static readonly string Description =
+            "<b>Eldritch Blast Essence</b>" +
+            Environment.NewLine +
+            "<b>Equivalent spell level:</b> 4" +
+            Environment.NewLine +
             "This eldritch essence invocation allows you to change your eldritch blast into a bewitching blast. " +
             "Any creature struck by a bewitching blast must succeed on a Will save or be confused for 1 round in " +
             "addition to the normal damage from the blast.";

@@ -29,7 +29,11 @@ namespace HomebrewWarlock.Features.Invocations.Least
         internal const string DisplayName = "Eldritch Spear";
 
         [LocalizedString]
-        internal const string Description =
+        internal static readonly string Description =
+            "<b>Eldritch Blast Shape</b>" +
+            Environment.NewLine +
+            "<b>Equivalent spell level:</b> 2" +
+            Environment.NewLine +
             "This blast shape invocation extends your eldritch blast attacks to great distances. Eldritch spear " +
             "increases the range of an eldritch blast attack to long range.";
 

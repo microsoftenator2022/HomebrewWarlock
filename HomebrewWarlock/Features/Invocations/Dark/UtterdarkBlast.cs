@@ -77,7 +77,11 @@ namespace HomebrewWarlock.Features.Invocations.Dark
         internal const string DisplayName = "Utterdark Blast";
 
         [LocalizedString]
-        internal const string Description =
+        internal static readonly string Description =
+            "<b>Eldritch Blast Essence</b>" +
+            Environment.NewLine +
+            "<b>Equivalent spell level:</b> 8" +
+            Environment.NewLine +
             "This eldritch essence invocation allows you to change your eldritch blast into an utterdark blast. " +
             //"An utterdark blast deals negative energy damage, which heals undead creatures instead of damaging " +
             //"them (like inflict spells). " +

@@ -33,6 +33,10 @@ namespace HomebrewWarlock.Features.Invocations.Greater
 
         [LocalizedString]
         internal static readonly string Description =
+            "<b>Eldritch Blast Essence</b>" +
+            Environment.NewLine +
+            "<b>Equivalent spell level:</b> 6" +
+            Environment.NewLine +
             "This eldritch essence invocation allows you to change your eldritch blast into a vitriolic blast. A " +
             "vitriolic blast deals acid damage, and it is formed from conjured acid, making it different from " +
             "other eldritch essences because it ignores spell resistance. Creatures struck by a vitriolic blast " +

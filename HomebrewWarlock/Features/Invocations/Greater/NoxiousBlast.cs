@@ -25,7 +25,11 @@ namespace HomebrewWarlock.Features.Invocations.Greater
         internal const string DisplayName = "Noxious Blast";
 
         [LocalizedString]
-        internal const string Description =
+        internal static readonly string Description =
+            "<b>Eldritch Blast Essence</b>" +
+            Environment.NewLine +
+            "<b>Equivalent spell level:</b> 6" +
+            Environment.NewLine +
             "This eldritch essence invocation allows you to change your eldritch blast into a noxious blast. Any " +
             "creature struck by a noxious blast must make a Fortitude save or be nauseated for 1 minute.";
 

@@ -20,7 +20,9 @@ namespace HomebrewWarlock.Features.Invocations.Dark
         internal const string DisplayName = "Word Of Changing";
 
         [LocalizedString]
-        internal const string Description =
+        internal static readonly string Description =
+            "<b>Equivalent spell level:</b> 5" +
+            Environment.NewLine +
             "You utter a powerful word that transforms a creature into an inoffensive form. This effect functions " +
             "like the baleful polymorph spell"
             //+ ", except that 24 hours after being transformed, the subject is " +

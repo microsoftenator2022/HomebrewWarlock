@@ -120,6 +120,10 @@ namespace HomebrewWarlock.Features.Invocations.Greater
 
         [LocalizedString]
         internal static readonly string Description =
+            "<b>Eldritch Blast Essence</b>" +
+            Environment.NewLine +
+            "<b>Equivalent spell level:</b> 6" +
+            Environment.NewLine +
             "This eldritch essence invocation allows you to change your eldritch blast into a repelling blast. " +
             "Any Medium or smaller creature struck by a repelling blast must make a Reflex save or be hurled " +
             "1d6×5 feet (1d6 squares) directly away from you and knocked prone by the energy of the attack." +

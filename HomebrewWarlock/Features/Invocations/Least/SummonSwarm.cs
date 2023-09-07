@@ -26,6 +26,8 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
         [LocalizedString]
         internal static readonly string SpellDescription =
+            "<b>Equivalent spell level:</b> 2" +
+            Environment.NewLine +
             "This spell summons a spider swarm. The summoned swarm appears where you designate and acts according to " +
             "its initiative. It attacks your opponents to the best of its ability.";
 

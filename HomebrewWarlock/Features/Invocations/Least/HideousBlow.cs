@@ -74,7 +74,11 @@ namespace HomebrewWarlock.Features.Invocations.Least
         internal const string DisplayName = "Hideous Blow";
 
         [LocalizedString]
-        internal const string Description =
+        internal static readonly string Description =
+            "<b>Eldritch Blast Shape</b>" +
+            Environment.NewLine +
+            "<b>Equivalent spell level:</b> 1" +
+            Environment.NewLine +
             "As a standard action, you can make a single melee attack. If you hit, the target is affected as if " +
             "struck by your eldritch blast (including any eldritch essence applied to the blast). This damage is in " +
             "addition to any weapon damage that you deal with your attack, although you need not deal damage with " +

@@ -316,6 +316,8 @@ namespace HomebrewWarlock.Features.Invocations.Greater
 
         [LocalizedString]
         internal static readonly string Description =
+            "<b>Equivalent spell level:</b> 5" +
+            Environment.NewLine +
             "This invocation allows you to conjure forth a field of soul-chilling black tentacles that ooze from " +
             "the ground, groping for victims." + Environment.NewLine +
             "This invocation functions identically to the black tentacles spell, except that each creature within " +

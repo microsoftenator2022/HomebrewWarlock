@@ -69,7 +69,11 @@ namespace HomebrewWarlock.Features.Invocations.Greater
         internal const string DisplayName = "Eldritch Cone";
 
         [LocalizedString]
-        internal const string Description =
+        internal static readonly string Description =
+            "<b>Eldritch Blast Shape</b>" +
+            Environment.NewLine +
+            "<b>Equivalent spell level:</b> 5" +
+            Environment.NewLine +
             "This blast shape invocation allows you to invoke your eldritch blast as a 30-foot cone. The eldritch " +
             "cone deals the normal eldritch blast damage to all targets within the area. This is not a ray attack, " +
             "so it requires no ranged touch attack. Any creature in the area of the cone can attempt a Reflex save " +

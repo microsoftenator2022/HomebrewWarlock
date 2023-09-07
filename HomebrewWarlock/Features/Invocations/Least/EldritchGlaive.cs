@@ -391,6 +391,10 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
         [LocalizedString]
         internal static readonly string Description =
+            "<b>Eldritch Blast Shape</b>" +
+            Environment.NewLine +
+            "<b>Equivalent spell level:</b> 1" +
+            Environment.NewLine +
             "Your eldritch blast takes on physical substance, appearing similar to a glaive." + Environment.NewLine +
             //"As a full-round action, you can make a single melee touch attack as if wielding a reach weapon. " +
             "Attacks with this weapon are melee touch attacks. " +

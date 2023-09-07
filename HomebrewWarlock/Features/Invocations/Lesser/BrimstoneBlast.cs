@@ -102,6 +102,10 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
         [LocalizedString]
         internal static readonly string Description =
+            "<b>Eldritch Blast Essence</b>" +
+            Environment.NewLine +
+            "<b>Equivalent spell level:</b> 3" +
+            Environment.NewLine +
             "This eldritch essence invocation allows you to change your eldritch blast into a brimstone blast. A " +
             "brimstone blast deals fire damage." + Environment.NewLine +
             "Any creature struck by a brimstone blast must succeed on a Reflex save or catch on fire, taking 2d6 " +

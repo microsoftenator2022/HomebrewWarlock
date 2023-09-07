@@ -24,7 +24,11 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
         internal const string DisplayName = "Beshadowed Blast";
 
         [LocalizedString]
-        internal const string Description =
+        internal static readonly string Description =
+            "<b>Eldritch Blast Essence</b>" +
+            Environment.NewLine +
+            "<b>Equivalent spell level:</b> 4" +
+            Environment.NewLine +
             "This eldritch essence invocation allows you to change your eldritch blast into a beshadowed blast. Any " +
             "creature struck by a beshadowed blast must succeed on a Fortitude save or be blinded for 1 round.";
 

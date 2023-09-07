@@ -22,7 +22,9 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
         internal const string DisplayName = "The Dead Walk";
 
         [LocalizedString]
-        internal const string Description =
+        internal static readonly string Description =
+            "<b>Equivalent spell level:</b> 4" +
+            Environment.NewLine +
             "You can turn the bones or bodies of dead creatures into undead skeletons or zombies (as the animate " +
             "dead spell). Undead created by this ability crumble into dust after 1 minute per caster level.";
 

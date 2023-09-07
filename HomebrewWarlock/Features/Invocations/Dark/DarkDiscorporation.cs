@@ -165,6 +165,8 @@ namespace HomebrewWarlock.Features.Invocations.Dark
 
         [LocalizedString]
         internal static readonly string Description =
+            "<b>Equivalent spell level:</b> 8"+
+            Environment.NewLine +
             "One with the powers of darkness, you learn to abandon your body. When you use this ability, you become " +
             "a Huge swarm of Diminutive, batlike shadows." +
             Environment.NewLine +

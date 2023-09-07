@@ -101,6 +101,10 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
         [LocalizedString]
         internal static readonly string Description =
+            "<b>Eldritch Blast Shape</b>" +
+            Environment.NewLine +
+            "<b>Equivalent spell level:</b> 4" +
+            Environment.NewLine +
             "This blast shape invocation allows you to improve your eldritch blast by turning it into an arc of " +
             "energy that “jumps” from the first target to others. An eldritch chain can jump to one or more " +
             "secondary targets within 30 feet of the first target, allowing you to make additional ranged touch " +

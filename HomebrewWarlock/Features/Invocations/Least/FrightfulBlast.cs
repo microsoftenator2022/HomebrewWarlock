@@ -26,7 +26,11 @@ namespace HomebrewWarlock.Features.Invocations.Least
         internal const string DisplayName = "Frightful Blast";
 
         [LocalizedString]
-        internal const string Description =
+        internal static readonly string Description =
+            "<b>Eldritch Blast Essence</b>" +
+            Environment.NewLine +
+            "<b>Equivalent spell level:</b> 2" +
+            Environment.NewLine +
             "This eldritch essence invocation allows you to change your eldritch blast into a frightful blast. Any " +
             "creature struck by a frightful blast must succeed on a Will save or become shaken for 1 minute. A " +
             "shaken creature struck by a frightful blast is not affected by the shaken aspect of the blast but " +

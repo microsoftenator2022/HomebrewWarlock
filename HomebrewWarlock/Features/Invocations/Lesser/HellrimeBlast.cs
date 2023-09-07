@@ -29,7 +29,11 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
         internal const string DisplayName = "Hellrime Blast";
 
         [LocalizedString]
-        internal const string Description =
+        internal static readonly string Description =
+            "<b>Eldritch Blast Essence</b>" +
+            Environment.NewLine +
+            "<b>Equivalent spell level:</b> 4" +
+            Environment.NewLine +
             "This eldritch essence invocation allows you to change your eldritch blast into a hellrime blast. A " +
             "hellrime blast deals cold damage. Any creature struck by the attack must make a Fortitude save or " +
             "take a –4 penalty to Dexterity for 10 minutes. The Dexterity penalties from multiple hellrime blasts " +

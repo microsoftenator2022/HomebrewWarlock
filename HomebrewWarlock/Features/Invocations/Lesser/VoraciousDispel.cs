@@ -95,7 +95,9 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
         internal const string DisplayName = "Voracious Dispelling";
 
         [LocalizedString]
-        internal const string Description =
+        internal static readonly string Description =
+            "<b>Equivalent spell level:</b> 4" +
+            Environment.NewLine +
             "You can use dispel magic as the spell. Any creature with an active spell effect dispelled by this " +
             "invocation takes 1 point of damage per level of the spell effect (no save).";
 

@@ -27,7 +27,11 @@ namespace HomebrewWarlock.Features.Invocations.Least
         internal const string DisplayName = "Sickening Blast";
 
         [LocalizedString]
-        internal const string Description =
+        internal static readonly string Description =
+            "<b>Eldritch Blast Essence</b>" +
+            Environment.NewLine +
+            "<b>Equivalent spell level:</b> 2" +
+            Environment.NewLine +
             "This eldritch essence invocation allows you to change your eldritch blast into a sickening blast. Any " +
             "living creature struck by a sickening blast must make a Fortitude save or become sickened for 1 " +
             "minute. A sickened creature struck by a second sickening blast is not affected by the sickening aspect " +

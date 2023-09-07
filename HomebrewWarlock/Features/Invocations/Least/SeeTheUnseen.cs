@@ -19,7 +19,10 @@ namespace HomebrewWarlock.Features.Invocations.Least
         internal const string DisplayName = "See the Unseen";
 
         [LocalizedString]
-        internal const string Description = "You gain See Invisibility as the spell";
+        internal static readonly string Description =
+            "<b>Equivalent spell level:</b> 2" +
+            Environment.NewLine +
+            "You gain See Invisibility as the spell";
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
         {

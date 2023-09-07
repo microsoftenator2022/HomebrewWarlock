@@ -92,7 +92,11 @@ namespace HomebrewWarlock.Features.Invocations.Dark
         internal const string DisplayName = "Eldritch Doom";
 
         [LocalizedString]
-        internal const string Description =
+        internal static readonly string Description =
+            "<b>Eldritch Blast Shape</b>" +
+            Environment.NewLine +
+            "<b>Equivalent spell level:</b> 8" +
+            Environment.NewLine +
             "This blast shape invocation allows you to invoke your eldritch blast as the dreaded eldritch doom. " +
             "This causes bolts of mystical power to lash out and savage nearby targets. An eldritch doom deals " +
             "eldritch blast damage to any number of targets designated by you and within 20 feet. This is not a ray " +

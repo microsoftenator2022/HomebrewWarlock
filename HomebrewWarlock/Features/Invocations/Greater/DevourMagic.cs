@@ -60,6 +60,8 @@ namespace HomebrewWarlock.Features.Invocations.Greater
 
         [LocalizedString]
         internal static readonly string Description =
+            "<b>Equivalent spell level:</b> 6" +
+            Environment.NewLine +
             "This invocation allows you to deliver a targeted greater dispel magic with your touch." +
             Environment.NewLine +
             "You gain 5 temporary hit points for each spell level dispelled by this touch. These temporary hit " +

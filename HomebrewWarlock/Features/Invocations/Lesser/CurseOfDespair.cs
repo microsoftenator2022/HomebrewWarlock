@@ -24,7 +24,9 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
         internal const string DisplayName = "Curse of Despair";
         
         [LocalizedString]
-        internal const string Description =
+        internal static readonly string Description =
+            "<b>Equivalent spell level:</b> 4" +
+            Environment.NewLine +
             "You can use this invocation to bestow a curse upon a touched opponent (as bestow curse). If the save " +
             "against this ability succeeds, the creature takes a –1 penalty on attack rolls for 1 minute.";
 
