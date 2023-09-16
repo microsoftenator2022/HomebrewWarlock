@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <VersionPrefix>0.9.2.0</VersionPrefix>
+    <VersionPrefix>0.9.2.1</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -55,21 +55,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\MicroWrath\MicroWrath.Generator\MicroWrath.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\..\MicroWrath\MicroWrath.Loader\MicroWrath.Loader.csproj" />
-    <ProjectReference Include="..\..\MicroWrath\MicroWrath\MicroWrath.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="ModMenu" HintPath="$(WrathPath)\Mods\ModMenu\ModMenu.dll" Private="False" />
   </ItemGroup>
 
-  <UsingTask TaskName="MicroWrath.Generator.GenerateGuidsFile" AssemblyFile="..\..\MicroWrath\MicroWrath.Generator.Tasks\bin\$(Configuration)\net472\MicroWrath.Generator.Tasks.dll" />
+  <!--<UsingTask TaskName="MicroWrath.Generator.GenerateGuidsFile" AssemblyFile="..\..\MicroWrath\MicroWrath.Generator.Tasks\bin\$(Configuration)\net472\MicroWrath.Generator.Tasks.dll" />-->
 
   <ItemGroup>
     <None Update="Info.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MicroWrath" Version="0.7.1-prerelease-20230915-1104" />
   </ItemGroup>
 
   <Target Name="GenerateGuidsFileTarget" AfterTargets="Build">

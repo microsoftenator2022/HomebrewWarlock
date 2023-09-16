@@ -5,12 +5,6 @@ VisualStudioVersion = 17.7.33711.374
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomebrewWarlock", "HomebrewWarlock\HomebrewWarlock.csproj", "{C8C588E9-B1E1-4064-B3DD-D75829255431}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroWrath", "..\MicroWrath\MicroWrath\MicroWrath.csproj", "{35CF304D-B6E5-4177-863C-DF1FD2E9C264}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroWrath.Loader", "..\MicroWrath\MicroWrath.Loader\MicroWrath.Loader.csproj", "{7D77F20B-A491-47EA-9226-5321E8A67CC8}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroWrath.Generator", "..\MicroWrath\MicroWrath.Generator\MicroWrath.Generator.csproj", "{609A862B-3853-49FB-B709-49FAFA70E82F}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A0758744-3643-460E-B4BD-0FA967E40766}"
 	ProjectSection(SolutionItems) = preProject
 		LICENSE.txt = LICENSE.txt
@@ -26,18 +20,6 @@ Global
 		{C8C588E9-B1E1-4064-B3DD-D75829255431}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8C588E9-B1E1-4064-B3DD-D75829255431}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8C588E9-B1E1-4064-B3DD-D75829255431}.Release|Any CPU.Build.0 = Release|Any CPU
-		{35CF304D-B6E5-4177-863C-DF1FD2E9C264}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{35CF304D-B6E5-4177-863C-DF1FD2E9C264}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{35CF304D-B6E5-4177-863C-DF1FD2E9C264}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{35CF304D-B6E5-4177-863C-DF1FD2E9C264}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7D77F20B-A491-47EA-9226-5321E8A67CC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7D77F20B-A491-47EA-9226-5321E8A67CC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7D77F20B-A491-47EA-9226-5321E8A67CC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7D77F20B-A491-47EA-9226-5321E8A67CC8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{609A862B-3853-49FB-B709-49FAFA70E82F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{609A862B-3853-49FB-B709-49FAFA70E82F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{609A862B-3853-49FB-B709-49FAFA70E82F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{609A862B-3853-49FB-B709-49FAFA70E82F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
