@@ -60,8 +60,11 @@ namespace HomebrewWarlock.Resources
         internal static Sprite MaximizeSpell => AssetUtils.Direct.GetSprite("ee077ba5f8174f148a74c4543e58fac9", 21300000);
         internal static Sprite InfusedCurative => AssetUtils.Direct.GetSprite("39d4935e5d3dee04089959b1c324407b", 21300000);
 
-        internal static Sprite EssenceSprite(Sprite baseSprite) => Sprite.Create(UnityUtil.AlphaBlend(
-            UnityUtil.CopyReadable(baseSprite.texture), EldritchBlastOverlay.texture), baseSprite.rect, baseSprite.pivot);
+        internal static Sprite EssenceSprite(Sprite baseSprite) => Sprite.Create(
+            AssetUtils.AlphaBlend(baseSprite.texture, EldritchBlastOverlay.texture),
+            //UnityUtil.AlphaBlend(UnityUtil.CopyReadable(baseSprite.texture), EldritchBlastOverlay.texture),
+            baseSprite.rect,
+            baseSprite.pivot);
 
         internal static Sprite SickeningBlast => EssenceSprite(Sickened);
         internal static Sprite FrightfulBlast => EssenceSprite(Shaken);
