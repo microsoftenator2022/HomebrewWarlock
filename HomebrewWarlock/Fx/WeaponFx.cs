@@ -105,11 +105,11 @@ namespace HomebrewWarlock.Fx
                         .OrderByDescending(Functional.Identity)
                         .ToArray();
 
-                    MicroLogger.Debug(sb =>
-                    {
-                        for (var i = 0; i < alphaValues.Length; i++)
-                            sb.AppendLine($"alphaValues[{i}] = {alphaValues[i]}");
-                    });
+                    //MicroLogger.Debug(sb =>
+                    //{
+                    //    for (var i = 0; i < alphaValues.Length; i++)
+                    //        sb.AppendLine($"alphaValues[{i}] = {alphaValues[i]}");
+                    //});
 
                     var aks = gradient.alphaKeys;
 

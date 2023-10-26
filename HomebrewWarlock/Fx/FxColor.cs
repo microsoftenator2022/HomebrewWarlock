@@ -54,14 +54,17 @@ namespace HomebrewWarlock.Fx
                 texture = newTexture;
             }
 
-            var logLevel = MicroLogger.LogLevel;
+            //var logLevel = MicroLogger.LogLevel;
 
-            if (logLevel == MicroLogger.Severity.Debug)
-                MicroLogger.LogLevel = MicroLogger.Severity.Info;
+            //if (!debugLog)
+            //{
+            //    if (logLevel == MicroLogger.Severity.Debug)
+            //        MicroLogger.LogLevel = MicroLogger.Severity.Info;
+            //}
 
             var newPixels = texture.GetPixels().Select(f).ToArray();
 
-            MicroLogger.LogLevel = logLevel;
+            //MicroLogger.LogLevel = logLevel;
 
             if (textureFormat.SupportsSetPixel())
             {
@@ -88,37 +91,39 @@ namespace HomebrewWarlock.Fx
             return texture;
         }
 
-        internal static void ChangeAllColors(GameObject obj, Func<Color, Color> f, bool includeBaseMap = false, bool includeMaterialColor = false)
+        internal static void ChangeAllColors(GameObject obj, Func<Color, Color> f, bool includeBaseMap = false, bool includeMaterialColor = false, bool debugLog = false)
         {
             var wasActive = obj.activeSelf;
             obj.SetActive(false);
 
             foreach (var ps in obj.GetComponentsInChildren<ParticleSystem>())
             {
-                MicroLogger.Debug(() => $"{ps.gameObject.name} :: {ps.GetType()}");
+                if (debugLog)
+                    MicroLogger.Debug(() => $"{ps.gameObject.name} :: {ps.GetType()}");
 
                 var psr = ps.gameObject.GetComponent<ParticleSystemRenderer>();
 
-                MicroLogger.Debug(() =>
-                {
-                    var sb = new StringBuilder();
-                    sb.AppendLine($"Renderer {psr.name}");
-
-                    sb.AppendLine($" Material: {psr.material.name}");
-
-                    sb.AppendLine($" Shader: {psr.material.shader.name}");
-                    sb.AppendLine($" Textures:");
-
-                    foreach (var tName in psr.material.GetTexturePropertyNames())
+                if (debugLog)
+                    MicroLogger.Debug(() =>
                     {
-                        var tex = psr.material.GetTexture(tName);
+                        var sb = new StringBuilder();
+                        sb.AppendLine($"Renderer {psr.name}");
 
-                        if (tex is not null)
-                            sb.AppendLine($"  {tName}: [{(tex as Texture2D)?.format}] {tex.name}");
-                    }
+                        sb.AppendLine($" Material: {psr.material.name}");
 
-                    return sb.ToString();
-                });
+                        sb.AppendLine($" Shader: {psr.material.shader.name}");
+                        sb.AppendLine($" Textures:");
+
+                        foreach (var tName in psr.material.GetTexturePropertyNames())
+                        {
+                            var tex = psr.material.GetTexture(tName);
+
+                            if (tex is not null)
+                                sb.AppendLine($"  {tName}: [{(tex as Texture2D)?.format}] {tex.name}");
+                        }
+
+                        return sb.ToString();
+                    });
 
                 const string rampTextureName = "_ColorAlphaRamp";
                 if (psr.material.GetTexturePropertyNames().Contains(rampTextureName) && 
@@ -166,14 +171,16 @@ namespace HomebrewWarlock.Fx
 
             foreach (var lr in obj.GetComponentsInChildren<LineRenderer>() ?? Enumerable.Empty<LineRenderer>())
             {
-                MicroLogger.Debug(() => $"{lr.gameObject.name} :: {lr.GetType()}");
+                if (debugLog)
+                    MicroLogger.Debug(() => $"{lr.gameObject.name} :: {lr.GetType()}");
 
                 lr.colorGradient = UnityUtil.ChangeGradientColors(lr.colorGradient, f);
             }
 
             foreach (var al in obj.GetComponentsInChildren<AnimatedLight>() ?? Enumerable.Empty<AnimatedLight>())
             {
-                MicroLogger.Debug(() => $"{al.gameObject.name} :: {al.GetType()}");
+                if (debugLog)
+                    MicroLogger.Debug(() => $"{al.gameObject.name} :: {al.GetType()}");
 
                 var c = al.m_Color;
                 var col = al.m_ColorOverLifetime;

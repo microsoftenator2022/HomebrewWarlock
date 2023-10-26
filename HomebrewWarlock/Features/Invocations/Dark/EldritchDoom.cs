@@ -159,12 +159,12 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                                 //sol.yMultiplier = yM * scale;
                                 sol.zMultiplier = zM * scale;
 
-                                MicroLogger.Debug(() =>
-                                    $"{gameObject.name} " +
-                                    $"size: {sizeM} -> {sol.sizeMultiplier} " +
-                                    $"x: {xM} -> {sol.xMultiplier} " +
-                                    $"y: {yM} -> {sol.yMultiplier} " +
-                                    $"x: {zM} -> {sol.zMultiplier} ");
+                                //MicroLogger.Debug(() =>
+                                //    $"{gameObject.name} " +
+                                //    $"size: {sizeM} -> {sol.sizeMultiplier} " +
+                                //    $"x: {xM} -> {sol.xMultiplier} " +
+                                //    $"y: {yM} -> {sol.yMultiplier} " +
+                                //    $"x: {zM} -> {sol.zMultiplier} ");
                             }
                         }
 
@@ -204,11 +204,11 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                                     main.startSizeZ = startSizeZ;
                                 }
 
-                                MicroLogger.Debug(() => $"{gameObject.name} " +
-                                    $"start size: {startConstant} -> {particleSystem.main.startSize.constant} " +
-                                    $"start size X: {startConstantX} -> {particleSystem.main.startSizeX.constant} " +
-                                    $"start size Y: {startConstantY} -> {particleSystem.main.startSizeY.constant} " +
-                                    $"start size Z: {startConstantZ} -> {particleSystem.main.startSizeZ.constant} ");
+                                //MicroLogger.Debug(() => $"{gameObject.name} " +
+                                //    $"start size: {startConstant} -> {particleSystem.main.startSize.constant} " +
+                                //    $"start size X: {startConstantX} -> {particleSystem.main.startSizeX.constant} " +
+                                //    $"start size Y: {startConstantY} -> {particleSystem.main.startSizeY.constant} " +
+                                //    $"start size Z: {startConstantZ} -> {particleSystem.main.startSizeZ.constant} ");
                             }
                         }
 

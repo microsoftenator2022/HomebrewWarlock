@@ -31,9 +31,9 @@ namespace HomebrewWarlock.Features
 {
     internal static class ImbueItem
     {
-        static IEnumerable<BlueprintSpellbook> GetClassSpellbooks(bool includeMythic = false)
+        static IEnumerable<BlueprintSpellbook> GetClassSpellbooks(bool mythic = false)
         {
-            foreach (var c in BlueprintRoot.Instance.Progression.CharacterClasses.Where(c => !c.IsMythic || includeMythic))
+            foreach (var c in BlueprintRoot.Instance.Progression.CharacterClasses.Where(c => mythic == c.IsMythic))
             {
                 if (c.Spellbook is not null) yield return c.Spellbook;
 
@@ -44,27 +44,29 @@ namespace HomebrewWarlock.Features
             }
         }
 
-        static readonly Lazy<IEnumerable<BlueprintSpellbook>> ClassSpellbooks = new(() => GetClassSpellbooks().ToArray());
+        static readonly Lazy<IEnumerable<BlueprintSpellbook>> ClassSpellbooks = new(() => GetClassSpellbooks(false).ToArray());
+        static readonly Lazy<IEnumerable<BlueprintSpellbook>> MythicClassSpellbooks = new(() => GetClassSpellbooks(true).ToArray());
 
-        static bool SpellListIsArcaneCaster(BlueprintSpellList? spellList, bool includeMythic = false)
+        static IEnumerable<BlueprintSpellbook> GetSpellbooks(BlueprintSpellList? spellList, bool includeMythic = false)
         {
-            if (spellList is null) return false;
+            if (spellList is null)
+                return Array.Empty<BlueprintSpellbook>();
 
-            foreach (var sb in includeMythic ? GetClassSpellbooks(includeMythic) : ClassSpellbooks.Value)
-            {
-                if (sb.IsArcane && sb.SpellList == spellList)
-                    return true;
-            }
-
-            return false;
+            return ClassSpellbooks.Value
+                .Concat(includeMythic ? MythicClassSpellbooks.Value : Array.Empty<BlueprintSpellbook>())
+                .Where(sb => sb.SpellList == spellList);
         }
 
+        static bool SpellListIsArcaneCaster(BlueprintSpellList? spellList, bool includeMythic = false) =>
+            GetSpellbooks(spellList, includeMythic).Any(sb => sb.IsArcane);
+
         record class CraftableSpell(int SpellLevel, bool IsArcane, BlueprintAbility Spell);
-        static IEnumerable<CraftableSpell> GetAllCraftableSpells(bool arcane)
+        static IEnumerable<CraftableSpell> GetAllCraftableSpells(bool arcane, bool debugLog = false)
         {
             var craftRoot = BlueprintRoot.Instance.CraftRoot;
             var items = craftRoot.m_ScrollsItems.Concat(craftRoot.m_PotionsItems)
                 .Select(item => item.Get())
+                .SkipIfNull()
                 .Where(item => item.Ability.GetComponent<CraftInfoComponent>() is not null);
 
             foreach (var item in items)
@@ -76,26 +78,56 @@ namespace HomebrewWarlock.Features
                 var arcaneLists = spellLists.Where(slc => slc.isArcane);
                 var divineLists = spellLists.Where(slc => !slc.isArcane);
 
-                if (arcaneLists.Any() && arcane)
+                if (arcane && arcaneLists.Any())
                 {
                     var (slc, _) = arcaneLists.First();
 
                     MicroLogger.Debug(() => $"{item.NameSafe()}: Adding from {slc.m_SpellList.Get().NameSafe()} {slc.SpellLevel} (Arcane)");
                     yield return new(slc.SpellLevel, true, item.Ability);
                 }
-                else if (divineLists.Any() && !arcane)
+                else if (divineLists.Any())
                 {
                     var (slc, _) = divineLists.First();
 
                     MicroLogger.Debug(() => $"{item.NameSafe()}: Adding from {slc.m_SpellList.Get().NameSafe()} {slc.SpellLevel} (Divine)");
                     yield return new(slc.SpellLevel, false, item.Ability);
+                    
                 }
+
+                if (debugLog)
+                    MicroLogger.Debug(sb =>
+                    {
+                        var spellListsBooks = spellLists
+                            .Select(slc =>
+                                (spellList: slc.slc.SpellList,
+                                spellLevel: slc.slc.SpellLevel,
+                                GetSpellbooks(slc.slc.SpellList)));
+
+                        sb.AppendLine($"Spell: {item.Ability.NameSafe()}");
+                        sb.Append($"  {spellListsBooks.Count()} Spell lists:");
+
+                        foreach (var (list, level, books) in spellListsBooks)
+                        {
+                            sb.AppendLine();
+                            sb.Append($"    {list.NameSafe()} {level}:");
+
+                            foreach (var book in books)
+                            {
+                                var arcane = book.IsArcane;
+                                var arcaneCaster = book.CharacterClass is not null && book.CharacterClass.IsArcaneCaster;
+                                var divine = book.CharacterClass is not null && book.CharacterClass.IsDivineCaster;
+
+                                sb.AppendLine();
+                                sb.Append($"      {book.name} {(arcane ? "(Arcane spellbook) " : "")}{(arcaneCaster ? "(Arcane caster) " : "")}{(divine ? "(Divine caster)" : "")}");
+                            }
+                        }
+                    });
             }
         }
 
-        static BlueprintSpellList AddAllCraftableSpells(BlueprintSpellList spellList, bool isArcane)
+        static BlueprintSpellList AddAllCraftableSpells(BlueprintSpellList spellList, bool isArcane, bool debugLog = false)
         {
-            var spells = GetAllCraftableSpells(isArcane).ToArray();
+            var spells = GetAllCraftableSpells(isArcane, debugLog).ToArray();
 
             var spellsByLevel = new List<BlueprintAbilityReference>[10];
 
@@ -274,8 +306,16 @@ namespace HomebrewWarlock.Features
             "progress is simply arrested.";
             //"He cannot retry this Use Magic Device check for that spell until he gains a new level.";
 
-        internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(BlueprintInitializationContext context)
+        internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(
+            BlueprintInitializationContext context)
         {
+            bool debugLog =
+#if DEBUG
+                true;
+#else
+                false;
+#endif
+
             var table = context.NewBlueprint<BlueprintSpellsTable>(
                 GeneratedGuid.Get("ImbueItemSpellsTable"),
                 nameof(GeneratedGuid.ImbueItemSpellsTable))
@@ -301,7 +341,7 @@ namespace HomebrewWarlock.Features
                 nameof(GeneratedGuid.ImbueItemArcaneSpellList))
                 .Map(spellList =>
                 {
-                    AddAllCraftableSpells(spellList, true);
+                    AddAllCraftableSpells(spellList, true, debugLog);
 
                     return spellList;
                 });
@@ -334,7 +374,7 @@ namespace HomebrewWarlock.Features
                 nameof(GeneratedGuid.ImbueItemDivineSpellList))
                 .Map(spellList =>
                 {
-                    AddAllCraftableSpells(spellList, false);
+                    AddAllCraftableSpells(spellList, false, debugLog);
 
                     return spellList;
                 });

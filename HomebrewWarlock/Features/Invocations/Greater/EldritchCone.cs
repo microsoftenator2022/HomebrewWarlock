@@ -25,6 +25,7 @@ using MicroWrath.Util.Unity;
 
 using UnityEngine;
 using HomebrewWarlock.Resources;
+using HarmonyLib;
 
 namespace HomebrewWarlock.Features.Invocations.Greater
 {
@@ -86,7 +87,8 @@ namespace HomebrewWarlock.Features.Invocations.Greater
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintFeature> Create(
             BlueprintInitializationContext context,
-            BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures)
+            BlueprintInitializationContext.ContextInitializer<BaseBlastFeatures> baseFeatures,
+            bool debugLog = false)
         {
             var projectile = context.CloneBlueprint(BlueprintsDb.Owlcat.BlueprintProjectile.ChannelNegativeEnergyCone30Feet00,
                 GeneratedGuid.Get("EldritchConeProjectile"))
@@ -119,7 +121,8 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     {
                         pv.gameObject.name = "EldritchCone_projectile";
 
-                        MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(pv.gameObject)}");
+                        if (debugLog)
+                            MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(pv.gameObject)}");
 
                         ChangeAllColors(pv.gameObject, RotateColor);
                         ChangeAllColors(pv.gameObject, AdjustValue);
@@ -131,7 +134,8 @@ namespace HomebrewWarlock.Features.Invocations.Greater
 
                         UnityEngine.Object.DestroyImmediate(cfx.transform.Find("CenterGlow/GreenSmoke").gameObject);
 
-                        MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(cfx)}");
+                        if (debugLog)
+                            MicroLogger.Debug(() => $"{UnityUtil.Debug.DumpGameObject(cfx)}");
 
                         ChangeAllColors(cfx, RotateColor);
                         ChangeAllColors(cfx, AdjustValue);
@@ -140,7 +144,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                         {
                             al.m_Intensity = al.m_Intensity * 5;
                         }
-
+                        
                         ChangeAllColors(cfx.transform.Find("Position_Offset/LastWave_Outer").gameObject, color =>
                         {
                             var r = Mathf.Pow(color.r, 2f);
