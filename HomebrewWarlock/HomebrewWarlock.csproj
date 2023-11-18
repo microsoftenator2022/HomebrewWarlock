@@ -67,7 +67,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MicroWrath" Version="0.7.2-prerelease-20231021-0256" />
+    <PackageReference Include="MicroWrath" Version="0.8.0-prerelease-20231117-1407" />
   </ItemGroup>
 
   <Target Name="GenerateGuidsFileTarget" AfterTargets="Build">
