@@ -146,8 +146,8 @@ namespace HomebrewWarlock.Features.EldritchBlast
 
                     });
 
-                    //feature.HideInCharacterSheetAndLevelUp = true;
-                    feature.HideInUI = true;
+                    feature.HideInCharacterSheetAndLevelUp = true;
+                    //feature.HideInUI = true;
 
                     return bps.Expand();
                 });
