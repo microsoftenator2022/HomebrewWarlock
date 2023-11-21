@@ -8,9 +8,12 @@ using System.Threading.Tasks;
 using HomebrewWarlock.Fx;
 using HomebrewWarlock.Resources;
 
+using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Spells;
+using Kingmaker.Blueprints.Root;
+using Kingmaker.Blueprints.Root.Fx;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.ElementsSystem;
 using Kingmaker.Enums;
@@ -31,10 +34,14 @@ using Kingmaker.UnitLogic.Mechanics.Components;
 using Kingmaker.Utility;
 using Kingmaker.Visual;
 using Kingmaker.Visual.Animation.Kingmaker.Actions;
+using Kingmaker.Visual.MaterialEffects;
 using Kingmaker.Visual.Particles;
 
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.BlueprintsDb;
+using MicroWrath.Util.Linq;
+
+using Owlcat.Runtime.Core.Utils;
 
 using UnityEngine;
 
@@ -98,6 +105,134 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                 public GameObject LianaStart00_RotatableCopy => GetChild(nameof(LianaStart00_RotatableCopy));
             }
 
+            static AssetBundle? bundle = null;
+            
+            static bool reloading;
+            internal static AssetBundle ReloadBundle()
+            {
+                if (reloading) return bundle!;
+
+                reloading = true;
+
+                if (bundle is not null)
+                {
+                    MicroLogger.Debug(() => "Unloading bundle");
+
+                    bundle.Unload(true);
+                }
+
+                MicroLogger.Debug(() => "Loading bundle");
+
+                bundle = AssetBundle.LoadFromFile(@"D:\Poonity\WrathModificationTemplate-master\Build\ExampleModification\Bundles\assets_all");
+
+                ReloadMaterials(Material.name);
+
+                reloading = false;
+
+                return bundle;
+            }
+
+            static AssetBundle Bundle => bundle ?? ReloadBundle();
+
+            // Lit shader
+            const string materialId = "745833f55acae1f4bb23568a4e3ad376";
+
+            // Particles shader
+            //const string materialId = "8503d0bde8b88894798b00f3aacc7de5";
+
+            static Material Material => Bundle.LoadAsset<Material>(materialId);
+
+            static Material GetMaterial(Material oldMaterial)
+            {
+                var mat = UnityEngine.Object.Instantiate(Material);
+                
+                MicroLogger.Debug(sb =>
+                {
+                    sb.Append("Assets:");
+                    foreach (var name in Bundle.GetAllAssetNames())
+                    {
+                        sb.AppendLine();
+                        sb.Append($"  {name} {Bundle.LoadAsset(name).name}");
+                    }
+                });
+
+                if (mat is null)
+                {
+                    MicroLogger.Debug(() => $"Failed to load material");
+                    return null!;
+                }
+                
+                MicroLogger.Debug(sb =>
+                {
+                    sb.AppendLine($"{oldMaterial.name} keywords:");
+                    foreach (var kw in oldMaterial.shaderKeywords)
+                    {
+                        sb.AppendLine($"  {kw}");
+                    }
+                });
+
+                //var shader = Shader.Find("Owlcat/Particles") ?? oldMaterial.shader;
+                var shader = oldMaterial.shader;
+
+                mat = UnityEngine.Object.Instantiate(mat);
+
+                MicroLogger.Debug(() => $"Setting {mat.name} shader to {shader.name}");
+
+                mat.shader = shader;
+                
+                for (var i = 0; i < oldMaterial.passCount; i++)
+                {
+                    var name = mat.GetPassName(i);
+
+                    mat.SetShaderPassEnabled(name, oldMaterial.GetShaderPassEnabled(name));
+                }
+
+                //mat.EnableKeyword("PARTICLES_LIGHTING_ON");
+
+                foreach (var kw in oldMaterial.shaderKeywords)
+                {
+                    mat.EnableKeyword(kw);
+                }
+
+                mat.SetOverrideTag("DisableBatching", "False");
+                mat.SetOverrideTag("Reflection", "Cutout");
+                mat.SetOverrideTag("RenderType", "Transparent");
+
+                var enableKeywords = new[] { "_EMISSION", "_EMISSIONMAP", "_MASKSMAP", "_NORMALMAP" };
+                var disableKeywords = new[] { "_RIMLIGHTING_OFF", "DISSOLVE_ON" };
+
+                foreach (var kw in enableKeywords)
+                {
+                    mat.EnableKeyword(kw);
+                }
+
+                foreach (var kw in disableKeywords)
+                {
+                    mat.DisableKeyword(kw);
+                }
+
+                MicroLogger.Debug(sb =>
+                {
+                    sb.AppendLine($"{mat.name} keywords:");
+                    foreach (var kw in mat.shaderKeywords)
+                    {
+                        sb.AppendLine($"  {kw}");
+                    }
+                });
+
+                return mat;
+            }
+
+            static void ReloadMaterials(string name)
+            {
+                foreach (var psr in UnityEngine.Resources.FindObjectsOfTypeAll<ParticleSystemRenderer>())
+                {
+                    if (!psr.material.name.StartsWith(name)) continue;
+
+                    psr.material = GetMaterial(psr.material);
+                }
+            }
+
             public static PrefabLink AoeFx => new PrefabLink() { AssetId = "aa448b28b377b1c49b136d88fa346600" }
                 .CreateDynamicProxy<PrefabLink>(fx =>
                 {
@@ -124,6 +259,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                         waveAll.GrassLiana00_RotatableCopy,
                         waveAll.GrassLianaSingle00,
                         waveAll.GrassLianaSingle00_RotatableCopy,
+                        waveAll.StartTrailGround00,
 
                         wave00.Ground00,
                         wave00.Ground00_RotatableCopy,
@@ -203,65 +339,34 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     SetRampColors(waveAll.StinkingSmoke00.GetComponent<ParticlesMaterialController>());
                     SetRampColors(waveAll.StinkingSmoke00_RotatableCopy.GetComponent<ParticlesMaterialController>());
 
-                    static void ChangeColorsAndMainTexture(GameObject go)
+                    UnityEngine.Object.DestroyImmediate(waveAll.StinkingSmoke00);
+                    UnityEngine.Object.DestroyImmediate(waveAll.StinkingSmoke00_RotatableCopy);
+
+                    void SetTentacleMaterial(GameObject go)
                     {
+                        MicroLogger.Debug(() => $"Setting material for {go.name}");
+
                         var psr = go.GetComponent<ParticleSystemRenderer>();
 
-                        var texture = psr.material.GetTexture(ShaderProps._BaseMap) as Texture2D;
-                        if (texture is not null)
-                            psr.material.SetTexture(ShaderProps._BaseMap, FxColor.ChangeTextureColors(texture,
-                                c => UnityUtil.ModifyHSV(new(0, 0, c.b, c.a),
-                                    hsv => hsv with { s = Mathf.Clamp01((float)hsv.s * 5), v = 0.1 })));
-                        //_ => Color.black));
-                        else
-                        {
-                            MicroLogger.Debug(() => "{go} _BaseMap is null");
-                        }
+                        var something = GetMaterial(psr.material);
 
-                        var color = psr.material.GetColor(ShaderProps._BaseColor);
-                        psr.material.SetColor(ShaderProps._BaseColor, Color.black);
-
-                        //psr.material.SetFloat("_Petrification", 0);
-                        //psr.material.SetFloat("_DissolveEnabled", 0);
-
-                        psr.material.SetColor("_PetrificationColor", new(0, 0, 0, 0));
-                        psr.material.SetColor("_DissolveColor", new(0, 0, 0, 0));
-                        psr.material.SetColor("_TintColor", Color.black);
-
-                        psr.material.SetColor("_RimColor", new(0, 0, 0, 1));
-                        psr.material.SetFloat("_RimLighting", 1);
-
-                        //var aam = psr.material.GetTexture("_AdditionalAlbedoMap") as Texture2D;
-
-                        //if (aam is not null)
-                        //    psr.material.SetTexture("_AdditionalAlbedoMap", FxColor.ChangeTextureColors(aam, _ => Color.black));
-
-                        var dm = psr.material.GetTexture("_DissolveMap") as Texture2D;
-
-                        if (dm is not null)
-                            psr.material.SetTexture("_DissolveMap", FxColor.ChangeTextureColors(dm, _ => Color.black));
-
-                        var mm = psr.material.GetTexture("_MasksMap") as Texture2D;
-
-                        if (mm is not null)
-                            psr.material.SetTexture("_MasksMap",
-                                FxColor.ChangeTextureColors(mm, c => new Color(1, 0, 0, 1)));
+                        psr.material = something;
                     }
 
-                    ChangeColorsAndMainTexture(wave00.LianaStart00);
-                    ChangeColorsAndMainTexture(wave00.LianaStart00_RotatableCopy);
-                    ChangeColorsAndMainTexture(wave00.Liana00);
-                    ChangeColorsAndMainTexture(wave00.Liana00_RotatableCopy);
+                    //ChangeColorsAndMainTexture(wave00.LianaStart00);
+                    //ChangeColorsAndMainTexture(wave00.LianaStart00_RotatableCopy);
+                    SetTentacleMaterial(wave00.Liana00);
+                    SetTentacleMaterial(wave00.Liana00_RotatableCopy);
 
-                    ChangeColorsAndMainTexture(wave01.LianaStart00);
-                    ChangeColorsAndMainTexture(wave01.LianaStart00_RotatableCopy);
-                    ChangeColorsAndMainTexture(wave01.Liana00);
-                    ChangeColorsAndMainTexture(wave01.Liana00_RotatableCopy);
+                    //ChangeColorsAndMainTexture(wave01.LianaStart00);
+                    //ChangeColorsAndMainTexture(wave01.LianaStart00_RotatableCopy);
+                    SetTentacleMaterial(wave01.Liana00);
+                    SetTentacleMaterial(wave01.Liana00_RotatableCopy);
 
-                    ChangeColorsAndMainTexture(wave02.LianaStart00);
-                    ChangeColorsAndMainTexture(wave02.LianaStart00_RotatableCopy);
-                    ChangeColorsAndMainTexture(wave02.Liana00);
-                    ChangeColorsAndMainTexture(wave02.Liana00_RotatableCopy);
+                    //ChangeColorsAndMainTexture(wave02.LianaStart00);
+                    //ChangeColorsAndMainTexture(wave02.LianaStart00_RotatableCopy);
+                    SetTentacleMaterial(wave02.Liana00);
+                    SetTentacleMaterial(wave02.Liana00_RotatableCopy);
                 });
         }
 
