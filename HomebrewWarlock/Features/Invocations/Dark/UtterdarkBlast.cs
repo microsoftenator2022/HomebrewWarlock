@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 using HarmonyLib;
 
-using HomebrewWarlock.Features.EldritchBlast.Components;
+using HomebrewWarlock.NewActions;
+using HomebrewWarlock.NewComponents;
 using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;

@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 using HarmonyLib;
 
-using HomebrewWarlock.Features.EldritchBlast.Components;
-using HomebrewWarlock.Fx;
+using HomebrewWarlock.NewComponents;
 using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.ElementsSystem;
@@ -36,6 +36,7 @@ using Kingmaker.UnitLogic.Buffs.Components;
 using Kingmaker.UnitLogic.Class.Kineticist;
 using Kingmaker.UnitLogic.Commands;
 using Kingmaker.UnitLogic.Commands.Base;
+using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Mechanics.Components;
 using Kingmaker.Utility;
 using Kingmaker.View.Animation;
@@ -47,12 +48,11 @@ using Kingmaker.Visual.Sound;
 using MicroWrath.BlueprintInitializationContext;
 using MicroWrath.BlueprintsDb;
 
+using Owlcat.Runtime.Core.Utils;
+
 using UnityEngine;
 
 using UniRx;
-using Kingmaker.Blueprints.Facts;
-using Kingmaker.UnitLogic.Mechanics;
-using Owlcat.Runtime.Core.Utils;
 
 namespace HomebrewWarlock.Features.Invocations.Least
 {

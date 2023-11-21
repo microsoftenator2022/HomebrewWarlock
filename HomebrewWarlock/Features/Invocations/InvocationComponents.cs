@@ -4,11 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using HomebrewWarlock.NewComponents;
+
+using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.JsonSystem;
 using Kingmaker.ElementsSystem;
+using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Stats;
+using Kingmaker.PubSubSystem;
 using Kingmaker.RuleSystem;
 using Kingmaker.RuleSystem.Rules;
+using Kingmaker.RuleSystem.Rules.Abilities;
 using Kingmaker.RuleSystem.Rules.Damage;
+using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Mechanics.Actions;
@@ -16,10 +25,6 @@ using Kingmaker.UnitLogic.Mechanics.Components;
 
 namespace HomebrewWarlock.Features.Invocations
 {
-    internal class InvocationComponent : ArcaneSpellFailureComponent { }
-
-    internal class EldritchBlastComponent : InvocationComponent { }
-
     internal static class InvocationComponents
     {
         internal static readonly ExtraActivatableAbilityGroup EssenceInvocationAbilityGroup = new(0x8a31cafe);
@@ -79,4 +84,5 @@ namespace HomebrewWarlock.Features.Invocations
             return rdms.Where(rdm => rdm.Reason?.Ability == context.SourceAbilityContext.Ability).ToArray();
         }
     }
+
 }

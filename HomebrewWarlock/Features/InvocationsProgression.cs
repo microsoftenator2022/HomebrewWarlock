@@ -69,6 +69,8 @@ namespace HomebrewWarlock.Features
                         new() { Level = 20, m_Features = [invocationSelection.ToReference<BlueprintFeatureBaseReference>()] },
                     ];
 
+                    progression.GiveFeaturesForPreviousLevels = true;
+
                     progression.HideInCharacterSheetAndLevelUp = true;
 
                     return progression;

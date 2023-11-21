@@ -51,6 +51,8 @@ namespace HomebrewWarlock.Features
                         new() { Level = 20, m_Features = [ebRankRef] },
                     ];
 
+                    progression.GiveFeaturesForPreviousLevels = true;
+
                     progression.HideInCharacterSheetAndLevelUp = true;
 
                     return progression;

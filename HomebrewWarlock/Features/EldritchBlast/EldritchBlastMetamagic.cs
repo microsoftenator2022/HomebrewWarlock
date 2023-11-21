@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 using HarmonyLib;
 
+using HomebrewWarlock.NewConditions;
 using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
@@ -81,19 +82,6 @@ namespace HomebrewWarlock.Features.EldritchBlast
             }
         }
 
-        internal class ContextCasterHasSwiftAction : ContextCondition
-        {
-            public override bool CheckCondition()
-            {
-                var result = base.Context.MaybeCaster?.HasSwiftAction() ?? false;
-
-                MicroLogger.Debug(() => $"{base.Context.MaybeCaster} has swift action? {result}");
-
-                return result;
-            }
-
-            public override string GetConditionCaption() => "Caster has swift action";
-        }
 
         // Not currently needed
         //[HarmonyPatch]

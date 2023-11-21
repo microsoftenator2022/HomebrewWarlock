@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using HarmonyLib;
 
 using HomebrewWarlock.Features.EldritchBlast;
-using HomebrewWarlock.Features.EldritchBlast.Components;
+using HomebrewWarlock.NewComponents;
 using HomebrewWarlock.Features.Invocations;
 using HomebrewWarlock.Resources;
 
@@ -37,85 +37,6 @@ using UniRx;
 
 namespace HomebrewWarlock.Homebrew
 {
-    internal class ChangeAbilityCommandType : UnitFactComponentDelegate
-    {
-        public UnitCommand.CommandType NewCommandType = UnitCommand.CommandType.Standard;
-        public bool ToFullRoundAction = false;
-
-        public UnitCommand.CommandType? RequireCommandType;
-
-        public BlueprintAbilityReference[] Abilities = Array.Empty<BlueprintAbilityReference>();
-
-        IEnumerable<BlueprintAbility> GetAbilityBlueprints() =>
-            Abilities.Select(ability => ability.Get()).SkipIfNull();
-
-        public override void OnTurnOn()
-        {
-            foreach (var ability in this.GetAbilityBlueprints())
-            {
-                var actionEntry = new UnitPartAbilityModifiers.ActionEntry(base.Fact, this.NewCommandType, ability)
-                {
-                    RequireFullRound = this.NewCommandType == UnitCommand.CommandType.Standard && ToFullRoundAction,
-                    SpellCommandType = RequireCommandType
-                };
-
-                base.Owner.Ensure<UnitPartAbilityModifiers>().AddEntry(actionEntry);
-            }
-        }
-
-        public override void OnTurnOff()
-        {
-            base.Owner.Ensure<UnitPartAbilityModifiers>().RemoveEntry(base.Fact);
-        }
-    }
-
-    internal class AddDamageToBundle : UnitFactComponentDelegate, IInitiatorRulebookHandler<RulePrepareDamage>
-    {
-        public DamageTypeDescription DamageType = Default.DamageTypeDescription;
-
-        public ContextDiceValue Value = Default.ContextDiceValue;
-
-        public virtual void OnEventAboutToTrigger(RulePrepareDamage evt) { }
-
-        public virtual void OnEventDidTrigger(RulePrepareDamage evt)
-        {
-            var damage = this.DamageType.CreateDamage(
-                new DiceFormula(this.Value.DiceCountValue.Calculate(base.Context), this.Value.DiceType),
-                this.Value.BonusValue.Calculate(base.Context));
-
-            var fst = evt.DamageBundle.First();
-
-            foreach (var dm in fst.Modifiers)
-            {
-                MicroLogger.Debug(() => $"{dm.Fact}, {dm.Value}, {dm.Descriptor}");
-                damage.AddModifier(dm);
-            }
-
-            damage.CriticalModifier = fst.CriticalModifier;
-            damage.CalculationType.Copy(fst.CalculationType);
-            damage.AlignmentsMask = fst.AlignmentsMask;
-            damage.Durability = fst.Durability;
-            damage.EmpowerBonus.Copy(fst.EmpowerBonus);
-            damage.BonusPercent = fst.BonusPercent;
-
-            damage.SourceFact = base.Fact;
-
-            evt.Add(damage);
-        }
-    }
-
-    internal class AddDamageToEldritchBlast : AddDamageToBundle
-    {
-        public override void OnEventDidTrigger(RulePrepareDamage evt)
-        {
-            if (evt.ParentRule?.SourceAbility is not { } sourceBlueprint) return;
-
-            if (!sourceBlueprint.Components.OfType<EldritchBlastComponent>().Any()) return;
-
-            base.OnEventDidTrigger(evt);
-        }
-    }
-
     internal static class MythicBlast
     {
         [LocalizedString]

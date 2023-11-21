@@ -4,8 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using HomebrewWarlock.Features.EldritchBlast.Components;
+using HomebrewWarlock.Features.EldritchBlast;
 using HomebrewWarlock.Fx;
+using HomebrewWarlock.NewActions;
+using HomebrewWarlock.NewComponents;
+using HomebrewWarlock.NewConditions;
 using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;

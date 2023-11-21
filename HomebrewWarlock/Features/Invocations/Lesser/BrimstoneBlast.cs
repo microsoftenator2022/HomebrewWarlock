@@ -2,7 +2,7 @@
 using System.Linq;
 
 using HomebrewWarlock.Features.EldritchBlast;
-using HomebrewWarlock.Features.EldritchBlast.Components;
+using HomebrewWarlock.NewComponents;
 using HomebrewWarlock.Resources;
 
 using static HomebrewWarlock.Fx.FxColor;

@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-using HomebrewWarlock.Features.EldritchBlast.Components;
+using HomebrewWarlock.NewComponents;
 using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
@@ -57,7 +57,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
         public static readonly IMicroBlueprint<BlueprintAbility> AbilityRef = GeneratedGuid.EldritchBlastAbility.ToMicroBlueprint<BlueprintAbility>();
         public static readonly IMicroBlueprint<BlueprintAbility> TouchAbilityRef = GeneratedGuid.EldritchBlastAbility.ToMicroBlueprint<BlueprintAbility>();
 
-        private static readonly Components.BlastAbility BasicBlast = new(1);
+        private static readonly BlastAbility BasicBlast = new(1);
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintAbility> CreateAbility(
             BlueprintInitializationContext context,
@@ -74,7 +74,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
                     
                     ability.Range = AbilityRange.Close;
                     
-                    ability.AddComponent<Components.DeliverEldritchBlastProjectile>(c =>
+                    ability.AddComponent<DeliverEldritchBlastProjectile>(c =>
                     {
                         c.DefaultProjectile = projectile.ToReference();
 
@@ -173,7 +173,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
                     ability = new EldritchBlastTouch(touch.ToReference())
                         .ConfigureAbility(ability, baseFeatures.rankFeature.ToReference());
 
-                    ability.GetComponent<AbilityEffectRunAction>().Actions.Add(new EldritchBlastOnHitFx()
+                    ability.GetComponent<AbilityEffectRunAction>().Actions.Add(new EldritchBlastOnHitFX()
                     {
                         DefaultProjectile = baseFeatures.projectile.ToReference()
                     });

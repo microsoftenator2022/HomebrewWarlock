@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using HarmonyLib;
 
 using HomebrewWarlock.Fx;
+using HomebrewWarlock.NewComponents;
 using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
@@ -49,18 +50,6 @@ using UnityEngine;
 
 namespace HomebrewWarlock.Features.Invocations.Dark
 {
-    internal class SetMovementSpeed : UnitFactComponentDelegate
-    {
-        public override void OnTurnOn() =>
-            base.Owner.Stats.Speed.AddModifierUnique(
-                this.Value - base.Owner.Stats.Speed.BaseValue, base.Runtime, this.Descriptor);
-        public override void OnTurnOff() => base.Owner.Stats.Speed.RemoveModifiersFrom(base.Runtime);
-
-        public int Value = 30;
-
-        public ModifierDescriptor Descriptor;
-    }
-
     internal class DDPolymorph : Polymorph
     {
         public void SetupView(UnitEntityView view)
@@ -108,45 +97,6 @@ namespace HomebrewWarlock.Features.Invocations.Dark
                 return result;
             }
         }
-    }
-
-    internal class AlignDamageWithCaster : UnitFactComponentDelegate, IInitiatorRulebookHandler<RulePrepareDamage>
-    {
-        public void OnEventAboutToTrigger(RulePrepareDamage evt)
-        {
-            if (!(evt.Reason.Fact?.Blueprint?.Components?.OfType<AlignDamageWithCaster>()?.Any() ?? false))
-                return;
-
-            MicroLogger.Debug(sb =>
-            {
-                sb.AppendLine($"Damage Reason: {evt.Reason.Name}");
-                sb.AppendLine($"  SourceEntity: {evt.Reason.SourceEntity}");
-                sb.AppendLine($"  Caster: {evt.Reason.Caster}");
-                sb.Append($"  Fact: {evt.Reason.Fact}");
-            });
-
-            if (evt.Reason.Fact.Blueprint != this.Fact.Blueprint)
-                return;
-
-            if (evt.Reason.Caster is not { } caster)
-                return;
-
-            var casterAlignment = caster.Alignment.ValueVisible;
-
-            MicroLogger.Debug(() => $"Caster alignment: {casterAlignment}");
-
-            foreach (var alignment in casterAlignment.ToDamageAlignments())
-            {
-                MicroLogger.Debug(() => $"Adding {alignment} to damage");
-
-                foreach (var damage in evt.DamageBundle)
-                {
-                    damage.AddAlignment(alignment);
-                }
-            }
-        }
-
-        public void OnEventDidTrigger(RulePrepareDamage evt) { }
     }
 
     [HarmonyPatch]

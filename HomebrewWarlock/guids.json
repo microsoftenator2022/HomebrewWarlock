@@ -165,7 +165,13 @@
   "MythicEldritchBlastCastBuff": "4dfdd601-8547-4391-875c-f948336b3789",
   "UtterdarkBlastNegativeLevelAbility": "83c50130-70b2-48cc-a942-78037f08e58e",
   "UtterdarkBlastHealUndeadAbility": "830e02dd-7250-4bab-9bfa-5c7cca93e138",
-  "MythicEldritchBlastToggleAbility": "e127beac-f37c-4237-a326-fdbd0c1ddd68"
+  "MythicEldritchBlastToggleAbility": "e127beac-f37c-4237-a326-fdbd0c1ddd68",
+  "HellfireWarlockSavesLow": "043b50e0-59de-40b1-ba7e-4612c750b1d2",
+  "HellfireWarlockSavesHigh": "ee5101bf-8abd-4726-98c2-49e4816575f8",
   "EldritchBlastProgression": "6a462ca7-26f0-4744-9dfe-94582bce6adf",
-  "WarlockInvocationsProgression": "864c0d74-9d63-4150-9fd3-d6128e08223f"
+  "HellfireWarlockClass": "ba14c985-a9bd-486c-807c-9929c3d58db0",
+  "WarlockInvocationsProgression": "864c0d74-9d63-4150-9fd3-d6128e08223f",
+  "HellfireWarlockProgression": "5f84e198-685a-4135-b971-8f7d566acf46",
+  "HellfireWarlockInvokerProgressions": "44d54ccf-5387-446c-b263-74902cd8240b",
+  "HellfireWarlockBAB": "1be5c863-0b76-4c74-93d5-b7e2cdbb5e0b"
 }

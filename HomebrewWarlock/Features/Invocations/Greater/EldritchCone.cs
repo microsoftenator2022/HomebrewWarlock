@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using HomebrewWarlock.Features.EldritchBlast;
-using HomebrewWarlock.Features.EldritchBlast.Components;
+using HomebrewWarlock.NewComponents;
 
 using static HomebrewWarlock.Fx.FxColor;
 
@@ -227,7 +227,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     ability = new EldritchConeBlast()
                         .ConfigureAbility(ability, baseFeatures.rankFeature.ToReference());
 
-                    ability.GetComponent<AbilityEffectRunAction>().Actions.Add(new EldritchBlastOnHitFx()
+                    ability.GetComponent<AbilityEffectRunAction>().Actions.Add(new EldritchBlastOnHitFX()
                     {
                         DefaultProjectile = baseFeatures.projectile.ToReference()
                     });

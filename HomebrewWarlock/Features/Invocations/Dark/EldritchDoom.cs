@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 using HarmonyLib;
 
-using HomebrewWarlock.Features.EldritchBlast.Components;
+using HomebrewWarlock.Features.EldritchBlast;
+using HomebrewWarlock.NewComponents;
 using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
@@ -342,7 +343,7 @@ namespace HomebrewWarlock.Features.Invocations.Dark
 
                     ability = new EldritchDoomBlast().ConfigureAbility(ability, baseFeatures.rankFeature.ToReference());
 
-                    ability.GetComponent<AbilityEffectRunAction>().Actions.Add(new EldritchBlastOnHitFx()
+                    ability.GetComponent<AbilityEffectRunAction>().Actions.Add(new EldritchBlastOnHitFX()
                     {
                         DefaultProjectile = baseFeatures.projectile.ToReference()
                     });
