@@ -15,6 +15,7 @@ using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.Blueprints.Root.Fx;
+using Kingmaker.BundlesLoading;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.ElementsSystem;
 using Kingmaker.Enums;
@@ -106,11 +107,13 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                 public GameObject LianaStart00_RotatableCopy => GetChild(nameof(LianaStart00_RotatableCopy));
             }
 
+            const string BundleName = "HomebrewWarlock_assets_all";
+
             static string BundlePath =>
 #if DEBUG
-                @"D:\Poonity\WrathModificationTemplate-master\Build\ExampleModification\Bundles\assets_all";
+                $@"D:\Poonity\WrathModificationTemplate-master\Build\HomebrewWarlock\Bundles\{BundleName}";
 #else
-                Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "assets_all");
+                Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), $"{BundleName}");
 #endif
 
             static AssetBundle? bundle = null;
@@ -129,13 +132,9 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     bundle.Unload(true);
                 }
 
-                MicroLogger.Debug(() => "Loading bundle");
-#if DEBUG
+                MicroLogger.Debug(() => $"Loading bundle from {BundlePath}");
+
                 bundle = AssetBundle.LoadFromFile(BundlePath);
-#else
-                using var bundleStream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"{nameof(HomebrewWarlock)}.Resources.assets_all");
-                bundle = AssetBundle.LoadFromStream(bundleStream);
-#endif
 
                 ReloadMaterials(Material.name);
 
@@ -157,7 +156,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
             static Material GetMaterial(Material oldMaterial)
             {
                 var mat = UnityEngine.Object.Instantiate(Material);
-                
+
                 MicroLogger.Debug(sb =>
                 {
                     sb.Append("Assets:");
@@ -173,7 +172,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     MicroLogger.Debug(() => $"Failed to load material");
                     return null!;
                 }
-                
+
                 MicroLogger.Debug(sb =>
                 {
                     sb.AppendLine($"{oldMaterial.name} keywords:");
@@ -191,7 +190,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                 MicroLogger.Debug(() => $"Setting {mat.name} shader to {shader.name}");
 
                 mat.shader = shader;
-                
+
                 for (var i = 0; i < oldMaterial.passCount; i++)
                 {
                     var name = mat.GetPassName(i);
@@ -351,8 +350,8 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     SetRampColors(waveAll.StinkingSmoke00.GetComponent<ParticlesMaterialController>());
                     SetRampColors(waveAll.StinkingSmoke00_RotatableCopy.GetComponent<ParticlesMaterialController>());
 
-                    UnityEngine.Object.DestroyImmediate(waveAll.StinkingSmoke00);
-                    UnityEngine.Object.DestroyImmediate(waveAll.StinkingSmoke00_RotatableCopy);
+                    //UnityEngine.Object.DestroyImmediate(waveAll.StinkingSmoke00);
+                    //UnityEngine.Object.DestroyImmediate(waveAll.StinkingSmoke00_RotatableCopy);
 
                     void SetTentacleMaterial(GameObject go)
                     {
