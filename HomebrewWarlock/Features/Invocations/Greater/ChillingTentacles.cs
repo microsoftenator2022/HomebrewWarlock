@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -105,6 +106,13 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                 public GameObject LianaStart00_RotatableCopy => GetChild(nameof(LianaStart00_RotatableCopy));
             }
 
+            static string BundlePath =>
+#if DEBUG
+                @"D:\Poonity\WrathModificationTemplate-master\Build\ExampleModification\Bundles\assets_all";
+#else
+                Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "assets_all");
+#endif
+
             static AssetBundle? bundle = null;
             
             static bool reloading;
@@ -122,8 +130,12 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                 }
 
                 MicroLogger.Debug(() => "Loading bundle");
-
-                bundle = AssetBundle.LoadFromFile(@"D:\Poonity\WrathModificationTemplate-master\Build\ExampleModification\Bundles\assets_all");
+#if DEBUG
+                bundle = AssetBundle.LoadFromFile(BundlePath);
+#else
+                using var bundleStream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"{nameof(HomebrewWarlock)}.Resources.assets_all");
+                bundle = AssetBundle.LoadFromStream(bundleStream);
+#endif
 
                 ReloadMaterials(Material.name);
 

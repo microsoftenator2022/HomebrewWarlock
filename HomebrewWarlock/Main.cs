@@ -41,7 +41,7 @@ namespace HomebrewWarlock
             MicroLogger.Debug(() => "Reload handler");
 
             instance.ModEntry.OnUpdate = OnUpdate;
-
+#if DEBUG
             Update += (modEntry, delta) =>
             {
                 if (!reloading && (
@@ -61,6 +61,7 @@ namespace HomebrewWarlock
                     reloading = false;
                 }
             };
+#endif
         }
     }
 }

@@ -204,8 +204,10 @@ namespace HomebrewWarlock
             Create(context)
                 .Map(@class =>
                 {
+#if DEBUG
                     Game.Instance.BlueprintRoot.Progression.m_CharacterClasses =
                         [.. Game.Instance.BlueprintRoot.Progression.m_CharacterClasses, @class.ToReference()];
+#endif
                 })
                 .Register();
         }
