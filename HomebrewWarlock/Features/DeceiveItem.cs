@@ -8,6 +8,7 @@ using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Designers.Mechanics.Facts;
 using Kingmaker.EntitySystem.Stats;
+using Kingmaker.RuleSystem.Rules;
 using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 
@@ -36,7 +37,7 @@ namespace HomebrewWarlock.Features
                         c.Rule = RuleType.SkillCheck;
                         c.SpecificSkill = true;
                         c.Skill = new[] { StatType.SkillUseMagicDevice };
-                        c.m_SavingThrowType = ModifyD20.InnerSavingThrowType.All;
+                        c.m_SavingThrowType = FlaggedSavingThrowType.All;
                     
                         c.Replace = true;
 
