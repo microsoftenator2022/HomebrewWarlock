@@ -68,7 +68,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MicroWrath" Version="0.8.0-prerelease-20231121-2257" />
+    <PackageReference Include="AssemblyPublicizer" Version="1.0.2">
+      <PrivateAssets>none</PrivateAssets>
+      <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="MicroWrath" Version="0.8.1-*" />
   </ItemGroup>
 
   <Target Name="GenerateGuidsFileTarget" AfterTargets="Build">
