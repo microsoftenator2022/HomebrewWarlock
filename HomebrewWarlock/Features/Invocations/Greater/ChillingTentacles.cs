@@ -28,6 +28,7 @@ using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Components;
 using Kingmaker.UnitLogic.Abilities.Components.AreaEffects;
+using Kingmaker.UnitLogic.Abilities.Components.Base;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Commands.Base;
 using Kingmaker.UnitLogic.Mechanics;
@@ -254,6 +255,8 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     //FxColor.ChangeAllColors(ar.transform.Find("GrowingRoots").gameObject,
                     //    c => c *= 0.1f);
 
+                    //var groundFog = ResourcesLibrary.TryGetResource<GameObject>("8c4c90e58c04f814a8418a5926b4a212");
+
                     var waveAll = new WaveAll(ar);
                     var wave00 = new Wave00(ar);
                     var wave01 = new Wave01(ar);
@@ -292,7 +295,11 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     //FxColor.ChangeAllColors(waveAll.Ambient00, c => UnityUtil.RotateColorHue(c, 140));
                     FxColor.ChangeAllColors(waveAll.Ambient00, _ => Color.black);
 
-                    FxColor.ChangeAllColors(waveAll.FireFliesGreen, c => UnityUtil.RotateColorHue(c, 110));
+                    //FxColor.ChangeAllColors(waveAll.FireFliesGreen, c => c.ModifyHSV(hsv => hsv with { s = 0 }));
+                    //FxColor.ChangeAllColors(waveAll.FireFliesViolet, c => c.ModifyHSV(hsv => hsv with { s = 0 }));
+
+                    UnityEngine.Object.DestroyImmediate(waveAll.FireFliesGreen);
+                    UnityEngine.Object.DestroyImmediate(waveAll.FireFliesViolet);
 
                     var fxVisualPrefab = fx.transform.Find("FxVisualPrefab_Decal00").gameObject;
 
@@ -304,20 +311,6 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     rampTexture = FxColor.ChangeTextureColors(rampTexture,
                         c => UnityUtil.ModifyHSV(c, hsv => hsv with { s = hsv.s * 0.2 }),
                         TextureFormat.RGBA32);
-
-                    waveAll.StinkingSmoke00.GetComponent<ParticleSystemRenderer>().material.color =
-                        //new Color(0.8443396f, 0.8443396f, 0.8443396f);
-                        new Color(0.6f, 0.6f, 0.8f);
-
-                    waveAll.StinkingSmoke00.GetComponent<ParticleSystemRenderer>().material
-                        .SetTexture(ShaderProps._ColorAlphaRamp, rampTexture);
-
-                    waveAll.StinkingSmoke00_RotatableCopy.GetComponent<ParticleSystemRenderer>().material.color =
-                        //new Color(0.8443396f, 0.8443396f, 0.8443396f);
-                        new Color(0.6f, 0.6f, 0.8f);
-
-                    waveAll.StinkingSmoke00_RotatableCopy.GetComponent<ParticleSystemRenderer>().material
-                        .SetTexture(ShaderProps._ColorAlphaRamp, rampTexture);
 
                     void SetRampColors(ParticlesMaterialController pmc)
                     {
@@ -347,8 +340,35 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                         pmc.TexColorAlphaRamp = rampTexture;
                     }
 
-                    SetRampColors(waveAll.StinkingSmoke00.GetComponent<ParticlesMaterialController>());
-                    SetRampColors(waveAll.StinkingSmoke00_RotatableCopy.GetComponent<ParticlesMaterialController>());
+                    void SetSmokeProps(GameObject smokeObj)
+                    {
+                        smokeObj.SetActive(false);
+
+                        smokeObj.GetComponent<ParticleSystemRenderer>().material.color =
+                        //new Color(0.8443396f, 0.8443396f, 0.8443396f);
+                        new Color(0.6f, 0.6f, 0.8f);
+
+                        smokeObj.GetComponent<ParticleSystemRenderer>().material
+                            .SetTexture(ShaderProps._ColorAlphaRamp, rampTexture);
+
+                        SetRampColors(smokeObj.GetComponent<ParticlesMaterialController>());
+
+                        //var ps = smokeObj.GetComponent<ParticleSystem>();
+                        //var main = ps.main;
+                        //main.startSizeYMultiplier = 0.1f;
+
+                        //var psc = smokeObj.GetComponent<ParticlesSnapController>();
+
+                        //psc.Offset.Enabled = true;
+                        //psc.Offset.OffsetY.AddKey(0, -0.9f);
+                        //psc.Offset.OffsetY.AddKey(1, -0.9f);
+                    }
+
+                    SetSmokeProps(waveAll.StinkingSmoke00);
+                    SetSmokeProps(waveAll.StinkingSmoke00_RotatableCopy);
+
+                    //SetRampColors(waveAll.StinkingSmoke00.GetComponent<ParticlesMaterialController>());
+                    //SetRampColors(waveAll.StinkingSmoke00_RotatableCopy.GetComponent<ParticlesMaterialController>());
 
                     //UnityEngine.Object.DestroyImmediate(waveAll.StinkingSmoke00);
                     //UnityEngine.Object.DestroyImmediate(waveAll.StinkingSmoke00_RotatableCopy);
@@ -568,12 +588,82 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     return aoe;
                 });
 
+            var fogAreaFx = context.NewBlueprint<BlueprintAbilityAreaEffect>(GeneratedGuid.Get("ChillingTentacleFogFxArea"))
+                .Map(aoe =>
+                {
+                    aoe.Size = 20.Feet();
+                    aoe.Shape = AreaEffectShape.Cylinder;
+
+                    aoe.Fx = new PrefabLink() { AssetId = "8c4c90e58c04f814a8418a5926b4a212" }.CreateDynamicProxy(fx =>
+                    {
+                        const float scale = 0.6f;
+
+                        fx.transform.localScale = new (1f / scale, 1f, 1f / scale);
+
+                        var fxLocatorRoots = fx.GetComponentsInChildren<FxLocator>()
+                            .Select(c => c.gameObject.transform.parent.parent.gameObject);
+                        
+                        foreach (var lr in fxLocatorRoots)
+                        {
+                            lr.transform.localPosition *= (Mathf.Pow(scale, 2));
+                            var lpos = lr.transform.localPosition;
+
+                            lpos.y = scale / (1f + Mathf.Sqrt(Mathf.Pow(lpos.x, 2) + Mathf.Pow(lpos.z, 2)));
+
+                            lr.transform.localPosition = lpos;
+                        }
+                        
+                        var smoke = fx.transform.Find("Smoke00_Billboard").gameObject;
+
+                        var ps = smoke.GetComponent<ParticleSystem>();
+                        var main = ps.main;
+                        main.startColor = main.startColor with { mode = ParticleSystemGradientMode.Color, color = new(1, 1, 1, 0.5f) };
+                        
+                        var startSizeX = main.startSizeX;
+
+                        startSizeX.constant *= scale;
+
+                        main.startSizeX = startSizeX;
+
+                        var startSizeY = main.startSizeY;
+
+                        startSizeY.constant *= scale;
+
+                        main.startSizeY = startSizeY;
+
+                        var pmc = smoke.GetComponent<ParticlesMaterialController>();
+                        var car = pmc.ColorAlphaRamp;
+                        var colorKeys = car.colorKeys;
+
+                        for (var i = 0; i < colorKeys.Length; i++)
+                        {
+                            var ck = colorKeys[i];
+                            ck.color = ck.color with { g = ck.color.r, b = ck.color.r };
+
+                            colorKeys[i] = ck;
+                        }
+
+                        car.colorKeys = colorKeys;
+                        pmc.ColorAlphaRamp = car;
+
+                        var psr = smoke.GetComponent<ParticleSystemRenderer>();
+                        psr.material.SetColor(ShaderProps._TintColor, Color.white);
+                        psr.material.SetFloat("_RampAlbedoWeight", 1);
+                        psr.material.SetFloat("_HdrColorClamp", 100);
+                        psr.material.SetFloat("_HdrColorScale", 2f);
+                        psr.maxParticleSize = 100;
+                    });
+
+                    return aoe;
+                });
+
             var ability = context.NewBlueprint<BlueprintAbility>(
                 GeneratedGuid.Get("ChillingTentaclesAbility"))
                 .Combine(areaEffect)
+                .Combine(fogAreaFx)
                 .Map(bps =>
                 {
-                    (BlueprintAbility ability, var aoe) = bps;
+                    (BlueprintAbility ability, var aoe, var fog) = bps.Expand();
 
                     ability.m_DisplayName = LocalizedStrings.Features_Invocations_Greater_ChillingTentacles_DisplayName;
                     ability.m_Description = LocalizedStrings.Features_Invocations_Greater_ChillingTentacles_Description;
@@ -584,6 +674,12 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                         c.Actions.Add(GameActions.ContextActionSpawnAreaEffect(a =>
                         {
                             a.m_AreaEffect = aoe.ToReference();
+                            a.DurationValue.BonusValue.ValueType = ContextValueType.Rank;
+                        }));
+
+                        c.Actions.Add(GameActions.ContextActionSpawnAreaEffect(a =>
+                        {
+                            a.m_AreaEffect = fog.ToReference();
                             a.DurationValue.BonusValue.ValueType = ContextValueType.Rank;
                         }));
                     });
