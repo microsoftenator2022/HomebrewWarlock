@@ -37,12 +37,21 @@ namespace HomebrewWarlock.NewComponents
         {
             if (context?.MaybeOwner is not { } owner) return;
 
-            if (owner.Buffs.Enumerable
+            var essenceBuffss = owner.Buffs.Enumerable
                 .Where(b => b.IsTurnedOn)
-                .SelectMany(b => b.Blueprint.ComponentsArray.OfType<EldritchBlastEssence>())
-                .FirstOrDefault() is { } essence)
-                this.SpellLevel = Math.Max(essence.EquivalentSpellLevel, this.BaseEquivalentSpellLevel);
-            else this.SpellLevel = this.BaseEquivalentSpellLevel;
+                .SelectMany(b => b.Blueprint.ComponentsArray.OfType<EldritchBlastEssence>());
+
+            this.SpellLevel = essenceBuffss
+                .Select(essence => essence.EquivalentSpellLevel)
+                .Append(this.BaseEquivalentSpellLevel)
+                .Max();
+
+            //if (owner.Buffs.Enumerable
+            //    .Where(b => b.IsTurnedOn)
+            //    .SelectMany(b => b.Blueprint.ComponentsArray.OfType<EldritchBlastEssence>())
+            //    .FirstOrDefault() is { } essence)
+            //    this.SpellLevel = Math.Max(essence.EquivalentSpellLevel, this.BaseEquivalentSpellLevel);
+            //else this.SpellLevel = this.BaseEquivalentSpellLevel;
         }
     }
 }

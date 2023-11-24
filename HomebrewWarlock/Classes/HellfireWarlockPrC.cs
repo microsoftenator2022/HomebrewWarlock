@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using HomebrewWarlock.Features;
+
 using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
@@ -78,27 +80,6 @@ namespace HomebrewWarlock
         {
             var warlockProgressionsFeature = HellfireWarlockInvokerFeatures.Create(context);
 
-            var progression = context.NewBlueprint<BlueprintProgression>(GeneratedGuid.Get("HellfireWarlockProgression"))
-                .Combine(warlockProgressionsFeature)
-                .Map(bps =>
-                {
-                    var (progression, warlockProgressions) = bps;
-
-                    progression.m_Classes =
-                    [
-                        new() { m_Class = GeneratedGuid.HellfireWarlockClass.ToBlueprintReference<BlueprintCharacterClassReference>() }
-                    ];
-
-                    progression.LevelEntries =
-                    [
-                        new() { Level = 1, m_Features = [warlockProgressions.ToReference<BlueprintFeatureBaseReference>()] },
-                        new() { Level = 2, m_Features = [] },
-                        new() { Level = 3, m_Features = [] }
-                    ];
-
-                    return progression;
-                });
-
             var savesLow = context.NewBlueprint<BlueprintStatProgression>(GeneratedGuid.Get("HellfireWarlockSavesLow"))
                 .Map(bp =>
                 {
@@ -121,6 +102,53 @@ namespace HomebrewWarlock
                     bp.Bonuses = [0, 0, 1, 2];
 
                     return bp;
+                });
+
+            var hellfireBlast = HellfireBlast.Create(context);
+
+            var progression = context.NewBlueprint<BlueprintProgression>(GeneratedGuid.Get("HellfireWarlockProgression"))
+                .Combine(warlockProgressionsFeature)
+                .Combine(hellfireBlast)
+                .Map(bps =>
+                {
+                    var (progression, warlockProgressions, hellfireBlast) = bps.Expand();
+
+                    progression.m_Classes =
+                    [
+                        new() { m_Class = GeneratedGuid.HellfireWarlockClass.ToBlueprintReference<BlueprintCharacterClassReference>() }
+                    ];
+
+                    var hellfireBlastRankRef = GeneratedGuid.HellfireBlastRankFeature.ToBlueprintReference<BlueprintFeatureBaseReference>();
+
+                    progression.LevelEntries =
+                    [
+                        new()
+                        {
+                            Level = 1,
+                            m_Features =
+                            [
+                                warlockProgressions.ToReference<BlueprintFeatureBaseReference>(),
+                                hellfireBlast.ToReference<BlueprintFeatureBaseReference>(),
+                                hellfireBlastRankRef
+                            ]
+                        },
+                        new() { Level = 2, m_Features = [hellfireBlastRankRef] },
+                        new() { Level = 3, m_Features = [hellfireBlastRankRef] }
+                    ];
+
+                    progression.UIGroups =
+                    [
+                        new UIGroup()
+                        {
+                            m_Features =
+                            [
+                                //hellfireBlast.ToReference<BlueprintFeatureBaseReference>(),
+                                hellfireBlastRankRef
+                            ]
+                        }
+                    ];
+
+                    return progression;
                 });
 
             var @class = context.NewBlueprint<BlueprintCharacterClass>(GeneratedGuid.Get("HellfireWarlockClass"))
@@ -182,6 +210,15 @@ namespace HomebrewWarlock
                     {
                         c.m_Feature = GeneratedGuid.HellrimeBlastFeature.ToBlueprintReference<BlueprintFeatureReference>();
                         c.Group = Prerequisite.GroupType.Any;
+                    });
+
+                    @class.AddComponent<PrerequisiteClassLevel>(c =>
+                    {
+                        c.m_CharacterClass = @class.ToReference();
+                        c.Level = 3;
+                        c.Not = true;
+
+                        c.HideInUI = true;
                     });
 
                     @class.AddComponent<PrerequisiteIsPet>(c =>

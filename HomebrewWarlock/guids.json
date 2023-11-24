@@ -175,5 +175,9 @@
   "HellfireWarlockInvokerProgressions": "44d54ccf-5387-446c-b263-74902cd8240b",
   "HellfireWarlockBAB": "1be5c863-0b76-4c74-93d5-b7e2cdbb5e0b",
   "ChillingTentacleFogFxArea": "daf3145f-ca34-4500-8bf8-dee013831bec",
+  "HellfireBlastFeature": "7cde18d1-f910-4f66-ac91-acdaaa905d68",
+  "HellfireBlastRankFeature": "f8ee3e0f-c1e3-4552-b469-832dc2f746e1",
+  "HellfireBlastAbility": "f4aee63c-cdb7-4219-8189-dba1e342a977",
+  "HellfireBlastEssenceBuff": "76408bb5-5a5e-4946-b75f-c4e1668fb65c",
   "EldritchBlastPrerequisiteFeature": "46ffda21-bfb3-4532-87b5-3113c351cc12"
 }

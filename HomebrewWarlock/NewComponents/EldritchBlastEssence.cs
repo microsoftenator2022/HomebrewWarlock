@@ -105,12 +105,22 @@ namespace HomebrewWarlock.NewComponents
     internal class EldritchBlastElementalEssence : EldritchBlastEssence, IInitiatorRulebookHandler<RuleDealDamage>
     {
         public DamageEnergyType BlastDamageType = DamageEnergyType.Magic;
+
+        public virtual int DamageTypePriority { get; } = 0;
+
         public virtual void OnEventAboutToTrigger(RuleDealDamage evt)
         {
             if (BlastDamageType is DamageEnergyType.Magic) return;
 
             if (evt.SourceAbility is null) return;
             if (!evt.SourceAbility.ComponentsArray.OfType<EldritchBlastComponent>().Any()) return;
+
+            if (evt.Initiator.Buffs.Enumerable
+                .Where(b => b.IsTurnedOn)
+                .SelectMany(b => b.Blueprint.ComponentsArray.OfType<EldritchBlastElementalEssence>())
+                .Where(b => b != this)
+                .Any(element => element.DamageTypePriority > this.DamageTypePriority))
+                return;
 
             var damage = evt.DamageBundle.ToArray();
             evt.Remove(_ => true);
