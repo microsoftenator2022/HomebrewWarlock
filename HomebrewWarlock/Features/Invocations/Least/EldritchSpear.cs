@@ -18,10 +18,12 @@ using MicroWrath.BlueprintInitializationContext;
 namespace HomebrewWarlock.Features.Invocations.Least
 {
     using BaseBlastFeatures =
-        (BlueprintFeature baseFeature,
+        (BlueprintFeature blastFeature,
+        BlueprintFeature prerequisite,
         BlueprintFeature rankFeature,
         BlueprintAbility baseAbility,
         BlueprintProjectile projectile);
+
 
     internal static class EldritchSpear
     {
@@ -74,6 +76,8 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     feature.m_Icon = ability.m_Icon;
 
                     feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
+
+                    feature.AddPrerequisiteFeature(GeneratedGuid.EldritchBlastPrerequisiteFeature.ToMicroBlueprint<BlueprintFeature>());
 
                     return feature;
                 });

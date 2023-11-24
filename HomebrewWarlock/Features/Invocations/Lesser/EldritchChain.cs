@@ -26,10 +26,12 @@ using MicroWrath.BlueprintInitializationContext;
 namespace HomebrewWarlock.Features.Invocations.Lesser
 {
     using BaseBlastFeatures =
-    (BlueprintFeature baseFeature,
-    BlueprintFeature rankFeature,
-    BlueprintAbility baseAbility,
-    BlueprintProjectile projectile);
+        (BlueprintFeature blastFeature,
+        BlueprintFeature prerequisite,
+        BlueprintFeature rankFeature,
+        BlueprintAbility baseAbility,
+        BlueprintProjectile projectile);
+
 
     internal static class EldritchChain
     {
@@ -195,6 +197,8 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
                     feature.m_Icon = ability.m_Icon;
 
                     feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
+
+                    feature.AddPrerequisiteFeature(GeneratedGuid.EldritchBlastPrerequisiteFeature.ToMicroBlueprint<BlueprintFeature>());
 
                     return feature;
                 });

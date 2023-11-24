@@ -141,7 +141,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 .Combine(baseFeatures)
                 .Map(features =>
                 {
-                    var (ebFeatures, (baseFeature, rankFeature, _, _)) = features;
+                    var (ebFeatures, (baseFeature, prerequisiteFeature, rankFeature, _, _)) = features;
 
                     ebFeatures.EldritchBlastBase = baseFeature;
                     ebFeatures.EldritchBlastRank = rankFeature;

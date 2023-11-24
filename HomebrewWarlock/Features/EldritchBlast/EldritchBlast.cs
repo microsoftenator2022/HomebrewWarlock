@@ -20,7 +20,8 @@ using MicroWrath.BlueprintsDb;
 namespace HomebrewWarlock.Features.EldritchBlast
 {
     using BaseBlastFeatures =
-        (BlueprintFeature baseFeature,
+        (BlueprintFeature blastFeature,
+        BlueprintFeature prerequisite,
         BlueprintFeature rankFeature,
         BlueprintAbility baseAbility,
         BlueprintProjectile projectile);
@@ -112,7 +113,15 @@ namespace HomebrewWarlock.Features.EldritchBlast
                     return feature;
                 });
 
-            var blast = context.NewBlueprint<BlueprintFeature>(
+            var prerequisiteFeature = context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get("EldritchBlastPrerequisiteFeature"))
+                .Map(feature =>
+                {
+                    feature.HideInUI = true;
+
+                    return feature;
+                });
+
+            var features = context.NewBlueprint<BlueprintFeature>(
                 GeneratedGuid.Get("EldritchBlastFeature"))
                 .Map((BlueprintFeature feature) =>
                 {
@@ -124,12 +133,13 @@ namespace HomebrewWarlock.Features.EldritchBlast
                     
                     return feature;
                 })
+                .Combine(prerequisiteFeature)
                 .Combine(rankFeature)
                 .Combine(ability)
                 .Combine(projectile)
                 .Map(bps =>
                 {
-                    var (feature, rankFeature, ability, _) = bps.Expand();
+                    var (feature, prerequisite, rankFeature, ability, _) = bps.Expand();
 
                     ability.m_DisplayName = feature.m_DisplayName;
                     ability.m_Description = feature.m_Description;
@@ -141,6 +151,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
                         c.m_Facts = new[]
                         {
                             ability.ToReference<BlueprintUnitFactReference>(),
+                            prerequisite.ToReference<BlueprintUnitFactReference>()
                             //rankFeature.ToReference<BlueprintUnitFactReference>(),
                         };
 
@@ -152,7 +163,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
                     return bps.Expand();
                 });
 
-            return blast;
+            return features;
         }
 
         internal static BlueprintInitializationContext.ContextInitializer<BlueprintAbility> CreateTouchAbility(
@@ -167,8 +178,8 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 {
                     (BlueprintAbility ability, BaseBlastFeatures baseFeatures, var touch) = bps.Expand();
 
-                    ability.m_DisplayName = baseFeatures.baseFeature.m_DisplayName;
-                    ability.m_Description = baseFeatures.baseFeature.m_Description;
+                    ability.m_DisplayName = baseFeatures.blastFeature.m_DisplayName;
+                    ability.m_Description = baseFeatures.blastFeature.m_Description;
 
                     ability = new EldritchBlastTouch(touch.ToReference())
                         .ConfigureAbility(ability, baseFeatures.rankFeature.ToReference());

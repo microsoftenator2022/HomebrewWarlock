@@ -57,10 +57,12 @@ using UniRx;
 namespace HomebrewWarlock.Features.Invocations.Least
 {
     using BaseBlastFeatures =
-        (BlueprintFeature baseFeature,
+        (BlueprintFeature blastFeature,
+        BlueprintFeature prerequisite,
         BlueprintFeature rankFeature,
         BlueprintAbility baseAbility,
         BlueprintProjectile projectile);
+
 
     internal static class EldritchGlaive
     {
@@ -761,6 +763,8 @@ namespace HomebrewWarlock.Features.Invocations.Least
                     UseToggle!.Changed.Subscribe(setAbility);
 
                     setAbility(UseToggle!.Value);
+
+                    feature.AddPrerequisiteFeature(GeneratedGuid.EldritchBlastPrerequisiteFeature.ToMicroBlueprint<BlueprintFeature>());
 
                     return feature;
                 });

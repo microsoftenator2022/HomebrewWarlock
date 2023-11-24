@@ -30,7 +30,8 @@ using HarmonyLib;
 namespace HomebrewWarlock.Features.Invocations.Greater
 {
     using BaseBlastFeatures =
-        (BlueprintFeature baseFeature,
+        (BlueprintFeature blastFeature,
+        BlueprintFeature prerequisite,
         BlueprintFeature rankFeature,
         BlueprintAbility baseAbility,
         BlueprintProjectile projectile);
@@ -262,6 +263,8 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     feature.m_Icon = ability.m_Icon;
 
                     feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
+
+                    feature.AddPrerequisiteFeature(GeneratedGuid.EldritchBlastPrerequisiteFeature.ToMicroBlueprint<BlueprintFeature>());
 
                     return feature;
                 });

@@ -135,6 +135,8 @@ namespace HomebrewWarlock.Features.Invocations.Lesser
 
                     feature.AddAddFacts(c => c.m_Facts = new[] { ability.ToReference<BlueprintUnitFactReference>() });
 
+                    feature.AddPrerequisiteFeature(GeneratedGuid.EldritchBlastPrerequisiteFeature.ToMicroBlueprint<BlueprintFeature>());
+
                     return feature;
                 });
 

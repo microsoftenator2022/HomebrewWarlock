@@ -34,10 +34,12 @@ using MicroWrath.BlueprintInitializationContext;
 namespace HomebrewWarlock.Features.Invocations.Least
 {
     using BaseBlastFeatures =
-        (BlueprintFeature baseFeature,
+        (BlueprintFeature blastFeature,
+        BlueprintFeature prerequisite,
         BlueprintFeature rankFeature,
         BlueprintAbility baseAbility,
         BlueprintProjectile projectile);
+
 
     //internal class CastSpellWithContextParams : ContextAction
     //{
@@ -53,11 +55,11 @@ namespace HomebrewWarlock.Features.Invocations.Least
     //            return;
 
     //        var data = new AbilityData(this.Spell, caster);
-            
+
     //        data.OverrideCasterLevel = base.Context.Params.CasterLevel;
     //        data.OverrideDC = base.Context.Params.DC;
     //        data.OverrideSpellLevel = base.Context.Params.SpellLevel;
-            
+
     //        data.MetamagicData = new() { MetamagicMask = base.Context.Params.Metamagic };
 
     //        if (this.MarkAsChild)
@@ -273,6 +275,8 @@ namespace HomebrewWarlock.Features.Invocations.Least
                         {
                             ability.ToReference<BlueprintUnitFactReference>()
                         });
+
+                    feature.AddPrerequisiteFeature(GeneratedGuid.EldritchBlastPrerequisiteFeature.ToMicroBlueprint<BlueprintFeature>());
 
                     return feature;
                 });
