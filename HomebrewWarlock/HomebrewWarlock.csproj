@@ -20,19 +20,15 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\*.png" />
-    <!--<AdditionalFiles Include="$(WrathPath)\Bundles\cheatdata.json" />
-    <AdditionalFiles Include="guids.json" />-->
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="0Harmony" HintPath="$(WrathPath)\Wrath_Data\Managed\UnityModManager\0Harmony.dll" Private="False" />
     <Reference Include="Assembly-CSharp-firstpass" HintPath="$(WrathPath)\Wrath_Data\Managed\Assembly-CSharp-firstpass.dll" Private="False" />
     <Reference Include="Newtonsoft.Json" HintPath="$(WrathPath)\Wrath_Data\Managed\Newtonsoft.Json.dll" Private="False" />
-    <!--<Reference Include="Owlcat.Runtime.Core" HintPath="$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.Core.dll" Private="False" />-->
     <Reference Include="Owlcat.Runtime.Visual" HintPath="$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.Visual.dll" Private="False" />
     <Reference Include="Owlcat.Runtime.UniRx" HintPath="$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.UniRx.dll" Private="False" />
     <Reference Include="Owlcat.Runtime.Validation" HintPath="$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.Validation.dll" Private="False" />
-    <!--<Reference Include="Owlcat.SharedTypes" HintPath="$(WrathPath)\Wrath_Data\Managed\Owlcat.SharedTypes.dll" Private="False" />-->
     <Reference Include="Unity.TextMeshPro" HintPath="$(WrathPath)\Wrath_Data\Managed\Unity.TextMeshPro.dll" Private="False" />
     <Reference Include="UnityEngine" HintPath="$(WrathPath)\Wrath_Data\Managed\UnityEngine.dll" Private="False" />
     <Reference Include="UnityEngine.AssetBundleModule" HintPath="$(WrathPath)\Wrath_Data\Managed\UnityEngine.AssetBundleModule.dll" Private="False" />
@@ -47,19 +43,10 @@
     <Reference Include="UniRx" HintPath="$(WrathPath)\Wrath_Data\Managed\UniRx.dll" Private="False" />
     <Reference Include="UnityModManager" HintPath="$(WrathPath)\Wrath_Data\Managed\UnityModManager\UnityModManager.dll" Private="False" />
   </ItemGroup>
-
-  <!--<ItemGroup>
-    <Reference Include="Assembly-CSharp" HintPath="$(SolutionDir)lib\Assembly-CSharp_public.dll" Private="False" />
-    <Reference Include="Owlcat.Runtime.UI" HintPath="$(SolutionDir)lib\Owlcat.Runtime.UI_public.dll" Private="False" />
-    <Reference Include="Owlcat.Runtime.Core" HintPath="$(SolutionDir)lib\Owlcat.Runtime.Core_public.dll" Private="False" />
-    <Reference Include="Owlcat.SharedTypes" HintPath="$(SolutionDir)lib\Owlcat.SharedTypes_public.dll" Private="False" />
-  </ItemGroup>-->
-
+  
   <ItemGroup>
     <Reference Include="ModMenu" HintPath="$(WrathPath)\Mods\ModMenu\ModMenu.dll" Private="False" />
   </ItemGroup>
-
-  <!--<UsingTask TaskName="MicroWrath.Generator.GenerateGuidsFile" AssemblyFile="..\..\MicroWrath\MicroWrath.Generator.Tasks\bin\$(Configuration)\net472\MicroWrath.Generator.Tasks.dll" />-->
 
   <ItemGroup>
     <None Update="Info.json">
