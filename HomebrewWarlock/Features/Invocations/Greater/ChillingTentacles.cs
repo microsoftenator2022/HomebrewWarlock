@@ -6,6 +6,9 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
+using DG.Tweening;
+using DG.Tweening.Core.Easing;
+
 using HomebrewWarlock.Fx;
 using HomebrewWarlock.Resources;
 
@@ -114,7 +117,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
 #if DEBUG
                 $@"D:\Poonity\WrathModificationTemplate-master\Build\HomebrewWarlock\Bundles\{BundleName}";
 #else
-                Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), $"{BundleName}");
+                Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Resources", $"{BundleName}");
 #endif
 
             static AssetBundle? bundle = null;
@@ -174,14 +177,14 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     return null!;
                 }
 
-                MicroLogger.Debug(sb =>
-                {
-                    sb.AppendLine($"{oldMaterial.name} keywords:");
-                    foreach (var kw in oldMaterial.shaderKeywords)
-                    {
-                        sb.AppendLine($"  {kw}");
-                    }
-                });
+                //MicroLogger.Debug(sb =>
+                //{
+                //    sb.AppendLine($"{oldMaterial.name} keywords:");
+                //    foreach (var kw in oldMaterial.shaderKeywords)
+                //    {
+                //        sb.AppendLine($"  {kw}");
+                //    }
+                //});
 
                 //var shader = Shader.Find("Owlcat/Particles") ?? oldMaterial.shader;
                 var shader = oldMaterial.shader;
@@ -211,7 +214,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                 mat.SetOverrideTag("RenderType", "Transparent");
 
                 var enableKeywords = new[] { "_EMISSION", "_EMISSIONMAP", "_MASKSMAP", "_NORMALMAP" };
-                var disableKeywords = new[] { "_RIMLIGHTING_OFF", "DISSOLVE_ON" };
+                var disableKeywords = new[] { "_RIMLIGHTING_OFF" };
 
                 foreach (var kw in enableKeywords)
                 {
@@ -223,14 +226,14 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     mat.DisableKeyword(kw);
                 }
 
-                MicroLogger.Debug(sb =>
-                {
-                    sb.AppendLine($"{mat.name} keywords:");
-                    foreach (var kw in mat.shaderKeywords)
-                    {
-                        sb.AppendLine($"  {kw}");
-                    }
-                });
+                //MicroLogger.Debug(sb =>
+                //{
+                //    sb.AppendLine($"{mat.name} keywords:");
+                //    foreach (var kw in mat.shaderKeywords)
+                //    {
+                //        sb.AppendLine($"  {kw}");
+                //    }
+                //});
 
                 return mat;
             }
@@ -293,7 +296,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     }
 
                     //FxColor.ChangeAllColors(waveAll.Ambient00, c => UnityUtil.RotateColorHue(c, 140));
-                    FxColor.ChangeAllColors(waveAll.Ambient00, _ => Color.black);
+                    //FxColor.ChangeAllColors(waveAll.Ambient00, _ => Color.black);
 
                     //FxColor.ChangeAllColors(waveAll.FireFliesGreen, c => c.ModifyHSV(hsv => hsv with { s = 0 }));
                     //FxColor.ChangeAllColors(waveAll.FireFliesViolet, c => c.ModifyHSV(hsv => hsv with { s = 0 }));
@@ -301,57 +304,57 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     UnityEngine.Object.DestroyImmediate(waveAll.FireFliesGreen);
                     UnityEngine.Object.DestroyImmediate(waveAll.FireFliesViolet);
 
-                    var fxVisualPrefab = fx.transform.Find("FxVisualPrefab_Decal00").gameObject;
+                    //var fxVisualPrefab = fx.transform.Find("FxVisualPrefab_Decal00").gameObject;
 
-                    FxColor.ChangeAllColors(fxVisualPrefab, _ => Color.black);
+                    //FxColor.ChangeAllColors(fxVisualPrefab, _ => Color.black);
 
-                    var rampTexture = AssetUtils.GetTextureAssemblyResource(Assembly.GetExecutingAssembly(),
-                        $"{nameof(HomebrewWarlock)}.Resources.fogramp.png", TextureFormat.RGB24, false)!;
+                    //var rampTexture = AssetUtils.GetTextureAssemblyResource(Assembly.GetExecutingAssembly(),
+                    //    $"{nameof(HomebrewWarlock)}.Resources.fogramp.png", TextureFormat.RGB24, false)!;
 
-                    rampTexture = FxColor.ChangeTextureColors(rampTexture,
-                        c => UnityUtil.ModifyHSV(c, hsv => hsv with { s = hsv.s * 0.2 }),
-                        TextureFormat.RGBA32);
+                    //rampTexture = FxColor.ChangeTextureColors(rampTexture,
+                    //    c => UnityUtil.ModifyHSV(c, hsv => hsv with { s = hsv.s * 0.2 }),
+                    //    TextureFormat.RGBA32);
 
-                    void SetRampColors(ParticlesMaterialController pmc)
-                    {
-                        var ramp = new[]
-                        {
-                            new Color(0, 0, 0),
-                            new Color(0, 0, 0),
-                            new Color(0, 0, 0),
-                            new Color(0.066667f, 0, 0.250980f),
-                            new Color(0.223529f, 0, 0.501960f),
-                            new Color(0.149019f, 0, 0.345098f)
-                        };
+                    //void SetRampColors(ParticlesMaterialController pmc)
+                    //{
+                    //    var ramp = new[]
+                    //    {
+                    //        new Color(0, 0, 0),
+                    //        new Color(0, 0, 0),
+                    //        new Color(0, 0, 0),
+                    //        new Color(0.066667f, 0, 0.250980f),
+                    //        new Color(0.223529f, 0, 0.501960f),
+                    //        new Color(0.149019f, 0, 0.345098f)
+                    //    };
 
-                        var car = pmc.ColorAlphaRamp;
-                        var colorKeys = car.colorKeys;
+                    //    var car = pmc.ColorAlphaRamp;
+                    //    var colorKeys = car.colorKeys;
 
-                        for (var i = 0; i < ramp.Length; i++)
-                        {
-                            var ck = colorKeys[i];
-                            ck.color = UnityUtil.ModifyHSV(ramp[i], hsv => hsv with { s = hsv.s * 0.2 });
-                            colorKeys[i] = ck;
-                        }
+                    //    for (var i = 0; i < ramp.Length; i++)
+                    //    {
+                    //        var ck = colorKeys[i];
+                    //        ck.color = UnityUtil.ModifyHSV(ramp[i], hsv => hsv with { s = hsv.s * 0.2 });
+                    //        colorKeys[i] = ck;
+                    //    }
 
-                        car.colorKeys = colorKeys;
-                        pmc.ColorAlphaRamp = car;
+                    //    car.colorKeys = colorKeys;
+                    //    pmc.ColorAlphaRamp = car;
 
-                        pmc.TexColorAlphaRamp = rampTexture;
-                    }
+                    //    pmc.TexColorAlphaRamp = rampTexture;
+                    //}
 
                     void SetSmokeProps(GameObject smokeObj)
                     {
                         smokeObj.SetActive(false);
 
-                        smokeObj.GetComponent<ParticleSystemRenderer>().material.color =
-                        //new Color(0.8443396f, 0.8443396f, 0.8443396f);
-                        new Color(0.6f, 0.6f, 0.8f);
+                        //smokeObj.GetComponent<ParticleSystemRenderer>().material.color =
+                        ////new Color(0.8443396f, 0.8443396f, 0.8443396f);
+                        //new Color(0.6f, 0.6f, 0.8f);
 
-                        smokeObj.GetComponent<ParticleSystemRenderer>().material
-                            .SetTexture(ShaderProps._ColorAlphaRamp, rampTexture);
+                        //smokeObj.GetComponent<ParticleSystemRenderer>().material
+                        //    .SetTexture(ShaderProps._ColorAlphaRamp, rampTexture);
 
-                        SetRampColors(smokeObj.GetComponent<ParticlesMaterialController>());
+                        //SetRampColors(smokeObj.GetComponent<ParticlesMaterialController>());
 
                         //var ps = smokeObj.GetComponent<ParticleSystem>();
                         //var main = ps.main;
@@ -398,6 +401,108 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     //ChangeColorsAndMainTexture(wave02.LianaStart00_RotatableCopy);
                     SetTentacleMaterial(wave02.Liana00);
                     SetTentacleMaterial(wave02.Liana00_RotatableCopy);
+                });
+
+            internal class FadeIn : MonoBehaviour
+            {
+                public void OnEnable()
+                {
+                    var smoke = gameObject.transform.Find("Smoke00_Billboard").gameObject;
+
+                    var psr = smoke.GetComponent<ParticleSystemRenderer>();
+
+                    psr.material.color = new(1, 1, 1, 0);
+
+                    DOTween.Sequence()
+                        .Append(psr.material.DOFade(0.1f, 1).ChangeStartValue(0))
+                        .Append(psr.material.DOFade(0.25f, 2).SetEase(Ease.InOutSine))
+                        .Append(psr.material.DOFade(0.5f, 3).SetEase(Ease.InOutSine))
+                        .Play();
+                }
+
+                void OnDisable()
+                {
+                }
+            }
+
+            internal static PrefabLink FogFx => new PrefabLink() { AssetId = "8c4c90e58c04f814a8418a5926b4a212" }
+                .CreateDynamicProxy(fx =>
+                {
+                    const float scale = 0.6f;
+
+                    fx.transform.localScale = new(1f / scale, 1f, 1f / scale);
+
+                    var fxLocatorRoots = fx.GetComponentsInChildren<FxLocator>()
+                        .Select(c => c.gameObject.transform.parent.parent.gameObject);
+
+                    foreach (var lr in fxLocatorRoots)
+                    {
+                        //lr.transform.localPosition *= scale * scale;
+
+                        var lpos = lr.transform.localPosition;
+
+                        lpos.x *= scale * scale;
+                        lpos.z *= scale * scale;
+
+                        var d = Mathf.Sqrt(Mathf.Pow(lpos.x, 2) + Mathf.Pow(lpos.z, 2));
+
+                        lpos.y = scale * (1f / (1f + d) - 1f);
+
+                        lr.transform.localPosition = lpos;
+                    }
+
+                    var smoke = fx.transform.Find("Smoke00_Billboard").gameObject;
+
+                    var ps = smoke.GetComponent<ParticleSystem>();
+
+                    var main = ps.main;
+
+                    main.startColor = new() { mode = ParticleSystemGradientMode.Color, color = new(1, 1, 1, 1) };
+
+                    var startSizeX = main.startSizeX;
+
+                    startSizeX.constant *= scale;
+
+                    main.startSizeX = startSizeX;
+
+                    var startSizeY = main.startSizeY;
+
+                    startSizeY.constant *= scale;
+
+                    main.startSizeY = startSizeY;
+
+                    var pmc = smoke.GetComponent<ParticlesMaterialController>();
+
+                    UnityEngine.Object.DestroyImmediate(pmc);
+
+                    //var car = pmc.ColorAlphaRamp;
+                    //var colorKeys = car.colorKeys;
+
+                    //for (var i = 0; i < colorKeys.Length; i++)
+                    //{
+                    //    var ck = colorKeys[i];
+                    //    ck.color = ck.color with { g = ck.color.r, b = ck.color.r };
+
+                    //    colorKeys[i] = ck;
+                    //}
+
+                    //car.alphaKeys = [new(0, 0), new(0f, car.alphaKeys[1].time)];
+
+                    //car.colorKeys = colorKeys;
+                    //pmc.ColorAlphaRamp = car;
+
+                    var psr = smoke.GetComponent<ParticleSystemRenderer>();
+                    psr.material.SetColor(ShaderProps._TintColor, Color.white);
+
+                    //psr.material.SetFloat("_RampAlbedoWeight", 1);
+                    psr.material.SetFloat("_HdrColorClamp", 100);
+                    psr.material.SetFloat("_HdrColorScale", 2f);
+                    psr.maxParticleSize = 100;
+
+                    var fadeIn = fx.AddComponent<FadeIn>();
+
+                    if (fx.activeSelf)
+                        fadeIn.OnEnable();
                 });
         }
 
@@ -594,65 +699,7 @@ namespace HomebrewWarlock.Features.Invocations.Greater
                     aoe.Size = 20.Feet();
                     aoe.Shape = AreaEffectShape.Cylinder;
 
-                    aoe.Fx = new PrefabLink() { AssetId = "8c4c90e58c04f814a8418a5926b4a212" }.CreateDynamicProxy(fx =>
-                    {
-                        const float scale = 0.6f;
-
-                        fx.transform.localScale = new (1f / scale, 1f, 1f / scale);
-
-                        var fxLocatorRoots = fx.GetComponentsInChildren<FxLocator>()
-                            .Select(c => c.gameObject.transform.parent.parent.gameObject);
-                        
-                        foreach (var lr in fxLocatorRoots)
-                        {
-                            lr.transform.localPosition *= (Mathf.Pow(scale, 2));
-                            var lpos = lr.transform.localPosition;
-
-                            lpos.y = scale / (1f + Mathf.Sqrt(Mathf.Pow(lpos.x, 2) + Mathf.Pow(lpos.z, 2)));
-
-                            lr.transform.localPosition = lpos;
-                        }
-                        
-                        var smoke = fx.transform.Find("Smoke00_Billboard").gameObject;
-
-                        var ps = smoke.GetComponent<ParticleSystem>();
-                        var main = ps.main;
-                        main.startColor = main.startColor with { mode = ParticleSystemGradientMode.Color, color = new(1, 1, 1, 0.5f) };
-                        
-                        var startSizeX = main.startSizeX;
-
-                        startSizeX.constant *= scale;
-
-                        main.startSizeX = startSizeX;
-
-                        var startSizeY = main.startSizeY;
-
-                        startSizeY.constant *= scale;
-
-                        main.startSizeY = startSizeY;
-
-                        var pmc = smoke.GetComponent<ParticlesMaterialController>();
-                        var car = pmc.ColorAlphaRamp;
-                        var colorKeys = car.colorKeys;
-
-                        for (var i = 0; i < colorKeys.Length; i++)
-                        {
-                            var ck = colorKeys[i];
-                            ck.color = ck.color with { g = ck.color.r, b = ck.color.r };
-
-                            colorKeys[i] = ck;
-                        }
-
-                        car.colorKeys = colorKeys;
-                        pmc.ColorAlphaRamp = car;
-
-                        var psr = smoke.GetComponent<ParticleSystemRenderer>();
-                        psr.material.SetColor(ShaderProps._TintColor, Color.white);
-                        psr.material.SetFloat("_RampAlbedoWeight", 1);
-                        psr.material.SetFloat("_HdrColorClamp", 100);
-                        psr.material.SetFloat("_HdrColorScale", 2f);
-                        psr.maxParticleSize = 100;
-                    });
+                    aoe.Fx = Fx.FogFx;
 
                     return aoe;
                 });

@@ -25,6 +25,10 @@
   <ItemGroup>
     <Reference Include="0Harmony" HintPath="$(WrathPath)\Wrath_Data\Managed\UnityModManager\0Harmony.dll" Private="False" />
     <Reference Include="Assembly-CSharp-firstpass" HintPath="$(WrathPath)\Wrath_Data\Managed\Assembly-CSharp-firstpass.dll" Private="False" />
+    <Reference Include="DOTween" HintPath="$(WrathPath)\Wrath_Data\Managed\DOTween.dll" Private="False" />
+    <Reference Include="DOTween43" HintPath="$(WrathPath)\Wrath_Data\Managed\DOTween43.dll" Private="False" />
+    <Reference Include="DOTween46" HintPath="$(WrathPath)\Wrath_Data\Managed\DOTween46.dll" Private="False" />
+    <Reference Include="DOTweenPro" HintPath="$(WrathPath)\Wrath_Data\Managed\DOTweenPro.dll" Private="False" />
     <Reference Include="Newtonsoft.Json" HintPath="$(WrathPath)\Wrath_Data\Managed\Newtonsoft.Json.dll" Private="False" />
     <Reference Include="Owlcat.Runtime.Visual" HintPath="$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.Visual.dll" Private="False" />
     <Reference Include="Owlcat.Runtime.UniRx" HintPath="$(WrathPath)\Wrath_Data\Managed\Owlcat.Runtime.UniRx.dll" Private="False" />
@@ -32,11 +36,15 @@
     <Reference Include="Unity.TextMeshPro" HintPath="$(WrathPath)\Wrath_Data\Managed\Unity.TextMeshPro.dll" Private="False" />
     <Reference Include="UnityEngine" HintPath="$(WrathPath)\Wrath_Data\Managed\UnityEngine.dll" Private="False" />
     <Reference Include="UnityEngine.AssetBundleModule" HintPath="$(WrathPath)\Wrath_Data\Managed\UnityEngine.AssetBundleModule.dll" Private="False" />
+    <Reference Include="UnityEngine.AnimationModule" HintPath="$(WrathPath)\Wrath_Data\Managed\UnityEngine.AnimationModule.dll" Private="False" />
+    <Reference Include="UnityEngine.AudioModule" HintPath="$(WrathPath)\Wrath_Data\Managed\UnityEngine.AudioModule.dll" Private="False" />
     <Reference Include="UnityEngine.CoreModule" HintPath="$(WrathPath)\Wrath_Data\Managed\UnityEngine.CoreModule.dll" Private="False" />
     <Reference Include="UnityEngine.ImageConversionModule" HintPath="$(WrathPath)\Wrath_Data\Managed\UnityEngine.ImageConversionModule.dll" Private="False" />
     <Reference Include="UnityEngine.IMGUIModule" HintPath="$(WrathPath)\Wrath_Data\Managed\UnityEngine.IMGUIModule.dll" Private="False" />
     <Reference Include="UnityEngine.InputLegacyModule" HintPath="$(WrathPath)\Wrath_Data\Managed\UnityEngine.InputLegacyModule.dll" Private="false" />
     <Reference Include="UnityEngine.ParticleSystemModule" HintPath="$(WrathPath)\Wrath_Data\Managed\UnityEngine.ParticleSystemModule.dll" Private="False" />
+    <Reference Include="UnityEngine.PhysicsModule" HintPath="$(WrathPath)\Wrath_Data\Managed\UnityEngine.PhysicsModule.dll" Private="False" />
+    <Reference Include="UnityEngine.Physics2DModule" HintPath="$(WrathPath)\Wrath_Data\Managed\UnityEngine.Physics2DModule.dll" Private="False" />
     <Reference Include="UnityEngine.UI" HintPath="$(WrathPath)\Wrath_Data\Managed\UnityEngine.UI.dll" Private="False" />
     <Reference Include="UnityEngine.UIModule" HintPath="$(WrathPath)\Wrath_Data\Managed\UnityEngine.UIModule.dll" Private="False" />
     <Reference Include="Unity.RenderPipelines.Core.Runtime" HintPath="$(WrathPath)\Wrath_Data\Managed\Unity.RenderPipelines.Core.Runtime.dll" Private="False" />
@@ -52,7 +60,7 @@
     <None Update="Info.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\HomebrewWarlock_assets_all">
+    <None Include="Resources\HomebrewWarlock_assets_all">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -74,7 +82,9 @@
       <Files Include="$(OutDir)\**\*.*" />
     </ItemGroup>
 
-    <Copy SourceFiles="@(Files)" DestinationFolder="$(WrathPath)\Mods\$(MSBuildProjectName)" />
+    <Copy 
+      SourceFiles="@(Files)"
+      DestinationFiles="@(Files->'$(WrathPath)\Mods\$(MSBuildProjectName)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 
   <Target Name="ZipRelease" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">

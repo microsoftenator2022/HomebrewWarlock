@@ -35,7 +35,7 @@ using MicroWrath.Util.Linq;
 
 using UniRx;
 
-namespace HomebrewWarlock.Homebrew
+namespace HomebrewWarlock.Features
 {
     internal static class MythicBlast
     {
@@ -54,8 +54,8 @@ namespace HomebrewWarlock.Homebrew
             var castBuff = context.NewBlueprint<BlueprintBuff>(GeneratedGuid.Get("MythicEldritchBlastCastBuff"))
                 .Map(buff =>
                 {
-                    buff.m_DisplayName = LocalizedStrings.Homebrew_MythicBlast_DisplayName;
-                    buff.m_Description = LocalizedStrings.Homebrew_MythicBlast_Description;
+                    buff.m_DisplayName = LocalizedStrings.Features_MythicBlast_DisplayName;
+                    buff.m_Description = LocalizedStrings.Features_MythicBlast_Description;
                     buff.m_Icon = Sprites.EldritchBlastMythic;
 
                     buff.AddContextRankConfig(crc =>
@@ -130,8 +130,8 @@ namespace HomebrewWarlock.Homebrew
                 {
                     (BlueprintActivatableAbility toggle, var buff) = bps;
 
-                    toggle.m_DisplayName = LocalizedStrings.Homebrew_MythicBlast_DisplayName;
-                    toggle.m_Description = LocalizedStrings.Homebrew_MythicBlast_Description;
+                    toggle.m_DisplayName = LocalizedStrings.Features_MythicBlast_DisplayName;
+                    toggle.m_Description = LocalizedStrings.Features_MythicBlast_Description;
                     toggle.m_Icon = Sprites.EldritchBlastMythic;
 
                     toggle.m_Buff = buff.ToReference();
@@ -164,7 +164,7 @@ namespace HomebrewWarlock.Homebrew
                     //    actions.Deactivated.Add(GameActions.ContextActionRemoveBuff(rb => rb.m_Buff = buff.ToReference()));
                     //});
 
-                    feature.AddPrerequisiteFeature(EldritchBlast.FeatureRef);
+                    feature.AddPrerequisiteFeature(EldritchBlast.EldritchBlast.FeatureRef);
 
                     return feature;
                 });
@@ -184,7 +184,7 @@ namespace HomebrewWarlock.Homebrew
             var settings = new Settings.SettingsGroup("Mythic");
 
             (settings, enabled) = settings.AddToggle("MythicEldritchBlastToggle",
-                LocalizedStrings.Homebrew_MythicBlast_ToggleSettingDisplayName);
+                LocalizedStrings.Features_MythicBlast_ToggleSettingDisplayName);
 
             Settings.Instance.AddGroup(settings);
         }

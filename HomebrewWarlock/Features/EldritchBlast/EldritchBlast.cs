@@ -10,6 +10,7 @@ using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Classes.Prerequisites;
 using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Components;
@@ -114,8 +115,11 @@ namespace HomebrewWarlock.Features.EldritchBlast
                 });
 
             var prerequisiteFeature = context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get("EldritchBlastPrerequisiteFeature"))
-                .Map(feature =>
+                .Combine(rankFeature)
+                .Map(bps =>
                 {
+                    var (feature, rankFeature) = bps;
+
                     feature.HideInUI = true;
 
                     return feature;
@@ -154,11 +158,15 @@ namespace HomebrewWarlock.Features.EldritchBlast
                             prerequisite.ToReference<BlueprintUnitFactReference>()
                             //rankFeature.ToReference<BlueprintUnitFactReference>(),
                         };
-
                     });
 
-                    feature.HideInCharacterSheetAndLevelUp = true;
-                    //feature.HideInUI = true;
+                    feature.AddComponent<PrerequisiteNoFeature>(c =>
+                    {
+                        c.m_Feature = prerequisite.ToReference();
+                        c.HideInUI = true;
+                    });
+
+                    feature.HideNotAvailibleInUI = true;
 
                     return bps.Expand();
                 });

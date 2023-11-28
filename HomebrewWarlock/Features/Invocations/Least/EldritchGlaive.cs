@@ -764,7 +764,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
 
                     setAbility(UseToggle!.Value);
 
-                    feature.AddPrerequisiteFeature(GeneratedGuid.EldritchBlastPrerequisiteFeature.ToMicroBlueprint<BlueprintFeature>());
+                    feature.AddPrerequisiteFeature(GeneratedGuid.EldritchBlastFeature.ToMicroBlueprint<BlueprintFeature>());
 
                     return feature;
                 });

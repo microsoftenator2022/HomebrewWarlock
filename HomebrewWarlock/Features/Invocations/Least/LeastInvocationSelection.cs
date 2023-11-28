@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using HomebrewWarlock.Features.EldritchBlast;
 
+using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 
@@ -29,13 +31,15 @@ namespace HomebrewWarlock.Features.Invocations.Least
                 .Combine(DarkOnesOwnLuck.Create(context))
                 .Combine(OtherworldlyWhispers.Create(context))
                 .Combine(ebFeatures)
+                .Combine(AddEldritchBlastRankFeature.Create(context, ebFeatures))
                 .Map(sf =>
                 {
                     var (selection,
                         beguilingInfluence,
                         darkOnesOwnLuck,
                         otherworldlyWhispers,
-                        eldritchBlastFeatures) = sf.Expand();
+                        eldritchBlastFeatures,
+                        addRankFeature) = sf.Expand();
 
                     selection.m_DisplayName = LocalizedStrings.Features_Invocations_Least_LeastInvocationSelection_DisplayName;
                     //selection.m_Description = LocalizedStrings.Features_InvocationSelection_Description;
@@ -48,7 +52,9 @@ namespace HomebrewWarlock.Features.Invocations.Least
                         eldritchBlastFeatures.Essence.Least.SickeningBlast,
                         eldritchBlastFeatures.Blasts.Least.EldritchSpear,
                         eldritchBlastFeatures.Blasts.Least.HideousBlow,
-                        eldritchBlastFeatures.Blasts.Least.EldritchGlaive);
+                        eldritchBlastFeatures.Blasts.Least.EldritchGlaive,
+                        eldritchBlastFeatures.EldritchBlastBase,
+                        addRankFeature);
 
                     return selection;
                 })

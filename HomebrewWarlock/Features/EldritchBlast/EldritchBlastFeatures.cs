@@ -85,6 +85,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
 
         public BlueprintFeature EldritchBlastRank = null!;
         public BlueprintFeature EldritchBlastBase = null!;
+        public BlueprintFeature EldritchBlastPrerequisiteFeature = null!;
 
         public readonly BlastFeatures Blasts = new();
         
@@ -145,6 +146,7 @@ namespace HomebrewWarlock.Features.EldritchBlast
 
                     ebFeatures.EldritchBlastBase = baseFeature;
                     ebFeatures.EldritchBlastRank = rankFeature;
+                    ebFeatures.EldritchBlastPrerequisiteFeature = prerequisiteFeature;
 
                     return ebFeatures;
                 });

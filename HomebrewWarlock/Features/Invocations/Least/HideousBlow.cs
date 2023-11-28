@@ -276,7 +276,7 @@ namespace HomebrewWarlock.Features.Invocations.Least
                             ability.ToReference<BlueprintUnitFactReference>()
                         });
 
-                    feature.AddPrerequisiteFeature(GeneratedGuid.EldritchBlastPrerequisiteFeature.ToMicroBlueprint<BlueprintFeature>());
+                    feature.AddPrerequisiteFeature(GeneratedGuid.EldritchBlastFeature.ToMicroBlueprint<BlueprintFeature>());
 
                     return feature;
                 });

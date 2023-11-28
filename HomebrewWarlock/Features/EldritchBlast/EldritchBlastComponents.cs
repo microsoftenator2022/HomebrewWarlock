@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using HomebrewWarlock.Features.Invocations;
 using HomebrewWarlock.Fx;
-using HomebrewWarlock.Homebrew;
+using HomebrewWarlock.Features;
 using HomebrewWarlock.NewComponents;
 
 using Kingmaker.Blueprints;

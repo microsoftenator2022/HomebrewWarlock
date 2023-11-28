@@ -234,7 +234,7 @@ namespace HomebrewWarlock
         }
 
         [Init]
-        public static void Init()
+        static void Init()
         {
             var context = new BlueprintInitializationContext(Triggers.BlueprintsCache_Init);
 
