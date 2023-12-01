@@ -5,9 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using HomebrewWarlock.NewComponents;
+
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Classes.Selection;
+using Kingmaker.Designers.Mechanics.Facts;
 using Kingmaker.Enums.Damage;
 using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Mechanics.Components;
@@ -104,16 +107,29 @@ namespace HomebrewWarlock.Features
                         f.m_Icon = AssetUtils.Direct.GetSprite("c1c44cca1868e9a40bef853ef190ede5", 21300000);
                         return f;
                     }))
+                .Combine(context.NewBlueprint<BlueprintFeature>(GeneratedGuid.Get("WarlockEnergyResistanceLevel20Feature")).
+                    Map(f =>
+                    {
+                        f.HideInUI = true;
+                        return f;
+                    }))
                 .Map(sf =>
                 {
-                    var (selection, baseFeature, acid, cold, electricity, fire, sonic) = sf.Expand();
+                    var (selection, baseFeature, acid, cold, electricity, fire, sonic, level20) = sf.Expand();
 
-                    selection.HideInCharacterSheetAndLevelUp = true;
+                    //selection.HideInCharacterSheetAndLevelUp = true;
                     selection.HideInUI = true;
 
                     baseFeature.m_Description = LocalizedStrings.Features_EnergyResistance_Description;
+                    baseFeature.HideInCharacterSheetAndLevelUp = true;
 
                     baseFeature.Ranks = 2;
+
+                    baseFeature.AddComponent<AddFactAtRank>(c =>
+                    {
+                        c.Rank = 2;
+                        c.FactToAdd = level20.ToReference<BlueprintUnitFactReference>();
+                    });
 
                     foreach (var (element, feature) in
                         new[]
@@ -126,6 +142,8 @@ namespace HomebrewWarlock.Features
                         })
                     {
                         feature.m_Description = LocalizedStrings.Features_EnergyResistance_Description;
+
+                        feature.Ranks = 4;
 
                         feature.AddAddDamageResistanceEnergy(c =>
                         {
@@ -141,6 +159,11 @@ namespace HomebrewWarlock.Features
                             c.m_Feature = baseFeature.ToReference();
                             c.m_Progression = ContextRankProgression.MultiplyByModifier;
                             c.m_StepLevel = 5;
+                        });
+
+                        level20.AddComponent<AddFeatureIfHasFact>(c =>
+                        {
+                            c.m_Feature = c.m_CheckedFact = feature.ToReference<BlueprintUnitFactReference>();
                         });
                     }
 
