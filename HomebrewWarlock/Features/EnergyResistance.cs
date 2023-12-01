@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using HomebrewWarlock.NewComponents;
+using HomebrewWarlock.Resources;
 
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
@@ -96,7 +97,7 @@ namespace HomebrewWarlock.Features
                     .Map(f =>
                     {
                         f.m_DisplayName = LocalizedStrings.Features_EnergyResistance_DisplayNameFire;
-                        f.m_Icon = AssetUtils.Direct.GetSprite("8044829fbaea2654ea08d7fa0f9fd98a", 21300000);
+                        f.m_Icon = Sprites.ResistEnergyFire;
                         return f;
                     }))
                 .Combine(context.NewBlueprint<BlueprintFeature>(

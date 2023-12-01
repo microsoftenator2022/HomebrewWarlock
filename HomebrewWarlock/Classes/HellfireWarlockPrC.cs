@@ -109,9 +109,10 @@ namespace HomebrewWarlock
             var progression = context.NewBlueprint<BlueprintProgression>(GeneratedGuid.Get("HellfireWarlockProgression"))
                 .Combine(warlockProgressionsFeature)
                 .Combine(hellfireBlast)
+                .Combine(HellfireFireResist.Create(context))
                 .Map(bps =>
                 {
-                    var (progression, warlockProgressions, hellfireBlast) = bps.Expand();
+                    var (progression, warlockProgressions, hellfireBlast, fireResist) = bps.Expand();
 
                     progression.m_Classes =
                     [
@@ -132,7 +133,7 @@ namespace HomebrewWarlock
                                 hellfireBlastRankRef
                             ]
                         },
-                        new() { Level = 2, m_Features = [hellfireBlastRankRef] },
+                        new() { Level = 2, m_Features = [hellfireBlastRankRef, fireResist.ToReference<BlueprintFeatureBaseReference>()] },
                         new() { Level = 3, m_Features = [hellfireBlastRankRef] }
                     ];
 
