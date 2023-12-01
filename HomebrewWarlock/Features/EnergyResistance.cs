@@ -69,7 +69,7 @@ namespace HomebrewWarlock.Features
                     .Map(f =>
                     {
                         f.m_DisplayName = LocalizedStrings.Features_EnergyResistance_DisplayNameAcid;
-                        AssetUtils.Direct.GetSprite("9858c74cdfbee1d46a07b26c95d6ad99", 21300000);
+                        f.m_Icon = AssetUtils.Direct.GetSprite("9858c74cdfbee1d46a07b26c95d6ad99", 21300000);
                         return f;
                     }))
                 .Combine(context.NewBlueprint<BlueprintFeature>(
@@ -77,7 +77,7 @@ namespace HomebrewWarlock.Features
                     .Map(f =>
                     {
                         f.m_DisplayName = LocalizedStrings.Features_EnergyResistance_DisplayNameCold;
-                        AssetUtils.Direct.GetSprite("d82abb0dfe5ada145b9a6c560fbc1efb", 21300000);
+                        f.m_Icon = AssetUtils.Direct.GetSprite("d82abb0dfe5ada145b9a6c560fbc1efb", 21300000);
                         return f;
                     }))
                 .Combine(context.NewBlueprint<BlueprintFeature>(
@@ -85,7 +85,7 @@ namespace HomebrewWarlock.Features
                     .Map(f =>
                     {
                         f.m_DisplayName = LocalizedStrings.Features_EnergyResistance_DisplayNameElectricity;
-                        AssetUtils.Direct.GetSprite("e4f46fe964f7e2d4b87d92bfdd5bec18", 21300000);
+                        f.m_Icon = AssetUtils.Direct.GetSprite("e4f46fe964f7e2d4b87d92bfdd5bec18", 21300000);
                         return f;
                     }))
                 .Combine(context.NewBlueprint<BlueprintFeature>(
@@ -93,7 +93,7 @@ namespace HomebrewWarlock.Features
                     .Map(f =>
                     {
                         f.m_DisplayName = LocalizedStrings.Features_EnergyResistance_DisplayNameFire;
-                        AssetUtils.Direct.GetSprite("8044829fbaea2654ea08d7fa0f9fd98a", 21300000);
+                        f.m_Icon = AssetUtils.Direct.GetSprite("8044829fbaea2654ea08d7fa0f9fd98a", 21300000);
                         return f;
                     }))
                 .Combine(context.NewBlueprint<BlueprintFeature>(
@@ -101,7 +101,7 @@ namespace HomebrewWarlock.Features
                     .Map(f =>
                     {
                         f.m_DisplayName = LocalizedStrings.Features_EnergyResistance_DisplayNameSonic;
-                        AssetUtils.Direct.GetSprite("c1c44cca1868e9a40bef853ef190ede5", 21300000);
+                        f.m_Icon = AssetUtils.Direct.GetSprite("c1c44cca1868e9a40bef853ef190ede5", 21300000);
                         return f;
                     }))
                 .Map(sf =>
