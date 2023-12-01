@@ -4,18 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.JsonSystem;
 using Kingmaker.Designers.Mechanics.Facts;
 using Kingmaker.PubSubSystem;
-using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic;
-using static Kingmaker.Blueprints.Area.FactHolder;
+using Kingmaker.UnitLogic.Buffs.Blueprints;
 
 namespace HomebrewWarlock.NewComponents
 {
     [AllowedOn(typeof(BlueprintFeature))]
     [AllowedOn(typeof(BlueprintBuff))]
+    [TypeId("86391879-8ce3-4309-a7ef-87cc518aa3b0")]
     internal class AddFactAtRank : UnitFactComponentDelegate<AddFeatureIfHasFactData>, IFeatureRankHandler
     {
         public int Rank = 2;
